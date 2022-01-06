@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width">
+	<title>Romaji Memory</title>
+<style>
+*{
+	padding:0;margin:0;
+	outline:none;border:none;resize:none;
+	color:silver;background-color:transparent;
+	font-family:Helvetica,Arial,sans-serif;
+	box-sizing:border-box;
+}
+/* Flexbox */
+html,body,.ff{min-width:0;min-height:0;}
+html,body{width:100%;height:100%;}
+.f-1{flex:1;}
+.f-dc{flex-direction:column;}
+.f-jcc{justify-content:center;}
+.f-aic{align-items:center;}
+.xx78{
+	float:left;
+}
+.ucase{text-transform:uppercase;}
+.lcase{text-transform:lowercase;}
+.fwb{font-weight:bold;}
+.bg-red{background:#550000}
+.bg-vio{background:#4d004d}
+.bg-blu{background:#00384e}
+/* Margin, Padding */
+.ma{margin:auto;}
+/* Border */
+.b-s{border-style:solid;}
+.b-n{border-style:none;}
+.b-c128{border-color:#808080;}
+.b-c192{border-color:#c0c0c0;}
+/* Other */
+.dn{display:none;}
+.dib{display:inline-block;}
+.db{display:block;}
+.df{display:flex;}
+.r{border-radius:50%;}
+.cptr{cursor:pointer;}
+/* Floating requires: Sub-parent (display inline-block) */
+.fw{float:left;}
+.fe{float:right;}
+body{
+	background-color:#141414;
+	font-size:14px;
+}
+.underline{text-decoration: underline;}
+.w48{width:48px;}
+.w240{width:240px;}
+.w300{width:300px;}
+.w320{width:320px;}
+.mn2{margin-top:2px;}
+.mn4{margin-top:4px;}
+.mw4{margin-left:4px;}
+.mw8{margin-left:8px;}
+.s01 {border:1px lime solid;padding:2px 4px;}
+.bs01 {border:1px lime solid;padding:4px 8px;background-color:#222222;}
+.bs01:hover {background-color:#333333;}
+.hr{
+	background-color:lime;height:1px;width:100%;
+}
+.bg-yel {background-color:lightyellow;color:black;}
+.s02 {border:1px green solid;padding:2px 4px;margin:1px;}
+</style>
+</head>
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="js/romaji-dict.js"></script>
+	<div class="df">
+		<div>
+			<div>Max words per page</div>
+			<div><input type="text" class="w48 s01" value="75" maxlength="4"></div>
+		</div>
+		<div class="mw8">
+			<div>Wrong choices per word</div>
+			<div><input type="text" class="w48 s01" value="8" maxlength="2"></div>
+		</div>
+	</div>
+	<div class="hr mn2"></div>
+	<div class="df">
+		<div>
+			<div>Current page</div>
+			<div><input type="text" class="w48 s01" value="1"></div>
+		</div>
+		<div class="mw8 df">
+			<button class="bs01 mn4 mw4">Back</button>
+			<button class="bs01 mn4 mw4">Next</button>
+		</div>
+	</div>
+	<div class="hr mn2"></div>
+	<div class="mn2 df f-dc">
+		<div>Page: <span class="fwb lvalue">1</span>/<span class="fwb lvalue">1</span>, Words: <span class="fwb lvalue">1</span></div>
+	</div>
+	<div class="hr mn2"></div>
+	<div class="df">
+		<div>
+			<div>Correct today</div>
+			<div class="lvalue">0</div>
+		</div>
+		<div class="mw8">
+			<div>Still learning</div>
+			<div class="lvalue">0</div>
+		</div>
+	</div>
+	<div class="hr mn2"></div>
+	<div class="mn2 df f-dc">
+		<div>What is the meaning of <span class="fwb underline lvalue"></span>?</div>
+		<div class="bg-yel msg" style="visibility:hidden;">Correct!</div>
+		<div class="df f-dc">
+			<div class="df f-dc list-oguess"></div>
+		</div>
+	</div>
+<script>
+// Romaji[][romaji,english,type]
+
+function ByRomaji(aWord) {
+	for (var vI = 0; vI < RomajiWordList.length; vI++)
+		if (aWord.trim().toLowerCase() == RomajiWordList[vI][0].trim().toLowerCase())
+			return RomajiWordList[vI];
+	return null;
+}
+
+function ShuffleArray(aArray) {
+	var vLen = aArray.length;
+	// There remain elements to shuffle
+	while (0 !== vLen) {
+		// Pick a remaining element
+		// Swap it with the current element
+		var vRand = Math.floor(Math.random() * vLen),
+			vTemp = aArray[--vLen];
+		aArray[vLen] = aArray[vRand];
+		aArray[vRand] = vTemp;
+	}
+	return aArray;
+}
+
+$(function(){
+	var vIWordsPerPage = $("input:nth(0)"),
+		vIGuessPerWord = $("input:nth(1)"),
+		vICurrentPage = $("input:nth(2)"),
+		vBNextPage = $("button:nth(1)"),
+		vBPrevPage = $("button:nth(0)"),
+		vLPageNum = $(".lvalue:nth(0)"),
+		vLPageMax = $(".lvalue:nth(1)"),
+		vLPageMit = $(".lvalue:nth(2)"),
+		vLCorrectToday = $(".lvalue:nth(3)"),
+		vLStillLearning = $(".lvalue:nth(4)"),
+		vLMeaningOf = $(".lvalue:nth(5)"),
+		vListGuess = $(".list-oguess");
+	
+	vIWordsPerPage.on("input", ChangePagination);
+	vIGuessPerWord.on("input", ChangePagination);
+	vICurrentPage.on("input", ChangePagination2);
+	
+	function MakeGuess(aText){
+		return $('<button class="bs01 mn4 w300"></button>').text(aText);
+	}
+	function ChangePagination2() {
+		var vCurPage = vICurrentPage.val() >> 0;
+		if (vCurPage > 0)
+			pag.SetPage(vCurPage);
+	}
+	function ChangePagination() {
+		var vGuesses = vIGuessPerWord.val() >> 0,
+			vMaxWord = vIWordsPerPage.val() >> 0;
+		if (vGuesses < 7) vIGuessPerWord.val(vGuesses = 7);
+		if (vMaxWord < 35) vIWordsPerPage.val(vMaxWord = 35);
+		if (vGuesses > 25) vIGuessPerWord.val(vGuesses = 25);
+		if (vMaxWord > 1000) vIWordsPerPage.val(vMaxWord = 1000);
+		vDoneToday = []; vPageItemsDone=[]; vCorrectToday = []; vLearningWords = [];
+		pag.SetItemsPerPage(vIWordsPerPage.val()>>0);
+		ProcessWords();
+	}
+	function ProcessWords() {
+		vPageItemsDone=[];
+		var vItems = pag.PageItems;
+		vLPageNum.text(pag.Page);
+		vLPageMax.text(pag.LastPage);
+		vLPageMit.text(pag.Data.length);
+		vICurrentPage.val(pag.Page);
+		GoNextWord();
+	}
+	// Generate Word
+	var vDoneToday = [], vPageItemsDone=[], vCorrectToday = [], vLearningWords = [], vArrayChoices, vCorrectChoice, vCorrectChoiceHandle;
+	window.Score = {
+		DoneToday: vDoneToday,
+		CorrectToday: vCorrectToday,
+		Learning: vLearningWords
+	};
+	function GetNextWord() {
+		var vItems = pag.PageItems,
+			vRWordIdx = vItems.length * Math.random() >> 0,
+			vRWord = vItems[vRWordIdx];
+		if (vPageItemsDone.length >= vIWordsPerPage.val() >> 0)
+			return pag.Next();
+		if (0 <= vDoneToday.indexOf(vRWord))
+			return GetNextWord();
+		vPageItemsDone.push(vRWord);
+		// Need to get unique english translations first
+		var vObj = {}, vOrig=[];
+		for (var vI = 0; vI < vItems.length; vI++)
+			if (vRWord[1].trim().toLowerCase() != vItems[vI][1].trim().toLowerCase())
+				vObj[vItems[vI][1].trim().toLowerCase()]=vItems[vI];
+		// Revert to original form of array of array
+		for (var vName in vObj)
+			vOrig.push(vObj[vName]);
+		// End of processing revert
+		var vWGL = vOrig.filter(function (aA) {
+			return vRWord[0].trim().toLowerCase() != aA[0].trim().toLowerCase();
+		}).slice(0, vIGuessPerWord.val()>>0);
+		vDoneToday.push(vRWord);
+		vWGL.push(vRWord);
+		vWGL = ShuffleArray(vWGL);
+		vCorrectChoice=vRWord;
+		vArrayChoices=vWGL;
+		return [vWGL, vRWord];
+	}
+	// Rendering Guess ui
+	function RenderGuesses(aItems) {
+		if (void 0 === aItems) return;
+		var vWGL = aItems[0],
+			vRWord = aItems[1];
+		// Set word
+		vLMeaningOf.text(vRWord[0]);
+		// Clear all items
+		vListGuess.html("");
+		// vWGL[i][romaji, english, wordtype]
+		for (var vI = 0; vI < vWGL.length; vI++) {
+			var vItem = vWGL[vI],
+				vButton = MakeGuess(vWGL[vI][1]);
+			if (vCorrectChoice[1] == vItem[1])
+				vCorrectChoiceHandle = vButton;
+			vButton[0].Choice = vI;
+			vButton.click(ProcessGuess);
+			vListGuess.append(vButton);
+		}
+	}
+	// Go next word generate
+	function GoNextWord() {
+		RenderGuesses(GetNextWord());
+	}
+	// Validate user correctness
+	function ProcessGuess() {
+		var vChoiceIndex = this.Choice,
+			vPlayerChoice = vArrayChoices[vChoiceIndex];
+		
+		if (-1 === vChoiceIndex) return;
+		$("button", vListGuess).each(function (aI, aV) {
+			if (vCorrectChoiceHandle[0] !== aV)
+				$(aV).remove();
+			else aV.Choice=-1;
+		});
+		if (vPlayerChoice[1] == vCorrectChoice[1]) {
+			vCorrectToday.push(vCorrectChoice);
+			$(this).text(vCorrectChoice.slice(1).join(", ") + ", Correct!!!").addClass("fwb")
+			setTimeout(GoNextWord, 1500);
+			UpdateScore();
+		} else {
+			vLearningWords.push(vCorrectChoice);
+			setTimeout(GoNextWord, 1000);
+			UpdateScore();
+		}
+	}
+	// Update UI Score
+	function UpdateScore() {
+		// vCorrectToday[], vLearningWords[]
+		vLCorrectToday.text(vCorrectToday.length);
+		vLStillLearning.text(vLearningWords.length);
+	}
+	// Instance the Pagination
+	var pag = new Pagination(RomajiWordList, 75);
+	pag.change(ProcessWords);
+	vBNextPage.click(pag.Next);
+	vBPrevPage.click(pag.Back);
+	ProcessWords();
+});
+
+
+
+function Pagination(aArray, aItemsPerPage, aRetainPageNumber) {
+	var _ = this, vArray=aArray, vItemsPerPage=aItemsPerPage>>0,
+		vPage=1, vLength=0, vMaxPages=0, vOnChangeFunc, vPageItems;
+	if (vItemsPerPage < 1) vItemsPerPage=10;
+	function SetPageInfo(aCurrent, aMax) {
+		_.Page = _.page = aCurrent;
+		_.Data = _.data = vArray;
+		_.LastPage = _.lastPage = aMax;
+		vPageItems = vArray.slice((vPage-1)*vItemsPerPage,(vPage-1)*vItemsPerPage+vItemsPerPage);
+		_.PageItems = _.pageItems = vPageItems;
+	}
+	_.SetItemsPerPage = _.setItemsPerPage = function (aItemsPerPage) {
+		vItemsPerPage=aItemsPerPage;
+		vMaxPages = Math.ceil(vLength/vItemsPerPage);
+		Update();
+	};
+	_.SetPage = _.setPage = _.At = _.at = function (aPageNum) {
+		vPage=aPageNum;
+		Update();
+	};
+	_.Allocate = _.allocate = _.Alloc = _.alloc = _.setData = _.SetData = function (aArray) {
+		vArray = aArray;
+		vLength = aArray.length;
+		vMaxPages = Math.ceil(vLength/vItemsPerPage);
+		Update(true);
+	};
+	_.Next = _.next = _.Forward = _.forward = function () {
+		if (1 + vPage <= vMaxPages) Update(0, ++vPage);
+	};
+	_.Prev = _.prev = _.Back = _.back = function () {
+		if (0 < -1 + vPage) Update(0, --vPage);
+	};
+	_.Change = _.change = function (aCallback) {
+		// You may ask why "instanceof", well, "this" keyword rules.
+		if ("function" === typeof aCallback || aCallback instanceof Function)
+			vOnChangeFunc = aCallback;
+	};
+	if (aArray) {
+		_.Alloc(aArray);
+		SetPageInfo(vPage, vMaxPages);
+	}
+	function Update(aAllocate) {
+		if (aAllocate)
+			if (!aRetainPageNumber)
+				vPage=1;
+		SetPageInfo(vPage, vMaxPages);
+		if (vOnChangeFunc) {
+			if (vPageItems.length)
+				vOnChangeFunc(vPageItems, vPage, vMaxPages, vArray);
+		}
+	}
+}
+
+</script>
+</body>
+</html>
