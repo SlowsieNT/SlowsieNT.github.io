@@ -53,6 +53,7 @@ body{
 	font-size:14px;
 }
 .underline{text-decoration: underline;}
+.maxw480{max-width:480px;}
 .w48{width:48px;}
 .w240{width:240px;}
 .w300{width:300px;}
@@ -69,8 +70,12 @@ body{
 	background-color:lime;height:1px;width:100%;
 }
 .bg-yel {background-color:lightyellow;color:black;}
+.bg-gre {background-color:lightgreen;color:black;}
 .s02 {border:1px green solid;padding:2px 4px;margin:1px;}
+.p4{padding:4px;}
+.p4-8{padding:4px 8px;}
 .fs12{font-size:12px;}
+.fs16{font-size:16px;}
 </style>
 </head>
 <body>
@@ -116,15 +121,12 @@ body{
 	<div class="hr mn2"></div>
 	<div class="mn2 df f-dc">
 		<div>What is the meaning of <span class="fwb underline lvalue"></span>?</div>
-		<div class="bg-yel msg" style="visibility:hidden;">Correct!</div>
+		<div class="bg-gre msg fs16 p4-8 maxw480" style="opacity:0;">Correct!</div>
 		<div class="df f-dc">
 			<div class="df f-dc list-oguess"></div>
 		</div>
 	</div>
 	<div class="hr mn2 onlinebr" style="display: none;"></div>
-
-
-
 <script>
 // RomajiWordList[][romaji,english,type]
 
@@ -258,7 +260,6 @@ $(function(){
 	function ProcessGuess() {
 		var vChoiceIndex = this.Choice,
 			vPlayerChoice = vArrayChoices[vChoiceIndex];
-		
 		if (-1 === vChoiceIndex) return;
 		$("button", vListGuess).each(function (aI, aV) {
 			if (vCorrectChoiceHandle[0] !== aV)
@@ -266,6 +267,7 @@ $(function(){
 			else aV.Choice=-1;
 		});
 		if (vPlayerChoice[1] == vCorrectChoice[1]) {
+			$(".msg").fadeTo('fast', 1).fadeTo(1200, 0);
 			vCorrectToday.push(vCorrectChoice);
 			$(this).text(vCorrectChoice.slice(1).join(", ") + ", Correct!!!").addClass("fwb")
 			setTimeout(GoNextWord, 1500);
