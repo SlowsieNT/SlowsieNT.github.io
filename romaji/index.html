@@ -267,9 +267,9 @@ $(function(){
 			else aV.Choice=-1;
 		});
 		if (vPlayerChoice[1] == vCorrectChoice[1]) {
-			$(".msg").fadeTo('fast', 1).fadeTo(1200, 0);
+			$(".msg").fadeTo('fast', 1).fadeTo(1250, 0);
 			vCorrectToday.push(vCorrectChoice);
-			$(this).text(vCorrectChoice.slice(1).join(", ") + ", Correct!!!").addClass("fwb")
+			$(this).text(vCorrectChoice.slice(1).join(", ")).addClass("fwb")
 			setTimeout(GoNextWord, 1500);
 			UpdateScore();
 		} else {
