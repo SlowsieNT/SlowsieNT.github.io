@@ -59,10 +59,11 @@ body{
 .w320{width:320px;}
 .mn2{margin-top:2px;}
 .mn4{margin-top:4px;}
+.mn6{margin-top:6px;}
 .mw4{margin-left:4px;}
 .mw8{margin-left:8px;}
 .s01 {border:1px lime solid;padding:2px 4px;}
-.bs01 {border:1px lime solid;padding:4px 8px;background-color:#222222;}
+.bs01 {border:1px lime solid;padding:8px 8px;background-color:#222222;}
 .bs01:hover {background-color:#333333;}
 .hr{
 	background-color:lime;height:1px;width:100%;
@@ -120,8 +121,12 @@ body{
 			<div class="df f-dc list-oguess"></div>
 		</div>
 	</div>
+	<div class="hr mn2 onlinebr" style="display: none;"></div>
+
+
+
 <script>
-// Romaji[][romaji,english,type]
+// RomajiWordList[][romaji,english,type]
 
 function ByRomaji(aWord) {
 	for (var vI = 0; vI < RomajiWordList.length; vI++)
@@ -163,7 +168,7 @@ $(function(){
 	vICurrentPage.on("input", ChangePagination2);
 	
 	function MakeGuess(aText){
-		return $('<button class="bs01 mn4 w300"></button>').text(aText);
+		return $('<button class="bs01 mn6 w300"></button>').text(aText);
 	}
 	function ChangePagination2() {
 		var vCurPage = vICurrentPage.val() >> 0;
