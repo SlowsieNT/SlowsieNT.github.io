@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Image Resize</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<style>
+	*{border:none;outline:none;background:0;color:silver;margin:0;padding:0;}
+	body {
+		background-color:#111;
+		color:silver;
+	}
+	input:not([type=file]){width:128px;}
+	.s01{
+		padding:4px 8px;
+		margin-top:8px;
+		border:1px red solid;
+	}
+	.h01:hover{
+		background:#323232;
+	}
+	.hide{display: none;}
+</style>
+</head>
+<body>
+	<i>JavaScript only!</i>
+	<div><input class="s01" type="text" value="1280x720"></div>
+	<div><input type="file"></div>
+	<div><input class="s01" type="text" value="image/jpeg"></div>
+	<div><input class="s01" type="text" value=".jpg"></div>
+	<button class="s01 h01">Process Image</button>
+	<div>
+		<a href="#"><button class="s01 h01">Download (not ready)</button></a>
+	</div>
+	<canvas class="hide"></canvas>
+	<script>
+		var vInputs = $("input"),
+			vCanv = $("canvas")[0],
+			vTB1 = vInputs.eq(0),
+			vFB1 = vInputs.eq(1);
+		function test() {
+			vCanv.width = vTB1.val().split("x")[0];
+			vCanv.height = vTB1.val().split("x")[0];
+			var vD2D = vCanv.getContext("2d"),
+				vImage = new Image;
+			vImage.crossOrigin="anonymous";
+			vImage.onload = function () {
+				vD2D.drawImage(this, 0, 0, vCanv.width, vCanv.height);
+				vCanv.toBlob(function(aBlob){
+					// Create download link
+					var vLink = $("a");
+					vLink[0].href = URL.createObjectURL(aBlob);
+					vLink[0].download = vFileNameNoExt + "-resized-"+Date.now()+vInputs.eq(3).val();
+					$("button", vLink).text("Download (ready)");
+				}, vInputs.eq(2).val(), 1);
+			};
+			// Retrieve file object
+			var vFile = vFB1[0].files[0],
+				vFileNameNoExt,
+				vFR = new FileReader();
+			// Trim file extension if exists
+			if (!vFile) return alert("Select file!");
+			var vDotLPos = vFile.name.lastIndexOf(".");
+			if (-1 !== vDotLPos)
+				vFileNameNoExt = vFile.name.slice(0, vDotLPos);
+			else vFileNameNoExt = vFile.name;
+			// Load file as image
+			var vURL = URL.createObjectURL(vFile);
+			vImage.src = vURL;
+		}
+		$("button").click(test);
+	</script>
+</body>
+</html>
