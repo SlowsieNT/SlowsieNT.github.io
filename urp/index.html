@@ -28,10 +28,11 @@
 </head>
 <body>
 	<i>JavaScript only!</i>
+	<div><b>Used if you are lazy to open editor, works on mobile too.</b></div>
 	<div><input class="s01" type="text" value="1280x720"></div>
 	<div><input type="file"></div>
 	<div><input class="s01" type="text" value="image/jpeg"></div>
-	<div><input class="s01" type="text" value=".jpg"></div>
+	<div><input class="s01" type="text" value="resized-image.jpg"></div>
 	<button class="s01 h01">Load Size</button>
 	<button class="s01 h01">Process Image</button>
 	<div>
@@ -39,8 +40,17 @@
 	</div>
 	<canvas class="hide"></canvas>
 	<div class="mn24 evalcalc">
-		<b>Calculator via eval</b>
-		<div><textarea class="s01 s02" rows=5>1/Math.PI</textarea></div>
+		<b style="font-size:24px;">Calculator via eval</b>
+		<div>
+			<pre>IWidth, IHeight; (button: "Load Size")</pre>
+			<pre>Div2(aNum1, aNum2, aBy)</pre>
+			<pre>FloorDiv2(aNum1, aNum2, aBy)</pre>
+		</div>
+		<div><textarea class="s01 s02" rows=5>
+FloorDiv2(
+IWidth, IHeight, 2.2
+).join("x")
+</textarea></div>
 		<div>
 			<button class="s01 h01">Clear</button>
 			<button class="s01 h01">Get result (prompt)</button>
@@ -50,8 +60,11 @@
 	<script>
 		var vInputs = $("input"),
 			vCanv = $("canvas")[0],
+			IWidth=1280, IHeight=720,
 			vTB1 = vInputs.eq(0),
 			vFB1 = vInputs.eq(1);
+		function Div2(aX, aY, aZ){return [aX/aZ, aY/aZ];}
+		function FloorDiv2(aX, aY, aZ){return [aX/aZ>>0, aY/aZ>>0];}
 		function test() {
 			vCanv.width = vTB1.val().split("x")[0];
 			vCanv.height = vTB1.val().split("x")[1];
@@ -64,22 +77,14 @@
 					// Create download link
 					var vLink = $("a");
 					vLink[0].href = URL.createObjectURL(aBlob);
-					vLink[0].download = vRef.FileNameNoExt + "-resized-"+Date.now()+vInputs.eq(3).val();
+					vLink[0].download = vInputs.eq(3).val();
 					$("button", vLink).text("Download (ready)");
 				}, vInputs.eq(2).val(), 1);
 			};
 			vImage.src = HandleFile();
 		}
-		function HandleFile(aRef) {
-			if (!aRef)aRef={};
-			// Retrieve file object
+		function HandleFile() {
 			var vFile = vFB1[0].files[0];
-			// Trim file extension if exists
-			if (!vFile) return alert("Select file!");
-			var vDotLPos = vFile.name.lastIndexOf(".");
-			if (-1 !== vDotLPos)
-				aRef.FileNameNoExt = vFile.name.slice(0, vDotLPos);
-			else aRef.FileNameNoExt = vFile.name;
 			// Load file as image
 			var vURL = URL.createObjectURL(vFile);
 			return vURL;
@@ -89,13 +94,13 @@
 			vImage = new Image;
 			vImage.crossOrigin="anonymous";
 			vImage.onload = function () {
+				IWidth=this.width; IHeight=this.height;
 				vTB1.val(this.width + "x" + this.height);
 			};
 			var vURL = URL.createObjectURL(vFile);
 			vImage.src = HandleFile();
 		});
 		$("button:nth(1)").click(test);
-
 		$(".evalcalc button:nth(0)").click(function(){
 			$(".evalcalc textarea").val("");
 		});
