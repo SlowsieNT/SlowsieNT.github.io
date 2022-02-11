@@ -20,7 +20,8 @@
 	}
 	.h01:hover{
 		background:#323232;
-	}
+	}.s02{width:240px;}
+	.mn24{margin-top:24px;}
 	.hide{display: none;}
 </style>
 </head>
@@ -36,6 +37,15 @@
 		<a href="#"><button class="s01 h01">Download (not ready)</button></a>
 	</div>
 	<canvas class="hide"></canvas>
+	<div class="mn24 evalcalc">
+		<b>Calculator via eval</b>
+		<div><textarea class="s01 s02" rows=3>1/Math.PI</textarea></div>
+		<div>
+			<button class="s01 h01">Clear</button>
+			<button class="s01 h01">Get result (prompt)</button>
+		</div>
+		<div><button class="s01 h01">Get JSON str result (prompt)</button></div>
+	</div>
 	<script>
 		var vInputs = $("input"),
 			vCanv = $("canvas")[0],
@@ -84,6 +94,20 @@
 			vImage.src = HandleFile();
 		});
 		$("button:nth(1)").click(test);
+
+		$(".evalcalc button:nth(0)").click(function(){
+			$(".evalcalc textarea").val("");
+		});
+		$(".evalcalc button:nth(1)").click(function(){
+			var vCode = $(".evalcalc textarea").val();
+			prompt("Result:", Function("return " + vCode)());
+		});
+		$(".evalcalc button:nth(2)").click(function(){
+			var vCode = $(".evalcalc textarea").val();
+			var vResult = Function("return " + vCode)();
+			console.log(vResult)
+			prompt("Result:", JSON.stringify(vResult));
+		});
 	</script>
 </body>
 </html>
