@@ -30,6 +30,7 @@
 	<div><input type="file"></div>
 	<div><input class="s01" type="text" value="image/jpeg"></div>
 	<div><input class="s01" type="text" value=".jpg"></div>
+	<button class="s01 h01">Load Size</button>
 	<button class="s01 h01">Process Image</button>
 	<div>
 		<a href="#"><button class="s01 h01">Download (not ready)</button></a>
@@ -42,9 +43,9 @@
 			vFB1 = vInputs.eq(1);
 		function test() {
 			vCanv.width = vTB1.val().split("x")[0];
-			vCanv.height = vTB1.val().split("x")[0];
+			vCanv.height = vTB1.val().split("x")[1];
 			var vD2D = vCanv.getContext("2d"),
-				vImage = new Image;
+				vImage = new Image, vRef={};
 			vImage.crossOrigin="anonymous";
 			vImage.onload = function () {
 				vD2D.drawImage(this, 0, 0, vCanv.width, vCanv.height);
@@ -52,25 +53,37 @@
 					// Create download link
 					var vLink = $("a");
 					vLink[0].href = URL.createObjectURL(aBlob);
-					vLink[0].download = vFileNameNoExt + "-resized-"+Date.now()+vInputs.eq(3).val();
+					vLink[0].download = vRef.FileNameNoExt + "-resized-"+Date.now()+vInputs.eq(3).val();
 					$("button", vLink).text("Download (ready)");
 				}, vInputs.eq(2).val(), 1);
 			};
+			vImage.src = HandleFile();
+		}
+		function HandleFile(aRef) {
+			if (!aRef)aRef={};
 			// Retrieve file object
-			var vFile = vFB1[0].files[0],
-				vFileNameNoExt,
-				vFR = new FileReader();
+			var vFile = vFB1[0].files[0];
 			// Trim file extension if exists
 			if (!vFile) return alert("Select file!");
 			var vDotLPos = vFile.name.lastIndexOf(".");
 			if (-1 !== vDotLPos)
-				vFileNameNoExt = vFile.name.slice(0, vDotLPos);
-			else vFileNameNoExt = vFile.name;
+				aRef.FileNameNoExt = vFile.name.slice(0, vDotLPos);
+			else aRef.FileNameNoExt = vFile.name;
 			// Load file as image
 			var vURL = URL.createObjectURL(vFile);
-			vImage.src = vURL;
+			return vURL;
 		}
-		$("button").click(test);
+		$("button:nth(0)").click(function(){
+			var vFile = vFB1[0].files[0],
+			vImage = new Image;
+			vImage.crossOrigin="anonymous";
+			vImage.onload = function () {
+				vTB1.val(this.width + "x" + this.height);
+			};
+			var vURL = URL.createObjectURL(vFile);
+			vImage.src = HandleFile();
+		});
+		$("button:nth(1)").click(test);
 	</script>
 </body>
 </html>
