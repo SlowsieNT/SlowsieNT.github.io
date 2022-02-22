@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NumeroUtils</title>
+<style>
+	*{
+			box-sizing: border-box;
+			padding:0;margin:0;
+			border:none;outline:none;resize:none;
+			list-style:none;
+			background-color:transparent;
+			color:silver;
+			font-family: Helvetica, Arial, sans-serif;
+		}
+		body {
+			background-color:#161616;
+		}
+		.df {display:flex;}
+		.f-dc {flex-direction:column;}
+		.ma {margin:auto;}
+		.w1024{width:1024px;}
+		.bg01{background-color:rgba(255, 255, 255, 0.04);}
+		.w128{width:128px;}
+		.w96{width:96px;}
+		.bg10{background-color:#101010;}
+		.p4-8{padding: 4px 8px;}
+		.f-aic{align-items: center;}
+		.f-jcc{justify-content: center;}
+		.dib{display: inline-block;}
+		.mn2 {margin-top:2px;}
+		.mn4 {margin-top:4px;}
+		.mn8 {margin-top:8px;}
+		.fs16, .bg10 {font-size: 16px;}
+		.mw4 {margin-left:4px;}
+		.mw8 {margin-left:8px;}
+		.mw16 {margin-left:16px;}
+		.custom02:hover{
+			background-color:rgb(64, 115, 148);
+		}
+		.custom02{
+			background-color:rgb(50, 90, 117);
+			padding: 4px 16px;
+			cursor: pointer;
+		}
+		.mn32{margin-top:32px;}
+		.m24{margin:16px;padding:8px;}
+		.w40 {width:40px;}
+		.w48 {width:48px;}
+		.w32 {width:32px;}
+		.w180 {width:180px;}
+		.w190 {width:190px;}
+		.w192 {width:192px;}
+		.w194 {width:194px;}
+		.w200 {width:190px;}
+		.fs12 {font-size: 12px;}
+		.custom03{
+			border: 1px red solid;
+			width:320px;
+			height:240px;
+		}
+		.pr{position: relative;}
+		.pa{position: absolute;}
+</style>
+</head>
+<body>
+<script src="js/languages.js"></script>
+<script src="js/grammar.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<div class="ma w1024 bg01">
+	<div class="df">
+		<div class="mw16 mn4 f-dc df">
+			<div class="f-aic df">
+				<label class="f-aic df">
+					<div class="dib w128">May need:</div>
+					<div class="mw8">ÄÖÜß, Ñ, ÀÂÄÇÈÉÊÊÎÏÔÖÙÛÜ, ČĆŽĐŠ</div>
+				</label>
+			</div>
+			<div class="letterscfg mn4 f-aic df">
+				<label class="f-aic df">
+					<div class="dib w128">Letters Table:</div>
+					<select class="languages w194 bg10 fs16 p4-8"></select>
+					<input class="tabletype w194 bg10 fs16 mw8 p4-8" type="number" placeholder="Type (for SlavicBase)" min="0" max="9">
+				</label>
+			</div>
+			<div class="lettersbox mn4 f-aic df">
+				<label class="f-aic df">
+					<div class="dib w128">Letters:</div>
+					<input class="letters w194 bg10 fs16 p4-8" type="text" placeholder="Type name/fullname...">
+				</label>
+			</div>
+			<div class="birthdate mn4 f-aic df">
+				<label class="f-aic df">
+					<div class="dib w128">Birth date:</div>
+					<input class="date w194 bg10 fs16 p4-8" type="text" placeholder="11-11-2011">
+				</label>
+				
+			</div>
+		</div>
+		
+	</div>
+	<div class="mn4 f-dc df">
+		<div class="mw8 df">
+			<button class="calc-btn mn4 custom02">Calculate by provided inputs</button>
+		</div>
+		<textarea class="results mn4 mw8 bg10 fs16 p4-8" rows=7 style="width:78%" readonly placeholder="Results..."></textarea>
+	</div>
+	<div class="f-dc df mn8 mw8"><i>Disclaimer: Internet connection is not required to process inputs.</i></div>
+	<div class="f-dc df">&nbsp;</div>
+</div>
+
+
+<script>
+
+var vLettersBox = $(".lettersbox"),
+	vLettersInput = $(".letters"),
+	vLettersConfig = $(".letterscfg"),
+	vLettersConfigType = $(".tabletype"),
+	vLettersConfigLangs = $(".languages", vLettersConfig),
+	vBirthDate = $(".birthdate"),
+	vBirthDateInput = $(".date", vBirthDate),
+	vResults = $(".results"),
+	vCalcBtn = $(".calc-btn");
+
+for (var vN in NumeroUtils.FromLetters.Types) {
+	var vType = NumeroUtils.FromLetters.Types[vN],
+		vOption = $("<option>").val(vN).text(vType);
+	if ("Chaldean" === vType)
+		vOption[0].selected = 1;
+		vLettersConfigLangs.append(vOption);
+}
+
+vCalcBtn.click(function () {
+	var vTableType = vLettersConfigType.val().trim(),
+		vLanguageType = +vLettersConfigLangs.val().trim(),
+		vBirthDate = vBirthDateInput.val().trim().replace(/[^0-9]+/g, ""),
+		vLetters = vLettersInput.val().trim();
+	/* Assert vTableType invalid, else cast to signed int */
+	if (vTableType.length < 1)
+		vTableType = void 0;
+	else vTableType >>= 0;
+	
+	vResults.text("");
+	if (vLetters) {
+		var vNum = NumeroUtils.FromLetters(vLanguageType, vLetters, vTableType),
+			vSDigit = NumeroUtils.ResolveNumber(vNum);
+		vResults.text(vResults.text()+"Sum of letters:\r\n" + vLetters + " = " + vNum + " = " + vSDigit);
+	}
+	if (vBirthDate) {
+		var vSDigit = NumeroUtils.ResolveNumber(vBirthDate);
+		vResults.text(vResults.text()+"\r\n\r\nSum of birth date numbers:\r\n" + vBirthDate + " = " + vSDigit);
+	}
+});
+
+</script>
+</body>
+</html>
