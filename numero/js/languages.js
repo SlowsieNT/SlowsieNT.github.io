@@ -6,6 +6,7 @@
 var NumeroUtils = new function () {
 	// "_" will shorten code.
 	var _ = this;
+	_.Vowels = "AEIOUÄÖÜÀÂÄÈÉÊÊÎÏÔÖÙÛÜ";
 	_.EN_Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	_.DE_Letters = _.EN_Letters + "ÄÖÜß";
 	_.ES_Letters = _.EN_Letters + "Ñ";

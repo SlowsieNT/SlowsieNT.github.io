@@ -148,8 +148,17 @@ vCalcBtn.click(function () {
 	vResults.text("");
 	if (vLetters) {
 		var vNum = NumeroUtils.FromLetters(vLanguageType, vLetters, vTableType),
-			vSDigit = NumeroUtils.ResolveNumber(vNum);
-		vResults.text(vResults.text()+"Sum of letters:\r\n" + vLetters + " = " + vNum + " = " + vSDigit);
+			vSDigit = NumeroUtils.ResolveNumber(vNum), vT;
+		vResults.text(vResults.text()+"Letters, life path:\r\n" + vLetters + " = " + vNum + " = " + vSDigit);
+		vT = vLetters.split("").filter(function(aX){return -1===NumeroUtils.Vowels.indexOf(aX.toUpperCase())}).join("");
+		vNum = NumeroUtils.FromLetters(vLanguageType, vT, vTableType);
+		vSDigit = NumeroUtils.ResolveNumber(vNum);
+		vResults.text(vResults.text()+"\r\nLetters, personality (consonants only):\r\n" + vT + " = " + vNum + " = " + vSDigit);
+		vT = vLetters.split("").filter(function(aX){return -1!==NumeroUtils.Vowels.indexOf(aX.toUpperCase())}).join("");
+		vNum = NumeroUtils.FromLetters(vLanguageType, vT, vTableType);
+		vSDigit = NumeroUtils.ResolveNumber(vNum);
+		vResults.text(vResults.text()+"\r\nLetters, motivation (vowels only):\r\n" + vT + " = " + vNum + " = " + vSDigit);
+	
 	}
 	if (vBirthDate) {
 		var vSDigit = NumeroUtils.ResolveNumber(vBirthDate);
