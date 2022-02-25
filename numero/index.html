@@ -95,7 +95,7 @@
 			</div>
 			<div class="birthdate mn4 f-aic df">
 				<label class="f-aic df">
-					<div class="dib w128">Birth date:</div>
+					<div class="dib w128">Numbers:</div>
 					<input class="date w194 bg10 fs16 p4-8" type="text" placeholder="11-11-2011">
 				</label>
 				
@@ -107,7 +107,7 @@
 		<div class="mw8 df">
 			<button class="calc-btn mn4 custom02">Calculate by provided inputs</button>
 		</div>
-		<textarea class="results mn4 mw8 bg10 fs16 p4-8" rows=7 style="width:78%" readonly placeholder="Results..."></textarea>
+		<textarea class="results mn4 mw8 bg10 fs16 p4-8" rows=10 style="width:78%" readonly placeholder="Results..."></textarea>
 	</div>
 	<div class="f-dc df mn8 mw8"><i>Korean, Japanese, Chinese required to be romanized!</i></div>
 	<div class="f-dc df mn8 mw8"><i>Disclaimer: Internet connection is not required to process inputs.</i></div>
@@ -153,16 +153,16 @@ vCalcBtn.click(function () {
 		vT = vLetters.split("").filter(function(aX){return -1===NumeroUtils.Vowels.indexOf(aX.toUpperCase())}).join("");
 		vNum = NumeroUtils.FromLetters(vLanguageType, vT, vTableType);
 		vSDigit = NumeroUtils.ResolveNumber(vNum);
-		vResults.text(vResults.text()+"\r\nLetters, personality (consonants only):\r\n" + vT + " = " + vNum + " = " + vSDigit);
+		vResults.text(vResults.text()+"\r\nConsonants:\r\n" + vT + " = " + vNum + " = " + vSDigit);
 		vT = vLetters.split("").filter(function(aX){return -1!==NumeroUtils.Vowels.indexOf(aX.toUpperCase())}).join("");
 		vNum = NumeroUtils.FromLetters(vLanguageType, vT, vTableType);
 		vSDigit = NumeroUtils.ResolveNumber(vNum);
-		vResults.text(vResults.text()+"\r\nLetters, motivation (vowels only):\r\n" + vT + " = " + vNum + " = " + vSDigit);
+		vResults.text(vResults.text()+"\r\nVowels:\r\n" + vT + " = " + vNum + " = " + vSDigit);
 	
 	}
 	if (vBirthDate) {
 		var vSDigit = NumeroUtils.ResolveNumber(vBirthDate);
-		vResults.text(vResults.text()+"\r\n\r\nSum of birth date numbers:\r\n" + vBirthDate + " = " + vSDigit);
+		vResults.text(vResults.text()+"\r\n\r\nSum of Numbers:\r\n" + vBirthDate + " = " + vSDigit);
 	}
 });
 
