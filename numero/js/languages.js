@@ -21,6 +21,12 @@ var NumeroUtils = new function () {
 		}
 		return aNumber;
 	};
+	_.ResolveNumberOnce = function (aNumber) {
+		aNumber += "";
+		for (var vR = 0, vI = 0; vI < aNumber.length; vI++)
+			vR += +aNumber[vI];
+		return vR;
+	};
 	_.MonoTable_GetNumberFromLettersF = function (aLetters, aTable) {
 		aLetters = aLetters.toUpperCase();
 		for (var vR = 0, vI = 0; vI < aLetters.length; vI++) {

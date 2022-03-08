@@ -158,11 +158,11 @@ vCalcBtn.click(function () {
 		vNum = NumeroUtils.FromLetters(vLanguageType, vT, vTableType);
 		vSDigit = NumeroUtils.ResolveNumber(vNum);
 		vResults.text(vResults.text()+"\r\nVowels:\r\n" + vT + " = " + vNum + " = " + vSDigit);
-	
 	}
 	if (vBirthDate) {
-		var vSDigit = NumeroUtils.ResolveNumber(vBirthDate);
-		vResults.text(vResults.text()+"\r\n\r\nSum of Numbers:\r\n" + vBirthDate + " = " + vSDigit);
+		var vNum = NumeroUtils.ResolveNumberOnce(vBirthDate),
+			vSDigit = NumeroUtils.ResolveNumber(vNum);
+		vResults.text(vResults.text()+"\r\n\r\nSum of Numbers:\r\n" + vBirthDate + " = " + vNum + " = " + vSDigit);
 	}
 });
 
