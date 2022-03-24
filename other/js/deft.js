@@ -3,7 +3,7 @@ function deft(aMaxValue, aFunc, aFunc2, aNoWarning) {
 	var vSelf = deft;
 	// Predefine vSelf.Warning value if undefined
 	if (void 0 === vSelf.Warning)
-		vSelf.Warning = "deft: Error appears if no delay between each iteration.\r\nWays to Disable this warning:\r\nCounter.Warning=0\r\naNoWarning=1\r\naMaxValue to be negative";
+		vSelf.Warning = "deft: Error appears if no delay between each iteration.\r\nWays to Disable this warning:\r\ndeft.Warning=0\r\naNoWarning=1\r\naMaxValue to be negative";
 	// Feature: if aMaxValue is negative, disable warning
 	if (aMaxValue < 0)
 		aNoWarning = aMaxValue = -aMaxValue;
