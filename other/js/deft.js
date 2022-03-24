@@ -34,7 +34,7 @@ function deft(aMaxValue, aFunc, aFunc2, aNoWarning) {
 		if (aFunc.call(_, vCI, _)) _();
 	})(0);
 }
-if (0) // function required
+if (0)
 deft(2, function () {
 	// there's different approach, if scared of "this"
 	console.log("?i=" + this);
