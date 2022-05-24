@@ -65,13 +65,14 @@
 		return GetByStarting(aLetter);
 	}
 	function GetByEnglish(aStr) {
+		aStr = aStr.toLowerCase();
 		if (aStr.trim().length < 2)
 			return alert("Write something longer than 2 chars.");
 		for (var vR=[],vFI={}, vI = 0; vI < vJAWList.length; vI++) {
 			var vItem1 = vJAWList[vI][1];
 			for (var vI2 = 0; vI2 < vItem1.length; vI2++) {
 				var vItem = vItem1[vI2];
-				if (!(vI in vFI) && -1 !== vItem[3].indexOf(aStr))
+				if (!(vI in vFI) && -1 !== vItem[3].toLowerCase().indexOf(aStr))
 					vR.push(vJAWList[vI]),vFI[vI]=1;
 			}
 		}
