@@ -4,8 +4,9 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width">
-	<title>Browser</title>
+	<title>JADict Browser</title>
 	<meta name="description" content="Learn 111K+ Japanese words (Romaji included)">
+	<meta name="keywords" content="JADict Browser">
 	<style>
 	*{background-color:transparent;color:gray;border:none;outline:none;padding:0;margin:0;min-width:0;min-height:0;}
 	*{font-family:Helvetica, Arial, sans-serif;}
@@ -15,16 +16,18 @@
 	.bg-33{background-color:#333;}
 	.bg-44,.hbg44:hover{background-color:#444;}
 	.p4-8{padding:4px 8px;}
+	.fs24{font-size: 20px;}
 	.fs20{font-size: 20px;}
 	.mn4{margin-top:4px;}
 	.mn2{margin-top:2px;}
 	.mw4{margin-left:4px;}
 	.m4{margin:4px;}
+	input,select,button,textarea{font-size:20px;}
 	</style>
 </head>
 <body>
 <div class="m4">
-	<b><span id="WCount">N/A</span> words</b>
+	<h2><span id="WCount">N/A</span> words</h2>
 	<div class="mn4">
 		<div><span>Starting Letter:</span></div>
 		<select class="p4-8 mn2 bg-22" id="SLetter"></select>
