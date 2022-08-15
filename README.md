@@ -2,7 +2,7 @@
 ## Romaji Memory Game (note)
 Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 ## Tor Region Gennodes - Country Code List Generator
-Link: [/tor/gennodes](https://slowsient.github.io/numero)
+Link: [/tor/gennodes](https://slowsient.github.io/tor/gennodes)
 
 ## All links
 Dictionary Romaji 111k words! Link: [/romaji/b](https://slowsient.github.io/romaji/b)<br>
