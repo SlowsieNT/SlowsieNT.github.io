@@ -1,6 +1,8 @@
 # Index
 ## Romaji Memory Game (note)
 Design was never intended to be pleasing, might be changed in the future, who knows.<br>
+## Name Generator - existing names, or made-up word!
+Link: [/namegen](https://slowsient.github.io/namegen)
 ## Tor Region Gennodes - Country Code List Generator
 Link: [/tor/gennodes](https://slowsient.github.io/tor/gennodes)
 
