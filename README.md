@@ -1,8 +1,8 @@
 # Index
 
 ## MBTI - Links
-[/mbti](https://slowsient.github.io/mbti)
-[/mbti/estimate](https://slowsient.github.io/mbti/estimate)
+[/mbti](https://slowsient.github.io/mbti)<br>
+[/mbti/estimate](https://slowsient.github.io/mbti/estimate)<br>
 
 ## Romaji Memory Game (note)
 Design was never intended to be pleasing, might be changed in the future, who knows.<br>
