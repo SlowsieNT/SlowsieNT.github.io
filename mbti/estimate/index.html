@@ -44,9 +44,21 @@ select{
 	</tr>
 	<tbody id="items"></tbody>
 </table>
-<div style="margin-top:32px"><i>No Rights reserved.</i></div>
+<div style="margin-top:32px"></div>
+<div><img id="imgStatV" alt="Visitors (dnt)"></div>
+<script>
+if (-1 === location.hash.indexOf("dnt"))
+	document.getElementById("imgStatV").src = "https://shields-io-visitor-counter.herokuapp.com/badge?page=slowsient.githubio.mbti.estimate";
+</script>
+<div style="margin-top:16px"><i>No Rights reserved.</i></div>
 <div><i>Source Code License: <u>Unlicense</u>.</i></div>
 <script>
+function id(aID) {
+	return document.getElementById(aID);
+}
+function ce(aName) {
+	return document.createElement(aName);
+}
 id("title").innerHTML=document.title;
 var mbti_stuff = {
 	n: {
@@ -139,12 +151,6 @@ var mbti_stuff = {
 		v2perc.innerHTML = (100*BSize/aCount).toFixed(1);
 	}
 };
-function id(aID) {
-	return document.getElementById(aID);
-}
-function ce(aName) {
-	return document.createElement(aName);
-}
 var items = id("items"),
 	whatopt = id("whatopt"),
 	var1 = id("var1"),
