@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="mbti,rough estimate,personality type">
+	<meta name="description" content="Roughly Estimate MBTI">
+	<title>MBTI - Rough Estimate</title>
+</head>
+<body>
+<style>
+body{
+	font-size: 17px;
+	background-color:#111;
+	color:gray;
+}
+td:nth-child(even) {
+	padding-left:12px;
+}
+label {display: flex;}
+td {
+	height:32px;
+	max-width:240px;
+}
+select{
+	font-size: 17px;
+	padding:2px;background:#222;border:1px gray solid;color:silver;outline:none;
+}
+</style>
+<h2 id="title"></h2>
+<div><i>Do note this is not 'perfect' accuracy.</i></div>
+<select id="whatopt" value="ie">
+	<option value="ie">Introvert/Extrovert</option>
+	<option value="ns">Intuitive/Sensing</option>
+	<option value="tf">Thinking/Feeling</option>
+	<option value="jp">Judging/Perceiving</option>
+</select>
+<i style="color:red">&lt;&lt; There are more things here (reminder)</i>
+<table>
+	<tr>
+		<td><b id="var1">var1</b> (<span id="v1perc">0.0</span>%) [<b id="v1count">0</b>/<b class="optcount">0</b>]</td>
+		<td><b id="var2">var2</b> (<span id="v2perc">0.0</span>%) [<b id="v2count">0</b>/<b class="optcount">0</b>]</td>
+	</tr>
+	<tbody id="items"></tbody>
+</table>
+<div style="margin-top:32px"><i>No Rights reserved.</i></div>
+<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+<script>
+id("title").innerHTML=document.title;
+var mbti_stuff = {
+	n: {
+		ie: ["Introvert", "Extrovert"],
+		ns: ["Intuition", "Sensing"],
+		tf: ["Thinking", "Feeling"],
+		jp: ["Judging", "Perceiving"]
+	},
+	t: {
+		ie: ["Energized by time alone","Energized by people","Think before act","Act before think","Prefer Writing","Prefer Talking","Reserved","Enthusiastic","Focus Depth","Focus Breadth","Quiet","Talkative","Calm, shy, unsociable","Frank, assertive, sociable, adventurous","Dislikes center of attention","Likes center of attention","Think carefully","Talk freely","Cautious","Like to be noticed","Time and space to respond","Quick response","Open to trusted","Open to anyone","Stay in background","Social","Prefer Texting","Prefer Telephone call/in-person","Prefer 1:1 conversation","Prefer one-to-many conversation","Usually work alone","Usually teamwork","Dislike speaking on phone","Likes speaking on phone","Prefers Indoor","Prefers Outdoor","Only few are friends","Get to know many people","Know a lot of things that interest them","Know little bit of about a lot of topics","Understand before experiencing","Experience before understand","More guarded emotionally","Less guarded emotionally"],
+		ns: [
+			"Visionary", "Practical",
+			"Future-oriented", "Live here and now",
+			"Abstract", "Concrete",
+			"Focus on Big picture", "Sense things, focus on details",
+			"Likes ideas and concepts", "Factual, actual, concrete",
+			"Does not like routine, or practicalities", "Practical, realistic",
+			"Theoretical", "Experimental",
+			"What could be", "What is real",
+			"Possibilites", "Facts and details",
+			"Prefer learning than applying what's learned", "Prefer applying what's learned",
+			"Multiple points of view", "Get to the point",
+			"Original", "Traditional",
+			"Intellectual", "Pragmatic",
+			"Figurative, using analogies and metaphors", "Literal, using facts and examples",
+			"Complex speech pattern", "Clear, straightforward speech pattern",
+			"Repeat, re-phrase", "Direct to the point",
+			"Tend to complete others' sentences", "Listen until others finish what they have to say",
+			"Prefers fiction", "Prefers non-fiction",
+			"In their heads", "Aware of their bodies",
+			"Prefer jobs that need creativity", "Prefer practical jobs"			
+		],
+		tf: [
+			"Objective", "Subjective",
+			"Detached", "Attached",
+			"Critical", "Accepting",
+			"Tend to be blunt and tactless", "Usually very gentle and diplomatic",
+			"Cooler, distant to others", "Warmer, friendlier to others",
+			"Appear insensitive", "Very sensitive to others' feelings",
+			"Impersonal approach for decision making", "Personal approach for decision making",
+			"Interested in justice", "Interested in mercy",
+			"Analyze and weigh evidence", "Decide by weighing importance of alternatives",
+			"Critique new ideas", "Find what is right about new idea",
+			"Point out what is wrong, or could be done better", "Appreciate what is right or being done well",
+			"Focus on the task", "Focus on the people",
+			"Defend position with logic", "Defense depends on what is valued",
+			"Debate and argue", "Find common ground",
+			"Look for inconsistency", "Look areas where to agree",
+			"Want respect and fairness from others", "Want positivity and support from others",
+			"Tough minded", "Tender hearted",
+			"Questioning", "Accomodating",
+			
+		], jp: [
+			"Usually Organized", "Usually Disorganized",
+			"Express strong opinions", "Not fully worked out opinions",
+			"Plan many details in advance before acting", "Plan on the go",
+			"Often not lazy", "Often lazy",
+			"Single task", "Multitask",
+			"Decide quickly", "Delay decisionmaking",
+			"Do not like leaving unanswered questions", "Need freedom from lots of obligations",
+			"Planned, ordered, structured approach", "Flexible and spontaneous approach",
+			"Prefer to follow rules and protocols", "Act impulsively following the situation",
+			"Usually finishes projects", "Often start things without finishing",
+			"Work towards closure systematically", "Work in bursts of energy",
+			"Do not like to change decisions", "Curious and like a fresh look at things",
+			"Drive for closure", "Keep options open",
+			"Serious", "Playful",
+			"Conventional", "Unconventional",
+			"Goal oriented", "Always changing goals",
+			"Enjoy making lists", "Difficulty following lists",
+			"Prefer it structured", "Prefer unstructured",
+			"Need to be in control", "Good at adapting",
+			"Like a rapid pace", "Like a leisurely pace"
+		]
+	},
+	ChoiceA: {}, ChoiceB: {},
+	KSize: function (aObj) {
+		return Object.keys(aObj).length;
+	},
+	ResetChoice: function () {
+		this.ChoiceA = {};
+		this.ChoiceB = {};
+	}, UpdateStats: function (aCount) {
+		aCount /= 2;
+		var ASize = this.KSize(this.ChoiceA)
+			BSize = this.KSize(this.ChoiceB);
+		v1count.innerHTML = ASize;
+		v2count.innerHTML = BSize;
+		v1perc.innerHTML = (100*ASize/aCount).toFixed(1);
+		v2perc.innerHTML = (100*BSize/aCount).toFixed(1);
+	}
+};
+function id(aID) {
+	return document.getElementById(aID);
+}
+function ce(aName) {
+	return document.createElement(aName);
+}
+var items = id("items"),
+	whatopt = id("whatopt"),
+	var1 = id("var1"),
+	var2 = id("var2"),
+	v1perc = id("v1perc"),
+	v2perc = id("v2perc"),
+	v1count = id("v1count"),
+	v2count = id("v2count"),
+	z;
+function NItem(aHTML, aIndex, aName, aClickEvt) {
+	var td = ce("td"),
+		label = ce("label"),
+		input1 = ce("input"),
+		span1 = ce("span");
+	input1.type = "radio";
+	input1.value = aIndex;
+	input1.name = aName;
+	input1.onclick = aClickEvt;
+	span1.innerHTML = aHTML;
+	label.appendChild(input1);
+	label.appendChild(span1);
+	td.append(label)
+	return td;
+}
+function NRow(aHTML1, aHTML2, aIndex1, aIndex2, aClickEvt) {
+	var trow = ce("tr"),
+		item1 = NItem(aHTML1, aIndex1, "r"+aIndex1, aClickEvt),
+		item2 = NItem(aHTML2, aIndex2, "r"+aIndex1, aClickEvt);
+	trow.appendChild(item1);
+	trow.appendChild(item2);
+	return trow;
+}
+function UpdateChoice(){
+	items.innerHTML="";
+	mbti_stuff.ResetChoice();
+	var count = 0, wcv = whatopt.value;
+	function OptClickEvt1() {
+		var val = this.value, name = this.name;
+		// yeet already set
+		delete mbti_stuff.ChoiceA[name];
+		delete mbti_stuff.ChoiceB[name];
+		// get evenness
+		var flag1 = 0 === val % 2;
+		if (flag1)
+			mbti_stuff.ChoiceA[name]=1;
+		else
+			mbti_stuff.ChoiceB[name]=1;
+		mbti_stuff.UpdateStats(count);
+	}
+	count = mbti_stuff.t[wcv].length;
+	// show row count on ui part 1/2
+	mbti_stuff.UpdateStats(count);
+	// show row count on ui part 2/2
+	var ocs = document.getElementsByClassName("optcount");
+	for (var i = 0; i < ocs.length; i++)
+		ocs[i].innerHTML = 0|(count/2);
+	// show names
+	var1.innerHTML = mbti_stuff.n[wcv][0];
+	var2.innerHTML = mbti_stuff.n[wcv][1];
+	// do stuff
+	for (var i = 0, mcL = 0|(count/2); i < mcL; i++) {
+		// do math
+		var i1 = i*2, i2=i1 + 1,
+			c1 = mbti_stuff.t[wcv][i1],
+			c2 = mbti_stuff.t[wcv][i2];
+		items.appendChild(
+			NRow(c1, c2, i1, i2, OptClickEvt1)
+		);
+	}
+}
+whatopt.onchange=UpdateChoice;
+UpdateChoice();
+</script>
+</body>
+</html>
