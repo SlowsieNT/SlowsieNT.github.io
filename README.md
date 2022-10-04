@@ -1,6 +1,8 @@
 # Index
 
-## MBTI - Links
+## Tritype (personality related)
+[/tritype](https://slowsient.github.io/tritype)<br>
+## MBTI - Links (personality related)
 [/mbti](https://slowsient.github.io/mbti)<br>
 [/mbti/estimate](https://slowsient.github.io/mbti/estimate)<br>
 [/mbti/estimate#dnt](https://slowsient.github.io/mbti/estimate#dnt)<br>
