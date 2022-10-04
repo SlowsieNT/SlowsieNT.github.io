@@ -18,7 +18,7 @@ Link: [/tor/gennodes](https://slowsient.github.io/tor/gennodes)
 Dictionary 111k words! Link: [/romaji/b](https://slowsient.github.io/romaji/b)<br>
 
 ## Romaji Memory Game (note)
-Memorize Romaji words! Link: [/romaji](https://slowsient.github.io/romaji)<br>
+Memorize Romaji words! Link: [/romaji](https://slowsient.github.io/romaji) (7.8k words)<br>
 Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Numerology
