@@ -1,4 +1,4 @@
-# Index
+# Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Colors (personality related, 11+ colors)
