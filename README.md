@@ -1,5 +1,5 @@
 # Index
-
+Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Colors (personality related, 11+ colors)
 [/pcolors](https://slowsient.github.io/pcolors)<br>
@@ -22,10 +22,10 @@
 
 ## Romaji Memory Game (7.8k words)
 [/romaji](https://slowsient.github.io/romaji)<br>
-Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Numerology
 [/numero](https://slowsient.github.io/numero)<br>
 Numerology utils.
+
 ## License(s)
 Unlicense<br>
