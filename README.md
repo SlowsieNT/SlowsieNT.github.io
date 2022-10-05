@@ -1,7 +1,7 @@
 # Index
 
 
-## Colors (personality related)
+## Colors (personality related, 11+ colors)
 [/pcolors](https://slowsient.github.io/pcolors)<br>
 
 ## Tritype (personality related)
