@@ -1,5 +1,9 @@
 # Index
 
+
+## Colors (personality related)
+[/pcolors](https://slowsient.github.io/pcolors)<br>
+
 ## Tritype (personality related)
 [/tritype](https://slowsient.github.io/tritype)<br>
 
