@@ -1,6 +1,9 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
+## BMI Calculator (body mass index)
+[/bmicalc](https://slowsient.github.io/bmicalc)<br>
+
 ## Colors (personality related, 11+ colors)
 [/pcolors](https://slowsient.github.io/pcolors)<br>
 
