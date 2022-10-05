@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BMI - Calculator</title>
+</head>
+<body>
+<h1 id="dtitle"></h3>
+<script>document.getElementById("dtitle").innerHTML=document.title;</script>
+<style>
+body {background-color: #111;color:gray;}
+input,select{background:#222;border:1px gray solid;color:silver;outline:none;}
+</style>
+<input type="text" id="height" placeholder="Height (cm)" min="0" value="142">
+<input type="text" id="weight" placeholder="Weight (kg)" min="0" value="42">
+<div id="index"></div>
+<div style="margin-top:24px">bmi = WeightKilograms/(HeightMeters*HeightMeters)</div>
+<div style="margin-top:42px"><i>No Rights reserved.</i></div>
+<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+<script>
+function GetBMI(aH, aW) {
+	// aH = meters, aW = kg
+	var index = aW/(aH*aH);
+	if (index > 25) index = 25;
+	return {
+		index: index.toFixed(1),
+		gain: index < 19,
+		lose: index > 24
+	}
+}
+var
+	tbInput = document.getElementById("height"),
+	tbInput2 = document.getElementById("weight"),
+	lblOut = document.getElementById("index");
+function DoWork(){
+	var index = GetBMI(tbInput.value/100, tbInput2.value);
+	lblOut.innerHTML = "BMI: " + index.index + " (" + (index.lose ? "lose" : index.gain ? "gain" : "ideal") + " weight)";
+}
+tbInput.onkeyup = tbInput2.onkeyup = DoWork;
+DoWork();
+</script>
+</body>
+</html>
