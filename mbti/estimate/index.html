@@ -28,7 +28,7 @@ select{
 	padding:2px;background:#222;border:1px gray solid;color:silver;outline:none;
 }
 </style>
-<h2 id="title"></h2>
+<h2><script>document.write(document.title)</script></h2>
 <div><i>Do note this is not 'perfect' accuracy.</i></div>
 <select id="whatopt" value="ie">
 	<option value="ie">Introvert/Extrovert</option>
@@ -59,7 +59,6 @@ function id(aID) {
 function ce(aName) {
 	return document.createElement(aName);
 }
-id("title").innerHTML=document.title;
 var mbti_stuff = {
 	n: {
 		ie: ["Introvert", "Extrovert"],
@@ -68,49 +67,73 @@ var mbti_stuff = {
 		jp: ["Judging", "Perceiving"]
 	},
 	t: {
-		ie: ["Energized by time alone","Energized by people","Think before act","Act before think","Prefer Writing","Prefer Talking","Reserved","Enthusiastic","Focus Depth","Focus Breadth","Quiet","Talkative","Calm, shy, unsociable","Frank, assertive, sociable, adventurous","Dislikes center of attention","Likes center of attention","Think carefully","Talk freely","Cautious","Like to be noticed","Time and space to respond","Quick response","Open to trusted","Open to anyone","Stay in background","Social","Prefer Texting","Prefer Telephone call/in-person","Prefer 1:1 conversation","Prefer one-to-many conversation","Usually work alone","Usually teamwork","Dislike speaking on phone","Likes speaking on phone","Prefers Indoor","Prefers Outdoor","Only few are friends","Get to know many people","Know a lot of things that interest them","Know little bit of about a lot of topics","Understand before experiencing","Experience before understand","More guarded emotionally","Less guarded emotionally"],
+		ie: [
+			"Energized by time alone","Energized by people",
+			"Think before act","Act before think",
+			"Prefer Writing","Prefer Talking",
+			"Reserved","Enthusiastic",
+			"Focus Depth","Focus Breadth",
+			"Quiet","Talkative",
+			"Calm, shy, unsociable","Frank, assertive, sociable, adventurous",
+			"Avoid center of attention","Usually center of attention",
+			"Think carefully","Talk freely",
+			"Cautious","Like to be noticed",
+			"Time and space to respond","Quick response",
+			"Open to trusted","Open to anyone",
+			"Stay in background","Social",
+			"Prefer Texting","Prefer Telephone call/in-person",
+			"Prefer one-to-one conversation","Prefer one-to-many conversation",
+			"Usually work alone","Usually teamwork",
+			"Avoid speaking on phone","Prefer speaking on phone",
+			"Prefer Indoor","Prefer Outdoor",
+			"Few are friends","Get to know many people",
+			"Know a lot of things of interest","Know little bit of many topics",
+			"Understand then experience","Experience then understand",
+			"More guarded emotionally","Less guarded emotionally"
+		],
 		ns: [
 			"Visionary", "Practical",
 			"Future-oriented", "Live here and now",
-			"Abstract", "Concrete",
+			"<span title=\"Theoretical, not concrete; difficult to understand.\">Abstract</span>", "Concrete",
 			"Focus on Big picture", "Sense things, focus on details",
 			"Likes ideas and concepts", "Factual, actual, concrete",
 			"Does not like routine, or practicalities", "Practical, realistic",
 			"Theoretical", "Experimental",
 			"What could be", "What is real",
 			"Possibilites", "Facts and details",
-			"Prefer learning than applying what's learned", "Prefer applying what's learned",
+			"Learn more", "Apply what's learned",
 			"Multiple points of view", "Get to the point",
 			"Original", "Traditional",
-			"Intellectual", "Pragmatic",
-			"Figurative, using analogies and metaphors", "Literal, using facts and examples",
-			"Complex speech pattern", "Clear, straightforward speech pattern",
+			"Intellectual", "<span title=\"Practical point of view.\">Pragmatic</span>",
+			"Use analogies, metaphors", "Literal, use facts, examples",
+			"Complex speech pattern", "Easy, clear speech pattern",
 			"Repeat, re-phrase", "Direct to the point",
-			"Tend to complete others' sentences", "Listen until others finish what they have to say",
+			"Often finish others' sentences", "Listen to what is being said",
 			"Prefers fiction", "Prefers non-fiction",
 			"In their heads", "Aware of their bodies",
 			"Prefer jobs that need creativity", "Prefer practical jobs"			
 		],
 		tf: [
-			"Objective", "Subjective",
+			"Rational / objective / reasonable / analytical", "Irrational / subjective / compassionate / empathetic",
 			"Detached", "Attached",
 			"Critical", "Accepting",
-			"Tend to be blunt and tactless", "Usually very gentle and diplomatic",
-			"Cooler, distant to others", "Warmer, friendlier to others",
+			"Value truth and logic", "Value tact and diplomacy",
+			"Usually blunt and tactless", "Usually gentle and diplomatic",
+			"Appear cold to others", "Appear warm to others",
 			"Appear insensitive", "Very sensitive to others' feelings",
 			"Impersonal approach for decision making", "Personal approach for decision making",
 			"Interested in justice", "Interested in mercy",
-			"Analyze and weigh evidence", "Decide by weighing importance of alternatives",
+			"Analyze and weigh evidence", "Weigh importance of alternatives",
 			"Critique new ideas", "Find what is right about new idea",
 			"Point out what is wrong, or could be done better", "Appreciate what is right or being done well",
 			"Focus on the task", "Focus on the people",
-			"Defend position with logic", "Defense depends on what is valued",
+			"Defend position with logic", "Defense depends on values",
 			"Debate and argue", "Find common ground",
 			"Look for inconsistency", "Look areas where to agree",
 			"Want respect and fairness from others", "Want positivity and support from others",
 			"Tough minded", "Tender hearted",
-			"Questioning", "Accomodating",
-			
+			"Questioning", "<span title=\"Helpful and obliging.\">Accommodating</span>",
+			"Get to the point", "Small-talk to warm up"			
 		], jp: [
 			"Usually Organized", "Usually Disorganized",
 			"Express strong opinions", "Not fully worked out opinions",
@@ -126,7 +149,7 @@ var mbti_stuff = {
 			"Do not like to change decisions", "Curious and like a fresh look at things",
 			"Drive for closure", "Keep options open",
 			"Serious", "Playful",
-			"Conventional", "Unconventional",
+			"<span title=\"Based on or in accordance with general agreement, use, or practice; customary.\">Conventional</span>", "Unconventional",
 			"Goal oriented", "Always changing goals",
 			"Enjoy making lists", "Difficulty following lists",
 			"Prefer it structured", "Prefer unstructured",
