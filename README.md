@@ -4,6 +4,9 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 ## BMI Calculator (body mass index)
 [/bmicalc](https://slowsient.github.io/bmicalc)<br>
 
+## Star/zodiac Sign (personality related)
+[/ssign](https://slowsient.github.io/ssign)<br>
+
 ## Colors (personality related, 11+ colors)
 [/pcolors](https://slowsient.github.io/pcolors)<br>
 
