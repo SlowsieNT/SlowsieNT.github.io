@@ -29,7 +29,7 @@ var Paginator2 = new function () {
 					handle.UpdateHandlers[i].apply(_, [handle]);
 		}
 		function SetData(aItems) {
-			if (aItems && aItems.length) {	
+			if (aItems && "length" in aItems) {	
 				handle.Items = aItems;
 				handle.ItemsLen = aItems.length;
 			}
@@ -54,7 +54,7 @@ var Paginator2 = new function () {
 			handle.UpdateHandlers.push(aUpdateHandler);
 		};
 		_[4] = _.MaxPage = function () {
-			return Math.ceil(handle.ItemsLen/handle.PerPage);
+			return Math.ceil(handle.ItemsLen/handle.PerPage)||1;
 		};
 		_[5] = _.Next = function () {
 			if (handle.Page < _.MaxPage(handle))
