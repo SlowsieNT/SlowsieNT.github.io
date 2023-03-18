@@ -6,7 +6,7 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [js/pag2.js at Github](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/pag2.js)<br>
 
 ## Password/Passphrase generator
-*Many options you can use!*
+*Many options you can use!*<br>
 [/ppgen](https://slowsient.github.io/ppgen)<br>
 
 ## BMI Calculator (body mass index)
