@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Username/Password generator</title>
-	<meta name="keywords" content="password,password generator,passphrase,passphrase generator">
-	<meta name="description" content="Create secure and or easy to remember passphrase/passwords!">
+	<meta name="keywords" content="username,username generator,password,password generator,passphrase,passphrase generator">
+	<meta name="description" content="Create secure and or easy to remember passphrase/passwords! Or just username.">
 </head>
 <body>
 <style>
@@ -417,30 +417,12 @@ var Namegen = new function (aNames) {
 		function rr(aN) {
 			return 0|aN*r();
 		}
-		_.A = {
-			// vc = vowel count, cc = consonant count
-			// vc and cc are assigned at runtime.
-			VC: 0, CC: 0,
-			V: "aeiouy".split(""),
-			C: "bcdfghjklmnpqrstvwxz".split("")
-		};
-		_.Consonant = function () {
-			if (!_.A.CC) _.A.CC = _.A.C.length;
-			return _.A.C[rr(_.A.CC)];
-		};
-		_.Vowel = function () {
-			if (!_.A.VC) _.A.VC = _.A.V.length;
-			return _.A.V[rr(_.A.VC)];
-		};
-		_.UCFirst = function (aStr) {
-			return aStr.charAt().toUpperCase() + aStr.slice(1);
-		};
-		_.Word = function (aLength) {
+		_[0] = _.Word = function (aLength) {
 			for (var word = "", lastt, i = 0; i < aLength; i++) {
-				if (0 === lastt && 0 === rr(7))
-					word += _.Vowel(lastt=0);
-				else if (1 === lastt && 0 === rr(9))
-					word += _.Consonant(lastt=1);
+				if (0 === lastt && 0 === rr(12))
+					word += _.Vowel(); // 8.33%
+				else if (1 === lastt && 0 === rr(18))
+					word += _.Consonant(); // 5.55%
 				else if (0 === lastt)
 					word += _.Consonant(lastt=1);
 				else if (1 === lastt)
@@ -448,6 +430,24 @@ var Namegen = new function (aNames) {
 				else word += rr(2) && _.Vowel(lastt=0) || _.Consonant(lastt=1);
 			}
 			return word;
+		};
+		_[1] = _.A = {
+			// vc = vowel count, cc = consonant count
+			// vc and cc are assigned at runtime.
+			VC: 0, CC: 0,
+			V: "aeiouy".split(""),
+			C: "bcdfghjklmnpqrstvwxz".split("")
+		};
+		_[2] = _.Consonant = function () {
+			if (!_.A.CC) _.A.CC = _.A.C.length;
+			return _.A.C[rr(_.A.CC)];
+		};
+		_[3] = _.Vowel = function () {
+			if (!_.A.VC) _.A.VC = _.A.V.length;
+			return _.A.V[rr(_.A.VC)];
+		};
+		_[4] = _.UCFirst = function (aStr) {
+			return aStr.charAt().toUpperCase() + aStr.slice(1);
 		};
 	};
 };
