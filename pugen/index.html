@@ -25,6 +25,7 @@
 	.h4{font-size: 18px;}
 	.fg-s{color:silver;}
 	.customTa01{height:24px;width:300px;}
+	.w64{width:64px;}
 </style>
 <div class="h2"><b><script>document.write(document.title);</script></b></div>
 <div><i>Also works on IE6+.</i></div>
@@ -49,15 +50,15 @@
 	</div>
 	<div class="mn8">
 		<div><i>Unreal</i> names count, and min max <i>word</i> length:</div>
-		<input type="number" value="1" min="0" size="4" id="unWordsLen">
-		<input type="number" value="3" min="3" max="9" size="2" id="unWordsCharMin">
-		<input type="number" value="5" min="3" max="9" size="2" id="unWordsCharMax">
+		<input type="number" value="1" min="0" class="w64" id="unWordsLen">
+		<input type="number" value="3" min="3" class="w64" id="unWordsCharMin">
+		<input type="number" value="5" min="3" class="w64" id="unWordsCharMax">
 	</div>
 	<div>
 		<div><i>Real</i> names count, and min max name length:</div>
-		<input type="number" value="0" min="0" size="4" id="unNamesLen">
-		<input type="number" value="3" min="3" max="9" size="2" id="unNamesCharMin">
-		<input type="number" value="8" min="3" max="9" size="2" id="unNamesCharMax">
+		<input type="number" value="0" min="0" class="w64" id="unNamesLen">
+		<input type="number" value="3" min="3" max="9" class="w64" id="unNamesCharMin">
+		<input type="number" value="8" min="3" max="9" class="w64" id="unNamesCharMax">
 		<select id="unNamesSex">
 			<option value="0">Boy</option>
 			<option value="1">Girl</option>
@@ -66,12 +67,12 @@
 	</div>
 	<div>
 		<div>Digits count, also chance % not to add:</div>
-		<input type="number" value="2" min="0" size="4" id="unDigitsLen">
-		<input type="number" value="70" min="0" max="100" size="8" id="unDigitsChance">
+		<input type="number" value="2" min="0" class="w64" id="unDigitsLen">
+		<input type="number" value="70" min="0" max="100" class="w64" id="unDigitsChance">
 	</div>
 	<div>
 		<div>Separators; symbols of choice:</div>
-		<input type="text" value="_." min="0" size="5" id="unSeparatorsList">
+		<input type="text" value="_." min="0" class="w64" id="unSeparatorsList">
 		<select id="unSeparatorsListAddEmpty">
 			<option value="0">No empty</option>
 			<option value="1" selected>Add empty</option>
@@ -93,25 +94,25 @@
 <div class="tool ppgen" id="tool02" style="display:none">
 	<div class="mn8">
 		<div>Samples count:</div>
-		<input type="number" value="5" min="1" id="ppSamplesLen">
+		<input type="number" value="5" min="1" class="w64" id="ppSamplesLen">
 	</div>
 	<div class="mn8">
 		<div>Words count, and min max word length:</div>
-		<input type="number" value="2" min="0" id="ppWordsLen">
-		<input type="number" value="3" min="3" max="9" size="2" id="ppWordsCharMin">
-		<input type="number" value="8" min="3" max="9" size="2" id="ppWordsCharMax">
+		<input type="number" value="2" min="0" class="w64" id="ppWordsLen">
+		<input type="number" value="3" min="3" max="9" class="w64" id="ppWordsCharMin">
+		<input type="number" value="8" min="3" max="9" class="w64" id="ppWordsCharMax">
 	</div>
 	<div>
 		<div>Digits count:</div>
-		<input type="number" value="2" min="0" id="ppDigitsLen">
+		<input type="number" value="2" min="0" class="w64" id="ppDigitsLen">
 	</div>
 	<div>
 		<div>Letters count:</div>
-		<input type="number" value="0" min="0" id="ppLettersLen">
+		<input type="number" value="0" min="0" class="w64" id="ppLettersLen">
 	</div>
 	<div>
 		<div>Symbols count:</div>
-		<input type="number" value="1" min="0" id="ppSymbolsLen">
+		<input type="number" value="1" min="0" class="w64" id="ppSymbolsLen">
 	</div>
 	<div>
 		<div>Random Upper/Lower case:</div>
@@ -133,8 +134,8 @@
 			<option value="2">Numbers</option>
 			<option value="3" selected>Both</option>
 		</select>
-		<input type="number" value="1" min="1" size="2" id="ppSByMin">
-		<input type="number" value="4" min="1" size="2" id="ppSByMax">
+		<input type="number" value="1" min="1" class="w64" id="ppSByMin">
+		<input type="number" value="4" min="1" class="w64" id="ppSByMax">
 	</div>
 	<div class="mn8">
 		<div>Final result casing:</div>
