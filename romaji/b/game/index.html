@@ -218,7 +218,7 @@ var Game = {
 		},
 		ResolveHandlers: function () {
 			Game.UI.Pag1 = Paginator.Create(
-				[1, Game.Dict],
+				[0, Game.Dict],
 				+Game.UI.TbWordsPerPage.value,
 				+Game.UI.TbCurrentPage.value,
 				function Update(aPageItems, aPageItemsLen, aPerPage, aPageNum, aPageCount, aArrayLen) {
