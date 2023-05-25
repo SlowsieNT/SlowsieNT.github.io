@@ -1,7 +1,7 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
-## 111K words Japanese Memory Game v2
+## 111K words Japanese Memory Game v2 (Ja111K Memory Game)
 [romaji/b/game](https://slowsient.github.io/romaji/b/game)<br>
 111,745 words.
 
