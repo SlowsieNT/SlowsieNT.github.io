@@ -1,6 +1,10 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
+## 111K words Japanese Memory Game v2
+[romaji/b/game](https://slowsient.github.io/romaji/b/game)<br>
+111,745 words.
+
 ## JS Libraries
 [js/pag2.js](http://SlowsieNT.github.io/js/pag2.js)<br>
 [js/pag2.js at Github](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/pag2.js)<br>
