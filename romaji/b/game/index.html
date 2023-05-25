@@ -137,7 +137,7 @@ var Game = {
 		RenderAnswers: function (aAnswerArr, aCorrectAnswer) {
 			var _ = this, elements = [];
 			_.LiAnswers.innerHTML = "";
-			if (window.Ja111DEBUGGING=1)
+			if (window.Ja111DEBUGGING)
 				console.log(aCorrectAnswer[1][0]);
 			for (var i in aAnswerArr) {
 				// oItem[0 word, 1 words[][0 kanji, 1 romaji, 2 word-type, 3 translation]]
