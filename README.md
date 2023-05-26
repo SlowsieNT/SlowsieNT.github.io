@@ -1,7 +1,7 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
-## 11k Japanese Memory Game v2 (JaLLiK Memory Game)
+## Japanese Memory Game v3 (JaLLiK Memory Game)
 [romaji/game](https://slowsient.github.io/romaji/game)<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
 Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
