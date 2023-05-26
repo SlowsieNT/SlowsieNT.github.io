@@ -3,8 +3,8 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 
 ## 11k Japanese Memory Game v2 (JaLLiK Memory Game)
 [romaji/game](https://slowsient.github.io/romaji/game)<br>
-Dictionary 1: Most used words dictionary.<br>
-Dictionary 2: Basic dictionary of <b>111,745</b> words.<br>
+Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
+Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 
 ## JS Libraries
 [js/pag2.js](http://SlowsieNT.github.io/js/pag2.js)<br>
