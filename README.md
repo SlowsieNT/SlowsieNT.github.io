@@ -5,6 +5,7 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [romaji/game](https://slowsient.github.io/romaji/game)<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
 Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
+Optimized file size, now is: `9.18MiB`, was: `23MiB`<br>
 
 ## JS Libraries
 [js/pag2.js](http://SlowsieNT.github.io/js/pag2.js)<br>
