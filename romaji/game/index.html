@@ -18,73 +18,110 @@
 	.mw14 {margin-left: 14px;}.mw16 {margin-left: 16px;}.mw18 {margin-left: 18px;}
 	.mn2 {margin-top:2px;}.mn4{margin-top:4px;}.mn6{margin-top:6px;}
 	.mn8 {margin-top:8px;}.mn10{margin-top:10px;}.mn12{margin-top:12px;}
+	.mns8{margin-top:8px;margin-bottom:8px;}
 	.p8{padding:8px;}
 	.es01, .bs01 {
-		border:1px gray solid;
+		border:1px #444 solid;
 		background-color: #222;
 		color:lime;outline:none;
 	}
-	.fg-lime {color:lime;}
-	.bs01:hover {background-color: #555;}
-	.hline {border-top:1px lime solid;margin-top:4px;margin-bottom:4px;}
+	ol {margin:0;padding:0;}
+	.fg-lime {color:lime;} .fg-lg{color:lightgreen;}
+	.bs01:hover {background-color: #444;}
+	.hline {width:55%;border-top:1px silver solid;margin-top:4px;margin-bottom:4px;}
+	fieldset {
+		border:1px #222 solid;margin-top:4px;margin-bottom:4px;
+		*width: 360px;
+		min-width: 300px;
+		max-width: 400px;
+	}
+	fieldset legend { color: silver; }
 	#liAnswers .bs01 {padding-right:16px;padding-left:16px;}
+	.fwb {font-weight: bold;}
+	.h2 {font-size:24px;}
 </style>
 </head>
 <body>
 	<script src="/js/lang/jaBasicDict.js"></script>
 	<script src="/js/lang/jaFrequentDict.js"></script>
-	<h2><script>document.write(document.title);</script></h2>
-	<div><i>Disclaimer: Design was <u>never intended</u> to be pleasing.</i></div>
-	<div><i>You may download this page for offline use.</i></div>
-	<div class="hline"></div>
-	<label><input type="radio" name="rbDictmode" value="Mode1" checked> Most used words</label>
-	<label><input type="radio" name="rbDictmode" value="ModeX"> Overkill wordlist (111k+)</label>
-	<div class="hline"></div>
-	<b id="lbWordsCount" class="mw2">N/A</b> words.
-	<div class="hline"></div>
-	<div>
-		<table>
-			<tr>
-				<td>
-					<span>Words per page</span>
-					<div><input id="tbWordsPerPage" class="w48 es01" type="number" value="125" min="50"></div>
-				</td>
-				<td>
-					<div class="mw16">
-						<span>Answers per word</span>
-						<div><input id="tbAnsPerWord" class="w32 es01" type="number" value="5" min="4" max="50"></div>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<div class="hline"></div>
-		<div class="mw2">
-			<button id="btnPrev1" class="bs01">&lt; Back</button>
-			<button id="btnNext1" class="bs01 mw4">Next &gt;</button>
-			Page:
-			<input id="tbCurrentPage" class="w48 es01" type="number" value="1">
-			/&nbsp;<b id="lbTotalPages">1</b>
-		</div>
-		<div class="hline"></div>
-		<table>
-			<tr>
-				<td>
-					<span>Correct</span>
-					<div><b id="lbCorrect1" class="fg-lime">0</b></div>
-				</td>
-				<td>
-					<div class="mw16">
-						<span>Learning</span>
-						<div><b id="lbLearning1">0</b></div>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<div class="hline"></div>
+	<fieldset>
+		<legend><b><script>document.write(document.title);</script></b></legend>
+		<div><i>You may download this page for offline use.</i></div>
+	</fieldset>
+	<fieldset>
+		<legend>Mode</legend>
 		<div>
-			<span style="font-size:22px">What is the meaning of <b id="lbQWord">N/A</b>?</span>
+			<label><input type="radio" name="rbDictmode" value="Mode1" checked> Most used words</label>
 		</div>
-		<div id="liAnswers"></div>
+		<div>
+			<label><input type="radio" name="rbDictmode" value="ModeX"> Overkill mode (111k+)</label>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Word count</legend>
+		<b id="lbWordsCount" class="mw2">N/A</b> words.
+	</fieldset>
+	<div>
+		<fieldset>
+			<legend>Options</legend>
+			<table>
+				<tr>
+					<td>
+						<span>Words per page</span>
+						<div><input id="tbWordsPerPage" class="w48 es01" type="number" value="125" min="50"></div>
+					</td>
+					<td>
+						<div class="mw16">
+							<span>Answers per word</span>
+							<div><input id="tbAnsPerWord" class="w32 es01" type="number" value="4" min="4" max="50"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button id="btnPrev1" class="bs01">&lt; Back</button>
+						<button id="btnNext1" class="bs01 mw4">Next &gt;</button>
+					</td>
+					<td>
+						<div class="mw16 mn2">
+							<span>Page:</span>
+							<input id="tbCurrentPage" class="w48 es01" type="number" value="1">
+							/&nbsp;<b id="lbTotalPages">1</b>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>Score</legend>
+			<table>
+				<tr>
+					<td>
+						<span><b>Correct</b></span>
+						<div><b id="lbCorrect1" class="fg-lime">0</b></div>
+					</td>
+					<td>
+						<div class="mw16">
+							<span><b>Learning</b></span>
+							<div><b id="lbLearning1">0</b></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		<div class="mw2">
+			<div>
+				<span style="font-size:22px">What is the meaning of <b id="lbQWord" class="fg-lg">N/A</b>?</span>
+			</div>
+			<div id="liAnswers"></div>
+		</div>
+		<fieldset>
+			<legend>Tip(s)</legend>
+			<ol class="mw16">
+				<li><span>You can pause to read answer by clicking answer again.</span></li>
+				<li><span>You can pause blinking of license text by clicking it.</span></li>
+			</ol>
+		</fieldset>
 		<script>
 			//var jaBasicDict, jaFrequentDict;
 // easify
@@ -118,8 +155,8 @@ var Game = {
 		}
 	},
 	Settings: {
-		AnswerDelay: 2e3,
-		AnswersPerWord: 5
+		AnswerDelay: 1.5e3,
+		AnswersPerWord: 4
 	},
 	Stats: {
 		Correct: 0,
@@ -178,12 +215,24 @@ var Game = {
 				if (!(i >= 0)) continue;
 				var oItem = aAnswerArr[i][1][1],
 					hAns = _.CreateAnswer(aAnswerArr[i][1][3], (i > 0 ? 4 : 16)),
+					hTmr,
 					zzz = 2;
+				function timerHide() {
+					clearTimeout(hTmr);
+					hTmr = setTimeout(Game.UI.RenderRand, Game.Settings.AnswerDelay);
+				}
 				hAns.IsAnswer = aCorrectAnswer[1][1] === oItem;
 				//console.log(hAns, hAns.IsAnswer, aCorrectAnswer[1][1], oItem)
 				hAns.Handle.HData = hAns;
 				hAns.Handle.onclick = function () {
-					_.OnAnswer(this, elements, aCorrectAnswer);
+					var tElem = this;
+					if (tElem.gameClicked) {
+						timerHide();
+					} else {
+						tElem.gameClicked = 1;
+						_.OnAnswer(tElem, elements, aCorrectAnswer);
+						timerHide();
+					}
 				};
 				elements.push(hAns);
 				_.LiAnswers.appendChild(hAns.Handle);
@@ -209,7 +258,6 @@ var Game = {
 			);
 			Game.Stats.WordsDone.push(aCorrectAnswer[1][1]);
 			// render random word
-			setTimeout(Game.UI.RenderRand, Game.Settings.AnswerDelay);
 		},
 		Update: function (aType) {
 			// Reset/update stats and ui
@@ -381,7 +429,6 @@ function ce(n) {return document.createElement(n);}
 
 Game.UI.ResolveHandlers();
 		</script>
-		<div class="hline"></div>
 		<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
 		<div><i>Source Code License: <u>Unlicense</u>.</i></div>
 		<script>
