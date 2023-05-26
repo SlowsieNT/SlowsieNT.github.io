@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width">
+	<title>JaLLiK Memory Game | Ja111K</title>
+	<meta name="description" content="Learn 11k of Japanese most used words, or overkill of 111K+ Japanese words.">
+	<meta name="keywords" content="Ja111K Game, JaLLik Game, JaLLik Memory Game, Ja111K Memory Game, Game, Memory, JaLLiK, Ja111K, Japanese Game, Japanese Memory Game">
+<style>
+	html {width:100%;height:100%;}
+	body {background-color: #111;color:gray;margin:0;padding:8px;}
+	.w32 {width:32px;} .w48 {width:48px;} .w64 {width:64px;}
+	.w240 {width:240px;} .w300 {width:300px;} .w320 {width:320px;} .w360 {width:360px;}
+	.w480 {width:480px;} .w640 {width:640px;} .w720 {width:720px;}
+	.mw2{margin-left:2px;}.mw4 {margin-left:4px;}.mw6{margin-left:6px;}
+	.mw8 {margin-left: 8px;}.mw10 {margin-left: 10px;}.mw12 {margin-left: 12px;}
+	.mw14 {margin-left: 14px;}.mw16 {margin-left: 16px;}.mw18 {margin-left: 18px;}
+	.mn2 {margin-top:2px;}.mn4{margin-top:4px;}.mn6{margin-top:6px;}
+	.mn8 {margin-top:8px;}.mn10{margin-top:10px;}.mn12{margin-top:12px;}
+	.p8{padding:8px;}
+	.es01, .bs01 {
+		border:1px gray solid;
+		background-color: #222;
+		color:lime;outline:none;
+	}
+	.fg-lime {color:lime;}
+	.bs01:hover {background-color: #555;}
+	.hline {border-top:1px lime solid;margin-top:4px;margin-bottom:4px;}
+	#liAnswers .bs01 {padding-right:16px;padding-left:16px;}
+</style>
+</head>
+<body>
+<script src="/js/lang/jaFrequentDict.js"></script>
+<script src="/js/lang/jaBasicDict.js"></script>
+	<h2><script>document.write(document.title);</script></h2>
+	<div><i>Disclaimer: Design was <u>never intended</u> to be pleasing.</i></div>
+	<div><i>You may download this page for offline use.</i></div>
+	<div class="hline"></div>
+	<label><input type="radio" name="rbDictmode" value="Mode1" checked> Most used words</label>
+	<label><input type="radio" name="rbDictmode" value="ModeX"> Overkill wordlist (111k+)</label>
+	<div class="hline"></div>
+	<b id="lbWordsCount" class="mw2">N/A</b> words.
+	<div class="hline"></div>
+	<div>
+		<table>
+			<tr>
+				<td>
+					<span>Words per page</span>
+					<div><input id="tbWordsPerPage" class="w48 es01" type="number" value="125" min="50"></div>
+				</td>
+				<td>
+					<div class="mw16">
+						<span>Answers per word</span>
+						<div><input id="tbAnsPerWord" class="w32 es01" type="number" value="5" min="4" max="50"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="hline"></div>
+		<div class="mw2">
+			<button id="btnPrev1" class="bs01">&lt; Back</button>
+			<button id="btnNext1" class="bs01 mw4">Next &gt;</button>
+			Page:
+			<input id="tbCurrentPage" class="w48 es01" type="number" value="1">
+			/&nbsp;<b id="lbTotalPages">1</b>
+		</div>
+		<div class="hline"></div>
+		<table>
+			<tr>
+				<td>
+					<span>Correct</span>
+					<div><b id="lbCorrect1" class="fg-lime">0</b></div>
+				</td>
+				<td>
+					<div class="mw16">
+						<span>Learning</span>
+						<div><b id="lbLearning1">0</b></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="hline"></div>
+		<div>
+			<span style="font-size:22px">What is the meaning of <b id="lbQWord">N/A</b>?</span>
+		</div>
+		<div id="liAnswers"></div>
+		<script>
+// easify
+for (var n in jaBasicDict) jaBasicDict[n] = [n].concat(jaBasicDict[n]);
+for (var n in jaFrequentDict) jaFrequentDict[n] = [n].concat(jaFrequentDict[n]);
+// etc
+var Game = {
+	Dict: {
+		CurrentDataType: 1, /*CurrentDataType[0 array, 1 obj]*/
+		Current: null,
+		Mode: {
+			// don't change array manually unless it's at index 1
+			"ModeX": [0, jaBasicDict, {}],
+			"Mode1": [0, jaFrequentDict, {}]
+		},
+		ResolveAll: function (aMode) {
+			var _ = this;
+			if (void 0 === aMode) for (var cdict = "Hard", i = 0, rbA = Game.UI.RbArrDictMode, rLen = rbA.length; i < rLen; i++) {
+				var rBtn = rbA[i];
+				if (rBtn.checked) cdict = rBtn.value;
+			}
+			// allocate lengths:
+			for (var mode in _.Mode)
+				for (var kWord in _.Mode[mode][1]) {
+					++_.Mode[mode][0];
+					// real shet:
+					_.Mode[mode][2][_.Mode[mode][1][kWord][1]] = _.Mode[mode][1][kWord];
+				}
+			// default mode:
+			_.Current = _.Mode[cdict] || _.Mode[aMode];
+		}
+	},
+	Settings: {
+		AnswerDelay: 2e3,
+		AnswersPerWord: 5
+	},
+	Stats: {
+		Correct: 0,
+		Learning: 0,
+		WordsDone: [],
+		Wordlist: [],
+		_: 0
+	},
+	Utils: {
+		ShuffleArray: function (aArray) {
+			var aLen = aArray.length;
+			while (0 !== aLen) {
+				// Pick a remaining element then Swap
+				var iRand = 0|aLen*Math.random(),
+					temp = aArray[--aLen];
+				aArray[aLen] = aArray[iRand];
+				aArray[iRand] = temp;
+			}
+			return aArray;
+		}
+	},
+	UI: {
+		// UI Handles:
+		LbWordsCount: id("lbWordsCount"),
+		TbWordsPerPage: id("tbWordsPerPage"),
+		TbAnsPerWord: id("tbAnsPerWord"),
+		LiAnswers: id("liAnswers"),
+		BtnPrev1: id("btnPrev1"),
+		BtnNext1: id("btnNext1"),
+		LbQWord: id("lbQWord"),
+		LbCorrect1: id("lbCorrect1"),
+		LbLearning: id("lbLearning1"),
+		TbCurrentPage: id("tbCurrentPage"),
+		LbTotalPages: id("lbTotalPages"),
+		RbArrDictMode: document.getElementsByName("rbDictmode"),
+		// Functions:
+		CreateAnswer: function (aButton1HTML, aMarginTop) {
+			var holder = ce("div");
+			holder.style.marginTop = aMarginTop + "px";
+			holder.innerHTML = '<button class="bs01 p8"></button>';
+			var btn = holder.getElementsByTagName("button")[0];
+			btn.innerHTML = aButton1HTML;
+			return {
+				Button: btn,
+				Handle: holder
+			};
+		},
+		RenderAnswers: function (aAnswerArr, aCorrectAnswer) {
+			var _ = this, elements = [];
+			_.LiAnswers.innerHTML = "";
+			if (window.Ja111DEBUGGING=1)
+				console.log("correct:", aCorrectAnswer[1]);
+			// etc
+			for (var i in aAnswerArr) {
+				// oItem[0 word, 1 words[0 xji, 1 romaji, 2 word-type, 3 translation]]
+				if (!(i >= 0)) continue;
+				var oItem = aAnswerArr[i][1][1],
+					hAns = _.CreateAnswer(aAnswerArr[i][1][3], (i > 0 ? 4 : 16)),
+					zzz = 2;
+				hAns.IsAnswer = aCorrectAnswer[1][1] === oItem;
+				//console.log(hAns, hAns.IsAnswer, aCorrectAnswer[1][1], oItem)
+				hAns.Handle.HData = hAns;
+				hAns.Handle.onclick = function () {
+					_.OnAnswer(this, elements, aCorrectAnswer);
+				};
+				elements.push(hAns);
+				_.LiAnswers.appendChild(hAns.Handle);
+				if (hAns.Button.offsetWidth < 320) {
+					hAns.Button.style.width = "320px";
+				}
+			}
+		},
+		OnAnswer: function (aAnswerHandle, aAnswerHandles, aCorrectAnswer) {
+			// aAnswerHandles[] {Button, Handle}
+			for (var i in aAnswerHandles)
+				if (!aAnswerHandles[i].IsAnswer)
+					aAnswerHandles[i].Handle.style.display = "none";
+			// aCorrectAnswer[0 word, 1 words[0 xji, 1 romaji, 2 word-type, 3 translation]]
+			var ansH = aAnswerHandle.HData, flag1 = ansH.IsAnswer;
+			Game.Stats.Correct += flag1;
+			Game.Stats.Learning += !flag1;
+			// ui
+			Game.UI.Update(2);
+			// etc
+			ansH.Button.innerHTML = (
+				e = aCorrectAnswer[1][2] + "<br>" + aCorrectAnswer[1][3]
+			);
+			Game.Stats.WordsDone.push(aCorrectAnswer[1][1]);
+			// render random word
+			setTimeout(Game.UI.RenderRand, Game.Settings.AnswerDelay);
+		},
+		Update: function (aType) {
+			if (2 === aType) {
+				Game.UI.LbCorrect1.innerHTML = Game.Stats.Correct;
+				Game.UI.LbLearning.innerHTML = Game.Stats.Learning;
+			}
+			if (1 === aType) {
+				Game.UI.LbCorrect1.innerHTML = Game.Stats.Correct = 0;
+				Game.UI.LbLearning.innerHTML = Game.Stats.Learning = 0;
+			}
+		},
+		RenderRand: function () {
+			var arrWords = Game.Stats.Wordlist,
+				arrWordsLen = 0,
+				tmpArr = [], wd = Game.Stats.WordsDone, wLen = wd.length;
+			for (var i2 in arrWords) {
+				var canAdd = 1;
+				for (var i = 0; i < wLen; i++)
+					if (arrWords[i2][1][1] == wd[i])
+						canAdd = 0;
+				if (canAdd)
+					tmpArr.push(arrWords[i2]);
+			}
+			arrWords = tmpArr, arrWordsLen = arrWords.length;
+			// etc
+			var items = [],
+				correctAnswerIdx = 0|Math.random()*arrWordsLen,
+				correctAnswer = arrWords[correctAnswerIdx],
+				answers = [correctAnswer];
+			Game.UI.LbQWord.innerHTML = correctAnswer[1][1] + " ("+correctAnswer[0]+")";
+			// Allocate decoy items
+			for (var i = 0; i < arrWordsLen; i++)
+				if (arrWords[i][1][1] != correctAnswer[1][1])
+					items.push(arrWords[i]);
+			// First shuffle array without correct answer
+			Game.Utils.ShuffleArray(items);
+			// Then push random answers
+			for (var i = 1; i < Game.Settings.AnswersPerWord; i++)
+				if (items[i]) answers.push(items[i]);
+			// Now shuffle the answers array
+			Game.Utils.ShuffleArray(answers);
+			var o = {};
+			for (var i in answers)
+				o[answers[i][1][1]]=1;
+			var klen = Object.keys(o).length;
+			// Finally render them
+			Game.UI.RenderAnswers(answers, correctAnswer);
+		},
+		ResolveMainHandles: function (aMode) {
+			Game.Dict.ResolveAll(aMode);
+			Game.UI.Pag1 = Paginator.Create(
+				[Game.Dict.CurrentDataType, Game.Dict.Current[1]],
+				+Game.UI.TbWordsPerPage.value,
+				+Game.UI.TbCurrentPage.value,
+				function Update(aPageItems, aPageItemsLen, aPerPage, aPageNum, aPageCount, aArrayLen) {
+					Game.UI.TbCurrentPage.value = aPageNum;
+					Game.UI.LbWordsCount.innerHTML = aArrayLen.toLocaleString();
+					Game.UI.LbTotalPages.innerHTML = aPageCount;
+					Game.Stats.Wordlist = aPageItems;
+					Game.UI.Update(1);
+					Game.UI.RenderRand();
+				}
+			);
+		},
+		ResolveHandlers: function () {
+			this.ResolveMainHandles();
+			var ois = null === document.body.oninput;
+			Game.UI.TbAnsPerWord[ois?"oninput":"onkeyup"] = function () {
+				Game.Settings.AnswersPerWord = 0|this.value;
+				var apw = Game.Settings.AnswersPerWord;
+				if (apw > 50)
+					Game.Settings.AnswersPerWord = 50;
+				if (apw < 4)
+					Game.Settings.AnswersPerWord = 4;
+				this.value = Game.Settings.AnswersPerWord;
+			};
+			Game.UI.TbWordsPerPage[ois?"oninput":"onkeyup"] = function () {
+				Game.UI.Pag1.PerPage(this.value);
+			};
+			Game.UI.TbCurrentPage[ois?"oninput":"onkeyup"] = function () {
+				var cpn = Game.UI.Pag1.PageNum(),
+					maxP = Game.UI.Pag1.PageCount(),
+					elem = this,
+					tval = elem.value;
+				if (+tval > maxP) tval = elem.value = maxP;
+				if (+tval < 1) tval = elem.value = 1;
+				if (+tval != +cpn)
+					Game.UI.Pag1.PageNum(tval);
+			};
+			Game.UI.BtnNext1.onclick = function () {
+				Game.UI.Pag1.Next();
+			};
+			Game.UI.BtnPrev1.onclick = function () {
+				Game.UI.Pag1.Prev();
+			};
+			for (var i = 0, rbLen = Game.UI.RbArrDictMode.length; i < rbLen; i++) {
+				var rbtn = Game.UI.RbArrDictMode[i];
+				rbtn.onclick = function () {
+					if (this.checked) {
+						Game.UI.ResolveMainHandles(this.value);
+					}
+				};
+			}
+		}
+	}
+};
+var Paginator = new function () {
+	var _ = this, mArray;
+	// aDataConf[0 dataType [0 array, 1 obj], 1 arrayOrObject]
+	_[0] = _.Create = function (aDataConf, aPerPage, aPageNum, aFnUpdateUI, aFnBeforeResolve) {
+		var cArray,
+			ret = {},
+			ArrayLen = 0,
+			PageNum = 1, PerPage = 1, PageCount = 1,
+			zzz = 0;
+		function ResolveData(aDataConf, aPageNum, aPerPage) {
+			if (aDataConf[0]) {
+				cArray = [];
+				for (var n in aDataConf[1])
+					cArray.push([n, aDataConf[1][n]]);
+				mArray = cArray;
+			} else mArray = aDataConf[1];
+			ArrayLen = mArray.length;
+			PageNum = ResolvePageNum(0|aPageNum);
+			PerPage = Math.abs(0|aPerPage);
+			if (1 > PerPage) PerPage = 1;
+			PageCount = Math.ceil(ArrayLen/PerPage);
+			ret.Update();
+		}
+		function ResolvePageNum(aPageNum, aCallUpdate) {
+			var flag1 = aPageNum > 0 && aPageNum <= PageCount;
+			if (aPageNum != PageNum && flag1)
+				PageNum = aPageNum;
+			if (flag1 && aCallUpdate)
+				ret.Update();
+			return PageNum;
+		}
+		// etc
+		ret[0] = ret.PageNum = ret.pageNum = ret.Page = ret.page = function (aPageNum) {
+			return ResolvePageNum(aPageNum, 1);
+		};
+		ret[1] = ret.PageCount = ret.pageCount = function () {
+			return PageCount;
+		};
+		ret[2] = ret.PerPage = ret.perPage = ret.per = function (aPerPage) {
+			var nPP = Math.abs(0|aPerPage);
+			if (nPP !== PerPage && nPP >= 1)
+				ret.Update(PerPage = nPP);
+		};
+		ret[3] = ret.Data = ret.data = ret.Items = ret.items = ResolveData;
+		ret[4] = ret.Next = ret.next = ret.Forward = ret.forward = function () {
+			return ret.PageNum(++PageNum);
+		};
+		ret[5] = ret.Prev = ret.Prev = ret.Back = ret.back = function () {
+			return ret.PageNum(--PageNum);
+		};
+		ret[6] = ret.Update = function () {
+			// Call upper Update
+			if (aFnUpdateUI) {
+				var tArray = mArray.slice((PageNum-1)*PerPage, PerPage+(PageNum-1)*PerPage);
+				aFnUpdateUI(tArray, tArray.length, PerPage, PageNum, PageCount, ArrayLen);
+			}
+		};
+		aFnBeforeResolve && aFnBeforeResolve();
+		ResolveData(aDataConf, aPageNum, aPerPage);
+		return ret;
+	};
+};
+
+function id(id) {return document.getElementById(id);}
+function ce(n) {return document.createElement(n);}
+
+Game.UI.ResolveHandlers();
+		</script>
+		<div class="hline"></div>
+		<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
+		<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+		<script>
+			(function(eBlink){
+				var i = 0, pauseBlink;
+				eBlink.onclick = function () { pauseBlink = !pauseBlink; };
+				(function loop() {
+					if (pauseBlink) return;
+					eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
+					eBlink.style.color = i & 1 ? "" : "lime";
+					setTimeout(loop, 1e3);
+				})();
+			})(document.getElementById("flicker722617809971422"));
+		</script>
+	</div>
+</body>
+</html>
