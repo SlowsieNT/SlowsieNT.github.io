@@ -212,6 +212,7 @@ var Game = {
 			setTimeout(Game.UI.RenderRand, Game.Settings.AnswerDelay);
 		},
 		Update: function (aType) {
+			// Reset/update stats and ui
 			if (2 === aType) {
 				Game.UI.LbCorrect1.innerHTML = Game.Stats.Correct;
 				Game.UI.LbLearning.innerHTML = Game.Stats.Learning;
@@ -251,10 +252,6 @@ var Game = {
 				if (items[i]) answers.push(items[i]);
 			// Now shuffle the answers array
 			Game.Utils.ShuffleArray(answers);
-			var o = {};
-			for (var i in answers)
-				o[answers[i][1][1]]=1;
-			var klen = Object.keys(o).length;
 			// Finally render them
 			Game.UI.RenderAnswers(answers, correctAnswer);
 		},
