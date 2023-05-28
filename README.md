@@ -41,9 +41,6 @@ Optimized file size, now is: `9.18MiB`, was: ~`25MiB`<br>
 ## Tor Region Gennodes - Country Code List Generator
 [/tor/gennodes](https://slowsient.github.io/tor/gennodes)
 
-## Japanese Dictionary (111k words)
-[/romaji/b](https://slowsient.github.io/romaji/b)<br>
-
 ## Romaji Memory Game (7.8k words)
 [/romaji](https://slowsient.github.io/romaji)<br>
 
