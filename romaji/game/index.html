@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!-- CLEAN CODE - BAD OPTIMIZATION ~90% of the time -->
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width">
@@ -44,8 +45,10 @@
 </style>
 </head>
 <body>
+	<!-- Putting dictionary here so page goes dark mode faster? -->
 	<script src="/js/lang/jaBasicDict.js"></script>
 	<script src="/js/lang/jaFrequentDict.js"></script>
+	<!-- Using old school design -->
 	<fieldset>
 		<legend><b><script>document.write(document.title);</script></b></legend>
 		<div class="mw4">
@@ -100,23 +103,25 @@
 				</tr>
 			</table>
 		</fieldset>
-		<fieldset>
-			<legend>Score</legend>
-			<table class="mw4">
-				<tr>
-					<td>
-						<span><b>Correct</b></span>
-						<div><b id="lbCorrect1" class="fg-lime">0</b></div>
-					</td>
-					<td>
-						<div class="mw16">
-							<span><b>Learning</b></span>
-							<div><b id="lbLearning1">0</b></div>
-						</div>
-					</td>
-				</tr>
-			</table>
-		</fieldset>
+		<div>
+			<fieldset>
+				<legend>Score</legend>
+				<table class="mw4">
+					<tr>
+						<td>
+							<span><b>Correct</b></span>
+							<div><b id="lbCorrect1" class="fg-lime">0</b></div>
+						</td>
+						<td>
+							<div class="mw16">
+								<span><b>Learning</b></span>
+								<div><b id="lbLearning1">0</b></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+		</div>
 		<div class="mw2">
 			<div>
 				<span style="font-size:22px">What is the meaning of:</span>
@@ -133,10 +138,10 @@
 		</div>
 		<fieldset>
 			<legend>Tip(s)</legend>
-			<ol class="mw16">
-				<li><span>You can pause to read answer by clicking answer again.</span></li>
-				<li><span>You can pause blinking of license text by clicking it.</span></li>
-			</ol>
+			<!-- wanted to use <ol> but ie6 said "nope" -->
+			<div><span>1. You can pause to read answer by clicking answer again.</span></div>
+			<div><span>2. You can pause blinking of license text by clicking it.</span></div>
+			<div><span>3. You can run this app on Internet Explorer 6.</span></div>
 		</fieldset>
 		<script>
 			//var jaBasicDict, jaFrequentDict;
@@ -225,8 +230,8 @@ var Game = {
 			var _ = this, elements = [],
 				screenW = document.body.offsetWidth;
 			_.LiAnswers.innerHTML = "";
-			if (window.Ja111DEBUGGING=1)
-				console.log("correct:", aCorrectAnswer[1]);
+			if ("undefined" !== typeof console)
+				console.log("Correct:", aCorrectAnswer[1]);
 			// etc
 			for (var i in aAnswerArr) {
 				// oItem[0 word, 1 words[0 xji, 1 romaji, 2 word-type, 3 translation]]
@@ -448,20 +453,24 @@ function ce(n) {return document.createElement(n);}
 
 Game.UI.ResolveHandlers();
 		</script>
-		<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
-		<div><i>Source Code License: <u>Unlicense</u>.</i></div>
-		<script>
-			(function(eBlink){
-				var i = 0, pauseBlink;
-				eBlink.onclick = function () { pauseBlink = !pauseBlink; };
-				(function loop() {
-					if (pauseBlink) return;
-					eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
-					eBlink.style.color = i & 1 ? "" : "lime";
-					setTimeout(loop, 1e3);
-				})();
-			})(document.getElementById("flicker722617809971422"));
-		</script>
+		<!-- footer -->
+		<div class="mw4">
+			<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
+			<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+			<script>
+				(function(eBlink){
+					var i = 0, pauseBlink;
+					eBlink.onclick = function () { pauseBlink = !pauseBlink; };
+					(function loop() {
+						if (!pauseBlink) {
+							eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
+							eBlink.style.color = i & 1 ? "" : "lime";
+						}
+						setTimeout(loop, 1e3);
+					})();
+				})(document.getElementById("flicker722617809971422"));
+			</script>
+		</div>
 	</div>
 </body>
 </html>
