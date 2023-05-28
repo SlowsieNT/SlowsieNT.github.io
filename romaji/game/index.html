@@ -48,6 +48,8 @@
 	<!-- Putting dictionary here so page goes dark mode faster? -->
 	<script src="/js/lang/jaBasicDict.js"></script>
 	<script src="/js/lang/jaFrequentDict.js"></script>
+	<script src="jaBasicDict.js"></script>
+	<script src="jaFrequentDict.js"></script>
 	<!-- Using old school design -->
 	<fieldset>
 		<legend><b><script>document.write(document.title);</script></b></legend>
@@ -299,11 +301,14 @@ var Game = {
 			var arrWords = Game.Stats.Wordlist,
 				arrWordsLen = 0,
 				tmpArr = [], wd = Game.Stats.WordsDone, wLen = wd.length;
+			// Remove answer words that were.
 			for (var i2 in arrWords) {
 				var canAdd = 1;
 				for (var i = 0; i < wLen; i++)
-					if (arrWords[i2][1][1] == wd[i])
+					if (arrWords[i2][1][1] == wd[i]) {
 						canAdd = 0;
+						break;
+					}
 				if (canAdd)
 					tmpArr.push(arrWords[i2]);
 			}
@@ -370,6 +375,7 @@ var Game = {
 				if (+tval != +cpn)
 					Game.UI.Pag1.PageNum(tval);
 			};
+			// yea, we won't shorten for a reason.
 			Game.UI.BtnNext1.onclick = function () {
 				Game.UI.Pag1.Next();
 			};
@@ -389,14 +395,11 @@ var Game = {
 };
 var Paginator = new function () {
 	var _ = this, mArray;
-	// aDataConf[0 dataType [0 array, 1 obj], 1 arrayOrObject]
 	_[0] = _.Create = function (aDataConf, aPerPage, aPageNum, aFnUpdateUI, aFnBeforeResolve) {
-		var cArray,
-			ret = {},
-			ArrayLen = 0,
-			PageNum = 1, PerPage = 1, PageCount = 1,
-			zzz = 0;
+		var ret = {}, cArray, ArrayLen = 0,
+			PageNum = 1, PerPage = 1, PageCount = 1;
 		function ResolveData(aDataConf, aPageNum, aPerPage) {
+			// aDataConf[0 dataType [0 array, 1 obj], 1 arrayOrObject]
 			if (aDataConf[0]) {
 				cArray = [];
 				for (var n in aDataConf[1])
@@ -440,7 +443,8 @@ var Paginator = new function () {
 		ret[6] = ret.Update = function () {
 			// Call upper Update
 			if (aFnUpdateUI) {
-				var tArray = mArray.slice((PageNum-1)*PerPage, PerPage+(PageNum-1)*PerPage);
+				var sIdx = (-1 + PageNum) * PerPage,
+					tArray = mArray.slice(sIdx, PerPage + sIdx);
 				aFnUpdateUI(tArray, tArray.length, PerPage, PageNum, PageCount, ArrayLen);
 			}
 		};
