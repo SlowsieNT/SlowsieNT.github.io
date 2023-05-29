@@ -7,6 +7,22 @@ Used for working with things like `XMLHttpRequest` where `for` loop is useless.<
 ```
 ## Code samples:
 ```js
+
+// Bare minimum: Iterating by Number
+deft([3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
+	if ("undefined" !== typeof console)
+		console.log("value:", aItem);
+	Next();
+});
+
+// Bare minimum: Iterating an Array:
+deft([[1, 3, 4]], function (Next, aItem, aIndex, aArray, aMaxIndex) {
+	if ("undefined" !== typeof console)
+		console.log("index:", aIndex, "value:", aItem);
+	Next();
+});
+
+
 // Basic: Iterating by Number
 deft([0, 3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 	if ("undefined" !== typeof console)
@@ -20,6 +36,7 @@ deft([0, [1, 3, 4]], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 		console.log("index:", aIndex, "value:", aItem);
 	Next();
 });
+
 
 // --- Now using callback to tell iterating is finished ---
 
