@@ -1,5 +1,6 @@
 # deft.js
-Used for working with things like `XMLHttpRequest` where `for` loop is useless.
+Made to work with IE6.<br>
+Used for working with things like `XMLHttpRequest` where `for` loop is useless.<br>
 ```html
 <!-- Best to download js file copy -->
 <script src="https://slowsient.github.io/js/lib/deft.js"></script>
