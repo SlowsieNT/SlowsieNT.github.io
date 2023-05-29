@@ -1,3 +1,11 @@
+# deft.js
+Used for working with things like `XMLHttpRequest` where `for` loop is useless.
+```html
+<!-- Best to download js file copy -->
+<script src="https://slowsient.github.io/js/lib/deft.js"></script>
+```
+## Code samples:
+```js
 // Basic: Iterating by Number
 deft([0, 3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 	if ("undefined" !== typeof console)
@@ -46,3 +54,4 @@ deft([0, 3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 		console.log("deft: done iterating.");
 	else alert("deft: done iterating.");
 });
+```
