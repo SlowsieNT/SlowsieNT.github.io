@@ -1,3 +1,12 @@
+# paginate.js
+Made to work with IE6.<br>
+Library is feature rich.<br>
+```html
+<!-- Best to download js file copy -->
+<script src="https://slowsient.github.io/js/lib/paginate.js"></script>
+```
+## Code samples:
+```js
 // Pagination Example code:
 var pag1 = Paginate({
 	iPageNum: 1, iPerPage: 2,
@@ -22,3 +31,4 @@ var pag1 = Paginate({
 			console.log(aPageItems);
 	}
 });
+```
