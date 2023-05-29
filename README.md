@@ -8,8 +8,7 @@ Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 Optimized file size, now is: `9.18MiB`, was: ~`25MiB`<br>
 
 ## JS Libraries
-[js/pag2.js](http://SlowsieNT.github.io/js/pag2.js)<br>
-[js/pag2.js at Github](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/pag2.js)<br>
+[under maintenance]
 
 ## Username/Password/Passphrase generator
 *Many options you can use!*<br>
