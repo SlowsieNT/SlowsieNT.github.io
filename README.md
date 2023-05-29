@@ -15,10 +15,6 @@ Optimized file size, now is: `9.18MiB`, was: ~`25MiB`<br>
 *Many options you can use!*<br>
 [/pugen](https://slowsient.github.io/pugen)<br>
 
-## Password/Passphrase generator
-*Many options you can use!*<br>
-[/ppgen](https://slowsient.github.io/ppgen)<br>
-
 ## BMI Calculator (body mass index)
 [/bmicalc](https://slowsient.github.io/bmicalc)<br>
 
