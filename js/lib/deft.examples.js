@@ -1,4 +1,3 @@
-
 // Basic: Iterating by Number
 deft([0, 3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 	if ("undefined" !== typeof console)
