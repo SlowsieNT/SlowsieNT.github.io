@@ -1,4 +1,7 @@
-// etc
+/* This is free and unencumbered software released into the public domain.
+ * License: Unlicense
+ * For more information, please refer to <http://unlicense.org/>
+ */
 function deft(aConf, aFnIter, aFnDone) {
 	// aConf[max|array]
 	// aConf[start, max|array]
