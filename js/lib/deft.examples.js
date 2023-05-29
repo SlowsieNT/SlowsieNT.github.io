@@ -1,3 +1,20 @@
+
+// Basic: Iterating by Number
+deft([0, 3], function (Next, aItem, aIndex, aArray, aMaxIndex) {
+	if ("undefined" !== typeof console)
+		console.log("value:", aItem);
+	Next();
+});
+
+// Basic: Iterating an Array:
+deft([0, [1, 3, 4]], function (Next, aItem, aIndex, aArray, aMaxIndex) {
+	if ("undefined" !== typeof console)
+		console.log("index:", aIndex, "value:", aItem);
+	Next();
+});
+
+// --- Now using callback to tell iterating is finished ---
+
 // Iterating an Array:
 deft([0, [1, 3, 4]], function (Next, aItem, aIndex, aArray, aMaxIndex) {
 	if ("undefined" !== typeof console)
