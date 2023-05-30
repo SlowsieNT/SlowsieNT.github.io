@@ -2,7 +2,7 @@
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Japanese Memory Game v3; JaLLiK
-[/romaji/game](https://slowsient.github.io/romaji/game) (Link)<br>
+[/romaji/game](https://slowsient.github.io/romaji/game) <- Link<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
 Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 Optimized file size, now is: `9.18MiB`, was: ~`25MiB`<br>
