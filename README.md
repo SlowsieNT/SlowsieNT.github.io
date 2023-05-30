@@ -2,7 +2,7 @@
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
 ## Japanese Memory Game v3; JaLLiK
-Needs `~9MB` to load it, unless cached.<br>
+Needs `~9MB` to load it UNLESS cached.<br>
 [/romaji/game](https://slowsient.github.io/romaji/game) <- Link<br>
 Made for Mobile users, also works on Internet Explorer, yes!<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
