@@ -29,8 +29,10 @@ function Paginate(aConf) {
 	function HandleUICA(aElemArr, aValue, aAttr) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
+		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
 			var t = aElemArr[i], etn = t.tagName;
+			if (!t) continue;
 			if (void 0 !== aAttr) {
 				if ("disabled" === aAttr)
 					if (aValue) t.setAttribute(aAttr, "");
