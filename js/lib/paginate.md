@@ -10,7 +10,7 @@ Library is feature rich.<br>
 // Pagination Example code:
 var pag1 = Paginate({
 	iPageNum: 1, iPerPage: 2,
-	// IMPORTANT: Properties below can be written in camelCase, or PascalCase!
+	// PROPERTIES BELOW CAN BE WRITTEN IN camelCase, or PascalCase!
 	// Data[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 	Data: [
 		0, [1,2,3,4,5] // OR: [ 1, {a:1,b:2,c:3,d:4,e:5} ]
@@ -20,9 +20,11 @@ var pag1 = Paginate({
 	// OPTIONAL: Properties below are Element, or Array-like:
 	Back: [back1, back2],
 	Next: [next1, next2],
+	// OPTIONAL: if INPUT/TEXTAREA/SELECT then user can modify them:
 	PerPage: [perPage1, perPage2],
 	CurPage: [curPage1, curPage2],
 	PageCount: [pageNum1, pageNum2],
+	// OPTIONAL: These are read only:
 	PageItemsCount: [PageItemsCount1, PageItemsCount2],
 	ItemsCount: [ItemsCount1, ItemsCount2],
 	// Update usually called after any change
