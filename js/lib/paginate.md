@@ -10,6 +10,7 @@ Library is feature rich.<br>
 // Pagination Example code:
 var pag1 = Paginate({
 	iPageNum: 1, iPerPage: 2,
+	// IMPORTANT: Properties below can be written in camelCase, or PascalCase!
 	// Data[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 	Data: [
 		0, [1,2,3,4,5] // OR: [ 1, {a:1,b:2,c:3,d:4,e:5} ]
