@@ -179,6 +179,7 @@ var Game = {
 	},
 	Settings: {
 		AnswerDelay: 1.5e3,
+		ReAnswerDelay: 2e3,
 		AnswersPerWord: 4
 	},
 	Stats: {
@@ -242,22 +243,22 @@ var Game = {
 				var oItem = aAnswerArr[i][1][1],
 					hAns = _.CreateAnswer(aAnswerArr[i][1][3], (i > 0 ? 4 : 16)),
 					hTmr,
-					zzz = 2;
-				function timerHide() {
+					zzz = 2, answered;
+				function timerHide(aDelay) {
 					clearTimeout(hTmr);
-					hTmr = setTimeout(Game.UI.RenderRand, Game.Settings.AnswerDelay);
+					hTmr = setTimeout(Game.UI.RenderRand, aDelay);
 				}
 				hAns.IsAnswer = aCorrectAnswer[1][1] === oItem;
 				//console.log(hAns, hAns.IsAnswer, aCorrectAnswer[1][1], oItem)
 				hAns.Handle.HData = hAns;
 				hAns.Handle.onclick = function () {
 					var tElem = this;
-					if (tElem.gameClicked) {
-						timerHide();
+					if (answered) {
+						timerHide(Game.Settings.ReAnswerDelay);
 					} else {
-						tElem.gameClicked = 1;
+						answered = 1;
 						_.OnAnswer(tElem, elements, aCorrectAnswer);
-						timerHide();
+						timerHide(Game.Settings.AnswerDelay);
 					}
 				};
 				elements.push(hAns);
