@@ -8,7 +8,7 @@ Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 Optimized file size, now is: `9.18MiB`, was: ~`25MiB`<br>
 
 ## JavaScript Libraries
-[deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md)<br>
+[deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - intended for AJAX use<br>
 [paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
 ## Username/Password/Passphrase generator
