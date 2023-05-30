@@ -1,4 +1,5 @@
 # deft.js
+## This is free and unencumbered software released into the public domain.
 Made to work with IE6.<br>
 Used for working with things like `XMLHttpRequest` where `for` loop is useless.<br>
 ```html
