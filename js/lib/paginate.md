@@ -1,4 +1,5 @@
 # paginate.js
+## This is free and unencumbered software released into the public domain.
 Made to work with IE6.<br>
 Library is feature rich.<br>
 ```html
