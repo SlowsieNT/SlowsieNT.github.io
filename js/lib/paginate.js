@@ -49,16 +49,15 @@ function Paginate(aConf) {
 		HandleUICA(PageCount, aPageCount);
 		HandleUICA(PageItemsCount, aPageItemsLen);
 		HandleUICA(ItemsCount, aArrayLen);
-		if (AutoDisable) {
-			HandleUICA(Back, 1 === aPageNum, "disabled");
+		if (AutoDisable)
+			HandleUICA(Back, 1 === aPageNum, "disabled"),
 			HandleUICA(Next, iPageCount === aPageNum, "disabled");
-		}
 	}
 	// Handle events
 	function AddHandler(aElemArr, aEventName, aFunc) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
-		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
+		for (var t, i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
 			var elem = aElemArr[i], etn = elem.tagName;
 			if (!aEventName) {
 				if ("INPUT" === etn || "TEXTAREA" === etn)
@@ -67,14 +66,19 @@ function Paginate(aConf) {
 			}
 			if (!aEventName) return;
 			if (p.aes) elem.addEventListener(aEventName, aFunc);
-			else if (p.ae) elem.attachEvent("on" + aEventName, aFunc);
-			else elem["on" + aEventName] = aFunc;
+			else {
+				function eH(e) { aFunc && aFunc.call(elem, e||event, elem); }
+				if (p.ae) elem.attachEvent("on" + aEventName, eH);
+				else elem["on" + aEventName] = eH;
+			}
 		}
 	}
 	// Handle per page items and events
 	AddHandler(PerPage, "", function (e) { rH.PerPage(this.value); });
 	// Handle current page number and events
 	AddHandler(CurPage, "", function (e) { rH.PageNum(this.value); });
+	// Handle page num change
+	AddHandler(PageCount, "", function (e) { rH.PerPage(Math.ceil(ArrayLen/+this.value)); });
 	// Handle button events
 	AddHandler(Back, "click", function (e) { rH.Back(); });
 	AddHandler(Next, "click", function (e) { rH.Next(); });
@@ -112,17 +116,14 @@ function Paginate(aConf) {
 	rH[1] = rH.PageCount = rH.pageCount = function () { return iPageCount; };
 	rH[2] = rH.PerPage = rH.perPage = rH.per = function (aPerPage) {
 		var nPP = Math.abs(0 | aPerPage);
+		if (nPP < 1) nPP = 1;
 		if (nPP !== iPerPage && nPP >= 1)
 			rH.Update(1, iPerPage = nPP);
 		return iPerPage;
 	};
 	rH[3] = rH.Data = rH.data = rH.Items = rH.items = ResolveData;
-	rH[4] = rH.Next = rH.next = rH.Forward = rH.forward = function () {
-		return rH.PageNum(++iPageNum);
-	};
-	rH[5] = rH.Prev = rH.Prev = rH.Back = rH.back = function () {
-		return rH.PageNum(--iPageNum);
-	};
+	rH[4] = rH.Next = rH.next = rH.Forward = rH.forward = function () { return rH.PageNum(++iPageNum); };
+	rH[5] = rH.Prev = rH.Prev = rH.Back = rH.back = function () { return rH.PageNum(--iPageNum); };
 	rH[6] = rH.Update = function (aCallType) {
 		// Call upper Update
 		if (UpdateUI) {
