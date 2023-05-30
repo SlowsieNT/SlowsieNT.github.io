@@ -59,8 +59,10 @@ function Paginate(aConf) {
 	function AddHandler(aElemArr, aEventName, aFunc) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
-		for (var t, i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
-			var elem = aElemArr[i], etn = elem.tagName;
+		if (!aElemArr) return;
+		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
+			var elem = aElemArr[i], etn = elem && elem.tagName;
+			if (!elem) continue;
 			if (!aEventName) {
 				if ("INPUT" === etn || "TEXTAREA" === etn)
 					aEventName = inputEvt;
