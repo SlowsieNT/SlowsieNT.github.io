@@ -31,7 +31,7 @@ function Paginate(aConf) {
 			aElemArr = [aElemArr];
 		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
-			var t = aElemArr[i], etn = t.tagName;
+			var t = aElemArr[i], etn = t && t.tagName;
 			if (!t) continue;
 			if (void 0 !== aAttr) {
 				if ("disabled" === aAttr)
