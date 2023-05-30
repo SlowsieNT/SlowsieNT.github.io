@@ -1,16 +1,16 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
 
+## JS Libraries (for Developers)
+[deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
+[paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
+
 ## Japanese Memory Game v3; JaLLiK
 Needs `~9MB` to load it UNLESS cached.<br>
 [/romaji/game](https://slowsient.github.io/romaji/game) <- Link<br>
 Made for Mobile, also IE6!<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
 Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
-
-## JavaScript Libraries
-[deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
-[paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
 ## Username/Password/Passphrase generator
 *Many options you can use!*<br>
