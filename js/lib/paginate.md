@@ -10,14 +10,14 @@ Library is feature rich.<br>
 // Pagination Example code:
 var pag1 = Paginate({
 	iPageNum: 1, iPerPage: 2,
-	// PROPERTIES BELOW CAN BE WRITTEN IN camelCase, or PascalCase!
+	// ALL PROPERTIES BELOW CAN BE WRITTEN IN camelCase, or PascalCase!
 	// Data[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 	Data: [
 		0, [1,2,3,4,5] // OR: [ 1, {a:1,b:2,c:3,d:4,e:5} ]
 	],
 	// OPTIONAL: Auto disable Next/Back button?
 	AutoDisable: true,
-	// OPTIONAL: Properties below are Element, or Array-like:
+	// OPTIONAL: ALL Properties below are Element, or Array-like (except Update callback, yes):
 	Back: [back1, back2],
 	Next: [next1, next2],
 	// OPTIONAL: if INPUT/TEXTAREA/SELECT then user can modify them:
