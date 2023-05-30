@@ -14,9 +14,9 @@ var pag1 = Paginate({
 	Data: [
 		0, [1,2,3,4,5] // OR: [ 1, {a:1,b:2,c:3,d:4,e:5} ]
 	],
-	// Auto disable Next/Back button?
+	// OPTIONAL: Auto disable Next/Back button?
 	AutoDisable: true,
-	// Properties are Element, or Array-like:
+	// OPTIONAL: Properties below are Element, or Array-like:
 	Back: [back1, back2],
 	Next: [next1, next2],
 	PerPage: [perPage1, perPage2],
