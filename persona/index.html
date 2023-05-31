@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Tools: BMI (gain or lose weight), color keywords, zodiac sign keywords, tritype info.">
+	<title>"Persona"</title>
+<style>
+body{background-color: #111;color:gray;}
+.dib{display:inline-block;*display:inline;*zoom:1;}
+a{color:lime;}
+.w32{width:32px;}
+.w48{width:48px;}
+.w64{width:64px;}
+.w96{width:96px;}
+.fwb{font-weight:bold;}
+.fg-w{color:#fff;}.fg-s{color:silver;}
+.mn4{margin-top:4px;}.mn8{margin-top:8px;}
+.m4{margin:4px;}.mw4{margin-left:4px;}
+select,input {outline:none;border:1px gray solid;padding:4px;background-color:#111;color:white;}
+button {outline:none;border:1px gray solid;padding:4px;background-color:#333;color:white;}
+button:hover {background-color:#555;}
+.w320{max-width:480px;*width:480px;}
+.fs24{font-size:24px;}
+</style>
+</head>
+<body>
+	<div class="m4">
+		<b class="fs24"><script>document.write(document.title);</script></b>
+	</div>
+<table>
+	<tr>
+		<td class="fg-s">Color:</td>
+		<td>
+			<input type="text" id="TbColor" class="w64" value="red">,
+			or: <select id="CbColor"></select>
+		</td>
+	</tr>
+	<tr>
+		<td class="fg-s">Star Sign:</td>
+		<td>
+			<input type="text" id="TbStarSign" class="w96" value="leo"><button id="BtnStarSignFromDate" class="mw4">From date...</button>
+		</td>
+	</tr>
+	<tr>
+		<td class="fg-s">Get BMI:</td>
+		<td>
+			<input type="text" id="TbBMIHeight" class="w32" value="142">
+			<input type="text" id="TbBMIWeight" class="w32" value="42">
+			Height, Weight (cm, kg)
+		</td>
+	</tr>
+	<tr><td class="fg-s">Tritype:</td><td><input type="text" id="TbTritype" class="w48" value="368"></td></tr>
+</table>
+<div class="m4">
+	<div class="mn8">
+		<span class="fg-s"><b>BMI info</b>:</span>
+		<div id="outBMI" class="mn4 w320">N/A</div>
+	</div>
+	<div class="mn8">
+		<span class="fg-s"><b>Color info</b>:</span>
+		<div id="outColor" class="mn4 w320">N/A</div>
+	</div>
+	<div class="mn8">
+		<span class="fg-s"><b>Star Sign info</b>:</span>
+		<div id="outStarSign" class="mn4 w320">N/A</div>
+	</div>
+	<div class="mn8">
+		<span class="fg-s"><b>Tritype info</b>:</span>
+		<div id="outTritype" class="mn4 w320">N/A</div>
+	</div>
+</div>
+<!-- footer -->
+<div class="m4">
+	<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
+	<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+	<script>
+		(function(eBlink){
+			var i = 0, pauseBlink;
+			eBlink.onclick = function () { pauseBlink = !pauseBlink; };
+			(function loop() {
+				if (!pauseBlink) {
+					eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
+					eBlink.style.color = i & 1 ? "" : "lime";
+				}
+				setTimeout(loop, 1e3);
+			})();
+		})(document.getElementById("flicker722617809971422"));
+	</script>
+</div>
+<script>
+var UITbs = [TbTritype, TbColor, TbStarSign, TbBMIHeight, TbBMIWeight];
+ColorDesc();
+~function(){
+	for (var n in ColorDesc.ac) {
+		var e = document.createElement("option");
+		e.innerHTML = e.value = n;
+		CbColor.appendChild(e);
+	}
+}();
+AddHandler(UITbs, "", UITbUpdate);
+AddHandler(CbColor, "change", function () {
+	TbColor.value = this.value;
+	UITbUpdate.call(TbColor);
+});
+onload = function () {
+	// handle initial input
+	CbColor.value = TbColor.value;
+	for (var i in UITbs)
+		UITbUpdate.call(UITbs[i]);
+	// add button handler
+	BtnStarSignFromDate.onclick = function () {
+		var p = prompt("Input date, format:\r\nmonth, day:", "1, 1");
+		if (null !== p && (p = p.split(/\s?,\s?/)).length > 1) {
+			p = StarSign(p[0], p[1])[0];
+			if (p)
+				TbStarSign.value = p,
+				UITbUpdate.call(TbStarSign);
+		}
+	};
+};
+function handleBMI() {
+	var index = GetBMI(TbBMIHeight.value/100, TbBMIWeight.value);
+	outBMI.innerHTML = index.index + " (" + (index.lose ? "lose" : index.gain ? "gain" : "ideal") + " weight)";
+}
+function UITbUpdate() {
+	var t = this;
+	if (TbTritype === t) {
+		var tt = Tritype()[t.value];
+		outTritype.innerHTML = tt && tt.length ? "<i>"+tt[0]+"</i>" + "<br>" + tt[1] : "INVALID TRITYPE";
+	} else if (TbColor === t) {
+		var k;
+		outColor.innerHTML = (k=ColorDesc(t.value)) && k[1] || "INVALID COLOR NAME";
+	} else if (TbStarSign === t) {
+		var k;
+		outStarSign.innerHTML = (k=StarSign(0, 0, t.value, 1)) && k[1] && k[1].replace("\r\n\r\n", "<br><br>") || "INVALID STAR SIGN";
+	} else if (TbBMIWeight === t) {
+		handleBMI();
+	} else if (TbBMIHeight === t) {
+		handleBMI();
+	} else if (0 === t) {
+		
+	}
+}
+	function AddHandler(aElemArr, aEventName, aFunc) {
+		var z, ac = arguments.callee;
+		if (void 0 === ac.ois)
+			z = document.createElement("a"),
+			ac.ois = null === z.oninput,
+			ac.ae = !!z.attachEvent,
+			ac.aes = !!z.addEventListener,
+			ac.iev = ac.ois ? "input" : "keyup";
+		if (aElemArr && aElemArr.tagName)
+			aElemArr = [aElemArr];
+		if (!aElemArr) return;
+		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
+			var elem = aElemArr[i], etn = elem && elem.tagName;
+			if (!elem) continue;
+			if (!aEventName) {
+				if ("INPUT" === etn || "TEXTAREA" === etn)
+					aEventName = ac.iev;
+				else aEventName = "change";
+			}
+			if (!aEventName) return;
+			if (ac.aes) elem.addEventListener(aEventName, aFunc);
+			else {
+				var eH = (function(elem){
+					return function (e) {
+						aFunc && aFunc.call(elem, e||event, elem);
+					}
+				})(elem);
+				if (ac.ae) elem.attachEvent("on" + aEventName, eH);
+				else elem["on" + aEventName] = eH;
+			}
+		}
+	}
+function GetBMI(aH, aW) {
+	// aH = meters, aW = kg
+	var index = aW/(aH*aH);
+	if (index > 25) index = 25;
+	return {
+		index: index.toFixed(1),
+		gain: index < 19,
+		lose: index > 24
+	}
+}
+function ColorDesc(aColor) {
+	var ac = arguments.callee;
+	if (!ac.ac) ac.ac = {
+		black: "Elegant, Proper, Powerful, Conservative, Sophisticated, Mystery, Insecure, Determined, Authoritarian, Independent, Fearful, Formality, Prestige, Serious, Classic",
+		white: "Serene, Calm, Naive, Indifferent, Optimistic, Innocent, Virtuous, Unfriendly, Organized, Bland, Delicate, Independent, Perfectionist, Discreet, Freshness, Hope, Goodness, Purity, Cleanliness, Simplicity, Coolness",
+		orange: "Positive, Superficial, Open-minded, Exhibitionist, Adventurer, Tolerant, Enthusiastic, Impatient, Spontaneous, Insincere, Social, Active, Energetic, Generous, Good Negotiator, Playful, Witty",
+		red: "Passionate, Impulsive, Extrovert, Risk-taker, Physical, Aggressive, Dominant, Energetic, Moody, Determined, Ambitious, Vibrant, Strong-willed, Confident",
+		yellow: "Optimist, Enthusiast, Creative, Fearful, Perfectionist, Happy, Communicative, Smart, Impatient, Methodical, Original, Committed, Responsible, Thorough, Faithful, Helpful, Sensible",
+		purple: "Creative, Immature, Wise, Arrogant, Intuitive, Mysterious, Imaginative, Compassionate, Dreamer, Visionary, Emotional, Sensitive, Supportive, Gentle, Charismatic, Peaceful",
+		blue: "Honest, Calm, Stubborn, Predictable, Serene, Reliable, Conservative, Sincere, Committed, Friendly, Authoritative, Empathetic, Loyal, Idealistic, Romantic",
+		green: "Positive, Possessive, Practical, Jealous, Calm, Judgy, Peacemaker, Greedy, Generous, Materialist, Analitical, Introverted, Cynical, Intellectual",
+		pink: "Romantic, Caring, Immature, Delicate, Sweet, Generous, Charming, Optimistic, Love, Sensitive, Kind, Happy",
+		brown: "Stable, Honest, Friendly, Reliable, Approachable, Natural, Organic",
+		gold: "Wealth, Success, Status, Generous, Living, Wisdom, Charisma, Optimistic",
+		gray: "Elegant, Balance, Neutral, Calm, Stability, Security, Strong, Authority, Maturity",
+		teal: "Old soul, Wise, Least aggressive, Romantic, Creative, Imaginative, Strong analytic mind, Well-liked",
+		indigo: "Spiritual, Mysterious, Integrity, Traditional, Idealistic, Intuitive",
+		magenta: "Kind, Compassionate, Gentle, Tolerant, Arrogant, Irritable, Creative, Down-to-earth",
+		turquoise: "Wise, Creative, Expressive, Balance, Calm, Refreshing, Clarity",
+		beige: "Earthy, Classic, Neutral, Warm, Bland, Soft, Dependable, Flexible, Crisp, Conservative, Dull, Boring",
+		navy: "Dignity, Credibility, Strength, Authority, Conservative, Trustworthy, Traditional, Quiet, Confident, Serene",
+		lightblue: "Peace, Tranquility, Quiet, Cool, Clean, Soft, Pure, Understanding",
+		terracotta: "Wholesome, Earthy, Country, Welcoming, Warmth, Stability, Fall, Harvest",
+		fuchsia: "Hot, Sensual, Exciting, Bright, Fun, Energetic, Feminine",
+		lightpink: "Love, Romance, Softness, Delicacy, Sweetness, Friendship, Tenderness, Fidelity, Compassion",
+		burgundy: "Vigor, Elegance, Richness, Refinement, Leadership, Maturity, Expensive",
+		lavender: "Enchantment, Nostalgia, Delicacy, Floral, Sweet, Fashion"
+	};
+	return [aColor, ac.ac[(aColor + "").toLowerCase().replace(/[^a-z]/g, "")] || null];
+}
+function StarSign(aMonth, aDay, aSign, aWithDesc) {
+	// Two usage cases: StarSign(0, 0, "leo"); StarSign(7, 23)
+	var ac = arguments.callee;
+	if (!ac.ed)
+		ac.ed = [20, 19, 20, 20, 20, 21, 22, 22, 21, 22, 21, 21],
+		ac.es = "Capricorn,Aquarius,Pisces,Aries,Taurus,Gemini,Cancer,Leo,Virgo,Libra,Scorpio,Sagittarius".split(","),
+		ac.sd = {
+			pisces: "Gentle, Wise, Friendly, Helpful, Creative, Explorer, Sensitive, Artistic, Trusting, Generous, Percetive, Easy-going, Compassionate, Philosophical\r\n\r\nCareless, Spiteful, Secretive, Escapist, Gullible, Irrational, Oblivious, Indecisive, Easily-led, Self-pitying, Overly-sensitive, Over-emotional, Scatterbrained, Absent-minded, Temperamental, Impressionable",
+			cancer: "Reliable, Passionate, Imaginative, Defensive, Sympathetic, Helpful, Persistent, Beliavable, Ostentatious, Susceptible, Sharp, Devoted, Family person, Generous\r\n\r\nSensitive, Unpredictable, Clingy, Over emotional, Dull, Irresolute, Over-sentimental, Devious, Restless, Stubborn, Suspicious, Aggressive, Possessive, Manipulative, Self-absorbed, Evasive, Crabby, Shrewd, Touchy, Moody, Lazy",
+			scorpio: "Intuitive, Secretive, Tenacious, Passionate, Mysterious, Resourceful, Determined, Trustworthy, Ambitious, Protective, Creative, Powerful, Intense, Clever, Loyal, Brave\r\n\r\nAggressive, Obstinate, Intolerant, Possessive, Manipulative, Destructive, Jealous, Resentful, Bad-tempered, Willful, Stubborn, Distrustful, Devious, Irrational",
+			taurus: "Punctual, Tenacious, Persistent, Ambitious, Organized, Dependable, Resourceful, Determined, Thorough, Generous, Outgoing, Focused, Patient, Clever, Tough, Loyal\r\n\r\nInflexible, Possessive, Materialistic, Opinionated, Self-centered, Self-indulgent, Argumentative, Uncompromising, Obstinate, Resentful, Brooding, Spiteful, Jealous, Rigid, Lazy",
+			virgo: "Reliable, Intelligent, Observant, Modest, Patient, Practical, Charming, Analytical, Dignified, Faithful, Logical, Organized, Meticulous, Perfectionist, Efficient, Diligent, Serious, Helpful, Witty, Clean, Kind, Tidy\r\n\r\nNagging, Worrier, Petty, Overcritical, Over-demanding, Undemonstrative, Fussy, Self-righteousness, Cynical, Aloof, Excessive worry, Judgmental, Nit-picky, Pedantic, Pessimistic, Apathetic, Stern, Vindictive, Nosy, Nervous, Unagreeable",
+			capricorn: "Loyal, Witty, Patient, Reliable, Cautious, Practical, Charming, Ambitious, Hardworking, Strong willed, Independent, Resourceful, Tenacious, Organized\r\n\r\nCold, Anxious, Haughty, Stubborn, Skeptical, Ruthless, Pessimistic, Apprehensive, Never satisfied, Holds a grudge, Condescending, Status seeking, Self-absorbed, Unmoveable, Insensitive, Egotistic",
+			aquarius: "Friendly, Creative, Dependable, Thoughtful, Idealistic, Humanitarian, Loyal friend, Individualistic, Strong willed, Independent, Intellectual, Generous, Original, Tolerant, Intuitive, Witty\r\n\r\nScattered, Detached, Contradictory, Stubborn, Chaotic, Unreasonable, Self-conscious, Distant, Rebellious, Insensitive, Unpredictable, Tactless",
+			libra: "Idealistic, Expressive, Diplomatic, Thoughtful, Sentimental, Easy-going, Determined, Peace-loving, Strong beliefs, Charming, Generous, Reliable, Sincere, Logical, Sweet, Loyal, Nice, Cooperative, Refined, Artistic\r\n\r\nIndolent, Codependant, Indecisive, Self-serving, Ineffectual, Sulky, Ill-tempered, Complainer, Egocentric, Withdrawn, Manipulative, Flirty, Afraid of conflicts",
+			gemini: "Bright, Admired, Adaptable, Youthful, Rational, Thinker, Fashionable, Flexible, Amusing, Well-informed, Chatty, Quick, Lively, Flexible, Content\r\n\r\nConflicting, Tentative, Indecisive, Persuasive, Anxious, Impulsive, Uneasy, Dishonest, Fidgety, Selfish, Moody, Tense, Easily bored, Manipulative, Sarcastic, Restless, Irritable, Unpredictable, Inconsistent, Shallow, Evasive, Mutable",
+			sagittarius: "Idealistic, Generous, Charming, Passionate, Independent, Trustworthy, Adventurous, Investigative, Free spirit, Optimistic, Outgoing, Amusing, Original, Honest, Loyal, Bold\r\n\r\nForgetful, Hotheaded, Outspoken, Domineering, Argumentative, Over-confident, Over-exaggerate, Blindly optimistic, Dogmatic, Impulsive, Impatient, Restless, Careless, Tactless, Aloof, Blunt",
+			aries: "Risk-taker, Spontaneous, Good friend, Strong willed, Confident, Curious, Helpful, Daring, Caring, Dreamer, Fast, Courageous, Empathetic, Self-starter, Energetic, Dynamic, Intrepid, Independent, Optimistic, Enthusiastic\r\n\r\nImpatient, Impetuous, Competitive, Irresponsible, Opinionated, Head strong, Temperamental, Argumentative, Impulsive, Stubborn, Reckless, Restless, Jealous, Bossy, Brash, Blunt, Intolerance, Insensitive, Short-tempered, Moody",
+			leo: "Courageous, Determined, Charismatic, Encouraging, Responsible, Independent, Strong willed, Warmhearted, Confident, Ambitious, Generous, Trusting, Fearless, Clever, Loyal, Proud\r\n\r\nBossy, Stubborn, Over-dramatic, Vengeful, Judgmental, Arrogant, Brooding, Egocentric, Pretentious, Demanding, Boastful, Oversensitive, Imperious"
+		};
+	if (!aSign)
+		aSign = ac.es[(--aMonth + (ac.ed[aMonth] < aDay)) % 12];
+	return [aSign, aWithDesc && ac.sd[(aSign + "").toLowerCase()]];
+}
+function Tritype() {
+	var ac = arguments.callee;
+	if (!ac.tt) ac.tt = [
+		"125, 152, 215, 251, 512, 521, The Mentor, They are very diligent, caring, and knowledgeable. They want to be ethical, helpful, and wise. They are very idealistic and see what needs to be done and the simple and effective ways to do it. They are intensely private but care about people. They seek practical systems and procedures to measure results and effectiveness. They can come across as particular at times but they are always focused on improvement.",
+		"126, 162, 216, 261, 612, 621, The Supporter, They are diligent, caring, and inquisitive. They want to be ethical, helpful, and supportive. Highly responsible and cooperative, they are most comfortable when They do things ‘by the book’ and know what to expect. Focused on the needs and concerns of others, they seek ways to be of service. They enjoy being the power behind the throne. They also need to be seen as the one that makes the extra effort to do what is called for in any given situation.",
+		"127, 172, 217, 271, 712, 721, The Teacher, They are diligent, caring, and innovative. They want to be ethical, empathetic, and inspired. Engaging, fun-loving, and outgoing, they want to be with people. They seek fun with a purpose, needing goals as well as time to play and celebrate and enjoy life. They love discovering new things. They have a gift of being able to squeeze the boredom out of anything tedious. They may seem stern at times but they are actually very lighthearted and enjoy teaching others what matters to them.",
+		"135, 153, 315, 351, 513, 531, The Technical Expert, They are diligent, focused, and knowledgeable. They want to be ethical, efficient, and wise. Highly rational, they seek systems and procedures. Detail-oriented, they like mathematical concepts and finding ways to breakdown and understand complex material. They are very precise and good with exacting details that others find difficult to manage. They like seeing interconnections from an unbiased perspective that can at times come across as technical and impersonal.",
+		"136, 163, 316, 361, 613, 631, The Taskmaster, They are diligent, ambitious, and inquisitive. They want to be ethical, efficient, and dutiful. Highly industrious and responsible, they are focused on achievement. They feel obligated to be orderly and create a successful image as dictated by society. Most importantly, they focus on Their duty and finding certainty. They are inclined to follow a tried and true approach to everything They do.",
+		"137, 173, 317, 371, 713, 731, The Systems Builder, They are diligent, ambitious, and innovative. They want to be ethical, efficient, and upbeat. They are self-motivated and want to achieve Their goals in a positive and effective way. They want to do Their best and want to look good doing it. They focus on success and seek ways to measure it. They are also very focused on building a successful foundation for whatever They do.",
+		"145, 154, 415, 451, 514, 541, The Researcher, They are diligent, intuitive, and knowledgeable. They want to be ethical, original, and wise. Highly intellectual, they are focused on what They perceive is correct and above reproach. Motivated to be informed, they are research-oriented. They seek and quote the opinions of experts to avoid being uncertain and seen as ignorant. They like to learn and will deeply study whatever captures Their interest.",
+		"146, 164, 416, 461, 614, 641, The Philosopher, They are diligent, intuitive, and inquisitive. They want to be ethical, original, and certain. Morally focused, they have strong emotions and are inclined to voice Their feelings and intuitions. They care deeply and want to help others improve their lives and the expectations they have of themselves. They  try to find the best philosophy that matches who They are in Their world view, and use it as Their guide.",
+		"147, 174, 417, 471, 714, 741, The Visionary, They are diligent, intuitive, and innovative. They want to be ethical, expressive, and positive. They are passionate and idealistic. They want to make a difference in the world and see the many possible approaches to different situations. Perfectionistic, they seek standards that improve lives. Their ideal vision of life is a utopia that everyone will contribute to and live by.",
+		"258, 285, 528, 582, 825, 852, The Strategist, They are caring, knowledgeable, and protective. They want to be helpful, wise, and straight- forward. Highly sensitive, they are an empathetic, intellectual ‘people’ person. They are both introverted and extroverted. At times they can be direct and easily move towards others and can ‘over' give or pull away to recharge. ",
+		"259, 295, 529, 592, 925, 952, The Problem Solver, They are caring, knowledgeable, and accepting. They want to be helpful, wise, and peaceful. They have a very shy, gentle, and reserved nature and tend to focus on what is harmonious. They need companionship and avoid feelings of loneliness by focusing on the needs and concerns of others. They can struggle with inaction when They feel overwhelmed. ",
+		"268, 286, 628, 682, 826, 862, The Rescuer, caring, They are supportive, and protective. They want to be helpful, engaging, and straightforward. By nature, they want to be in charge of Their world and are attracted to the noble cause. They wish to shield others from harm and will challenge what is unjust. They want to know what the rules are in order to feel safe and to know when They can break them. They are great in an emergency and always want to help others in need.",
+		"269, 296, 629, 692, 926, 962, The Good Samaritan, They are caring, inquisitive, and accepting. They want to be helpful, supportive, and peaceful. They like people and want to find ways to engage with them. Their sense of pride comes from getting along with others and being of assistance. They are known for Their easygoing and friendly disposition. They hate conflict and may struggle with being too indirect. However, this Tritype is not as passive as they believe and gently maneuvers to have their needs met. This can be confusing because they feel they are very generous and non conflictual so feel sad when told they are being controlling or manipulating.",
+		"278, 287, 728, 782, 827, 872, The Free Spirit, They are caring, innovative, and protective. They want to be helpful, loving, and straightforward. They are assertive, funny, and outgoing. They like to use Their charming and sunny disposition to create an upbeat, positive, and action-packed environment. They are also very nurturing to those in Their circle of care. They also like to be free follow Their own muse and not be obligated to anyone.",
+		"279, 297, 729, 792, 927, 972, The Peacemaker, They are caring, innovative, and accepting. They want to be helpful, upbeat, and peaceful. They are very kind and tend to see the best in others. They focus on easy and comfortable ways of relating. Very optimistic and positive, they hate any form of conflict or strife, and use Their sense of humor to smooth out difficulties. ",
+		"358, 385, 538, 583, 835, 853, The Solution Master, They are ambitious, knowledgeable, and protective. They want to be efficient, wise, and straightforward. Tough-minded, they are good at studying a problem and finding both original and practical solutions others often miss. Highly tenacious, they work tirelessly until They find effective solutions and can prevail against any type of adversity. Winning is very important in the game of life.",
+		"359, 395, 539, 593, 935, 953, The Thinker, They are ambitious, knowledgeable, and accepting. They want to be efficient, wise, and peaceful. Intellectual and clever, they find amenable ways to manage difficult situations and relationships. Often shy, they are very private and need time to more fully reveal Theirself. They are ambitious but seek admiration in a subtle manner. They can seem somewhat invisible when They want to due to their ability to fit in even if They lead with type 3.",
+		"368, 386, 638, 683, 836, 863, The Justice Fighter, They are ambitious, inquisitive, and protective. They want to be accomplished, loyal, and straightforward. Verbally adept and a good reader of people and situations, they have the ability to identify unjust authority, rebel against tyranny, and verbally spar against it. They want to get along with others but can struggle with being too direct and outspoken. They will identify with being an 8 because the descriptions of 8 fit this Tritype the most.",
+		"369, 396, 639, 693, 936, 963, The Mediator, They are ambitious, inquisitive, and accepting. They want to be successful, engaged, and peaceful. They seek peace, balance, and harmony. They want to know what is expected of They and will adjust Their behavior to succeed. They need affirmation, reassurance, and a sense of wellbeing to feel connected to Theirself and others. They have an amazing ability to adapt to circumstances and are often seen as the nice person.",
+		"378, 387, 738, 783, 837, 873, The Mover Shaker, They are ambitious, innovative, and protective. They want to be efficient, happy, and straightforward. They are a dynamic go-getter, focused on the prize. An expansive powerhouse, they see the big picture and have the will to make it happen. They are a true entrepreneur and empire builder. Obstacles are seen as competitive challenges. They are able to achieve whatever vision they have due to they “can do” personality.",
+		"379, 397, 739, 793, 937, 973, The Ambassador, They are ambitious, innovative, and accepting. They want to be focused, upbeat, and peaceful. They like people and are outgoing even if They are shy. They are easygoing and seek comfort but strive for success and a feeling of personal importance. They are identified with what They do and achieve but are diplomatic, friendly, and kind in Their approach. They have great ambitions but approach them in an understated manner.",
+		"458, 485, 548, 584, 845, 854, The Scholar, They are intuitive, knowledgeable, and protective. They want to be original, wise, and straightforward. They study what makes people tick and form strong opinions about what They learn. Somewhat introverted, they are identified with being an intuitive, strategic thinker. They see and focus on the interconnections that others often miss. They tend to be interested in the great works and ideals that stand the test of time.",
+		"459, 495, 549, 594, 945, 954, The Contemplative, They are intuitive, knowledgeable, and accepting. They want to be original, wise, and peaceful. Highly self-aware and reflective, they are very shy, reserved, and self-conscious. They need regular quiet time to reflect on Their thoughts and emotions. Easily flooded with emotion, it is difficult for They to voice Their ideas and feelings. They are deep person the fits the image of “still waters run deep”.",
+		"468, 486, 648, 684, 846, 864, The Truth Teller, They are intuitive, inquisitive, and protective. They want to be original, certain, and straightforward. They are highly sensitive and emotional. They track inconsistencies and are like the ‘canary in the coal mine,’ calling off hidden agendas, deception, and ulterior motives. They are very intense and can, at times, be overly emotional and reactive. They may have strong feelings but they are also fiercely loving and supportive.",
+		"469, 496, 649, 694, 946, 964, The Seeker, They are intuitive, inquisitive, and accepting. They want to be original, certain, and peaceful. They are very sensitive and can easily feel reserved and inhibited. They struggle with intense feelings of self-doubt and uncertainty. As a result, they need multiple sources of confirmation. They want to be individualistic but can fear being separate from others, so avoid confrontation. They want to have Their world peaceful but will always be in search of understanding life’s mysteries and will always continue seeking.",
+		"478, 487, 748, 784, 847, 874, The Messenger, They are intuitive, innovative, and protective. They want to be original, creative, and straightforward. A cutting-edge tracker of both Their internal and external worlds, they are an unconventional, passionate, and self-possessed master of solutions. Outwardly, they are confident with a sense of panache, but, inwardly, they are emotionally vulnerable. They see people and situations from diverse points of view but always need a creative edge to keep the momentum going.",
+		"479, 497, 749, 794, 947, 974, The Gentle Spirit, They are intuitive, innovative, and accepting. They want to be original, positive, and peaceful. They are identified with the defense of optimism and tend to hide Their painful feelings and pessimism for fear of being rejected. They see the wonder in beauty and are tenderhearted, lyrical, and idealistic. They are attracted to the healing arts. They are highly receptive but always have They own distinct point of view."
+	];
+	if (!ac.dict) {
+		ac.dict = {};
+		for (var i in ac.tt) {
+			var tt = ac.tt[i],
+				p = tt.split(", "),
+				a = p.slice(0, 7);
+			for (var i2 in a)
+				ac.dict[a[i2]] = [p[6], p.slice(7).join(", ")];
+		}
+	}
+	return ac.dict;
+}
+</script>
+
+</body>
+</html>
