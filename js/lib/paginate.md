@@ -19,16 +19,15 @@ var pag1 = Paginate({
 	],
 	// OPTIONAL: Auto disable Next/Back button?
 	AutoDisable: true,
-	// OPTIONAL: ALL Properties below are Element, or Array-like (except Update callback, yes):
-	Back: [back1, back2],
-	Next: [next1, next2],
+	Back: [back1, back2], // <- Can use jQuery, Element, or ARRAY-LIKE
+	Next: [next1, next2], // <- Can use jQuery, Element, or ARRAY-LIKE
 	// OPTIONAL: if INPUT/TEXTAREA/SELECT then user can modify them:
-	PerPage: [perPage1, perPage2],
-	CurPage: [curPage1, curPage2],
-	PageCount: [pageNum1, pageNum2],
+	PerPage: [perPage1, perPage2], // <- Can use jQuery, Element, or ARRAY-LIKE
+	CurPage: [curPage1, curPage2], // <- Can use jQuery, Element, or ARRAY-LIKE
+	PageCount: [pageNum1, pageNum2], // <- Can use jQuery, Element, or ARRAY-LIKE
 	// OPTIONAL: These are read only:
-	PageItemsCount: [PageItemsCount1, PageItemsCount2],
-	ItemsCount: [ItemsCount1, ItemsCount2],
+	PageItemsCount: [PageItemsCount1, PageItemsCount2], // <- Can use jQuery, Element, or ARRAY-LIKE
+	ItemsCount: [ItemsCount1, ItemsCount2], // <- Can use jQuery, Element, or ARRAY-LIKE
 	// Update usually called after any change
 	Update: function (aPageItems, aPageItemsLen, aPerPage, aPageNum, aPageCount, aArrayLen) {
 		// Write code here to render page items
