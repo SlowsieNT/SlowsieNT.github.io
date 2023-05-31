@@ -3,14 +3,8 @@
  * For more information, please refer to <http://unlicense.org/>
  */
 function Paginate(aConf) {
-	var p = arguments.callee, c = aConf, z;
-	if (void 0 === p.ois)
-		z = document.createElement("a"),
-		p.ois = !z.oninput,
-		p.ae = !!z.attachEvent,
-		p.aes = !!z.addEventListener;
-	// etc
-	var Data = c[0] || c.Data || c.data,
+	var c = aConf,
+		Data = c[0] || c.Data || c.data,
 		Back = c[1] || c.Back || c.back,
 		Next = c[2] || c.Next || c.next,
 		PerPage = c[3] || c.PerPage || c.perPage,
@@ -23,16 +17,13 @@ function Paginate(aConf) {
 		iPageNum = 0 | (c[10] || c.iPageNum),
 		iPerPage = 0 | (c[11] || c.iPerPage),
 		iPageCount = 1,
-		inputEvt = p.ois ? "input" : "keyup",
 		memArray, tmpArray, ArrayLen = 0,
 		valueAttr = { INPUT: 1, TEXTAREA: 1, SELECT: 1 };
 	function HandleUICA(aElemArr, aValue, aAttr) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
-		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
-			var t = aElemArr[i], etn = t && t.tagName;
-			if (!t) continue;
+			var t = aElemArr[i], etn = t.tagName;
 			if (void 0 !== aAttr) {
 				if ("disabled" === aAttr)
 					if (aValue) t.setAttribute(aAttr, "");
@@ -57,7 +48,14 @@ function Paginate(aConf) {
 	}
 	// Handle events
 	function AddHandler(aElemArr, aEventName, aFunc) {
-		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
+		var z, ac = arguments.callee;
+		if (void 0 === ac.ois)
+			z = document.createElement("a"),
+			ac.ois = null === z.oninput,
+			ac.ae = !!z.attachEvent,
+			ac.aes = !!z.addEventListener,
+			ac.iev = ac.ois ? "input" : "keyup";
+		if (aElemArr && aElemArr.tagName)
 			aElemArr = [aElemArr];
 		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
@@ -65,14 +63,18 @@ function Paginate(aConf) {
 			if (!elem) continue;
 			if (!aEventName) {
 				if ("INPUT" === etn || "TEXTAREA" === etn)
-					aEventName = inputEvt;
+					aEventName = ac.iev;
 				else aEventName = "change";
 			}
 			if (!aEventName) return;
-			if (p.aes) elem.addEventListener(aEventName, aFunc);
+			if (ac.aes) elem.addEventListener(aEventName, aFunc);
 			else {
-				function eH(e) { aFunc && aFunc.call(elem, e||event, elem); }
-				if (p.ae) elem.attachEvent("on" + aEventName, eH);
+				var eH = (function(elem){
+					return function (e) {
+						aFunc && aFunc.call(elem, e||event, elem);
+					}
+				})(elem);
+				if (ac.ae) elem.attachEvent("on" + aEventName, eH);
 				else elem["on" + aEventName] = eH;
 			}
 		}
