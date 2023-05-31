@@ -6,6 +6,7 @@ Library is feature rich.<br>
 <!-- Best to download js file copy -->
 <script src="https://slowsient.github.io/js/lib/paginate.js"></script>
 ```
+[See demo (Link)](https://slowsient.github.io/js/lib/paginate.demo.html)<br>
 ## Code samples:
 ```js
 // Pagination Example code:
