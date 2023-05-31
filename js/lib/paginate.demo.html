@@ -10,6 +10,8 @@ body{background-color: #111;color:gray;}
 .dib{display:inline-block;*display:inline;*zoom:1;}
 a{color:lime;}
 .w32{width:32px;}
+.fwb{font-weight:bold;}
+.fg-w{color:#fff;}
 </style>
 </head>
 <body>
@@ -19,21 +21,21 @@ a{color:lime;}
 </div>
 <button id="back1">Back</button>
 <button id="next1">Next</button>, per page:
-<input type="text" id="perPage1" class="dib w32" value="1">;
-<input type="text" id="curPage1" class="dib w32" value="1">/
+<input type="text" id="perPage1" class="dib w32" value="1">, page:
+<input type="text" id="curPage1" class="dib w32" value="1"> of
 <input type="text" id="pageNum1" class="dib w32" value="1">; page items count:
-<div id="PageItemsCount1" class="dib">0</div>; all items count:
-<div id="ItemsCount1" class="dib">0</div>
+<div id="PageItemsCount1" class="dib fwb fg-w">0</div>; all items count:
+<div id="ItemsCount1" class="dib fwb fg-w">0</div>
 <hr>
-<div id="renderItems"></div>
+<div id="renderItems" class="fg-w"></div>
 <hr>
 <button id="back2">Back</button>
 <button id="next2">Next</button>, per page:
-<input type="text" id="perPage2" class="dib w32" value="1">;
-<input type="text" id="curPage2" class="dib w32" value="1">/
-<div type="text" id="pageNum2" class="dib">1</div>; page items count:
-<div id="PageItemsCount2" class="dib">0</div>; all items count:
-<div id="ItemsCount2" class="dib">0</div>
+<input type="text" id="perPage2" class="dib w32" value="1">, page:
+<input type="text" id="curPage2" class="dib w32" value="1"> of
+<div id="pageNum2" class="dib fwb fg-w">1</div>; page items count:
+<div id="PageItemsCount2" class="dib fwb fg-w">0</div>; all items count:
+<div id="ItemsCount2" class="dib fwb fg-w">0</div>
 
 <script src="paginate.js"></script>
 <script>
