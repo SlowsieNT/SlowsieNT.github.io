@@ -27,6 +27,7 @@ a{color:lime;}
 <div id="PageItemsCount1" class="dib fwb fg-w">0</div>; all items count:
 <div id="ItemsCount1" class="dib fwb fg-w">0</div>
 <hr>
+<div>Page items:</div>
 <div id="renderItems" class="fg-w"></div>
 <hr>
 <button id="back2">Back</button>
@@ -64,6 +65,7 @@ var pag1 = Paginate({
 		// Write code here to render page items
 		if ("undefined" !== typeof console)
 			console.log(aPageItems);
+		// Just for demo:
 		renderItems.innerHTML = aPageItems;
 	}
 });
