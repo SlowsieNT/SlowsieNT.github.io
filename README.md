@@ -32,9 +32,6 @@ Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 [/mbti/estimate](https://slowsient.github.io/mbti/estimate)<br>
 [/mbti/estimate#dnt](https://slowsient.github.io/mbti/estimate#dnt)<br>
 
-## Name Generator - existing names, or made-up word!
-[/namegen](https://slowsient.github.io/namegen)
-
 ## Tor Region Gennodes - Country Code List Generator
 [/tor/gennodes](https://slowsient.github.io/tor/gennodes)
 
