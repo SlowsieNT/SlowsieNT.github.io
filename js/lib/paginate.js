@@ -48,7 +48,7 @@ function Paginate(aConf) {
 	}
 	// Handle events
 	function AddHandler(aElemArr, aEventName, aFunc) {
-		var z, ac = arguments.callee;
+		var z, ac = AddHandler;
 		if (void 0 === ac.ois)
 			z = document.createElement("a"),
 			ac.ois = null === z.oninput,
