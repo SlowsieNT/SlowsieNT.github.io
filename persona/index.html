@@ -143,8 +143,9 @@ function UITbUpdate() {
 		
 	}
 }
+	// Handle events
 	function AddHandler(aElemArr, aEventName, aFunc) {
-		var z, ac = arguments.callee;
+		var z, ac = AddHandler;
 		if (void 0 === ac.ois)
 			z = document.createElement("a"),
 			ac.ois = null === z.oninput,
@@ -186,7 +187,7 @@ function GetBMI(aH, aW) {
 	}
 }
 function ColorDesc(aColor) {
-	var ac = arguments.callee;
+	var ac = ColorDesc;
 	if (!ac.ac) ac.ac = {
 		black: "Elegant, Proper, Powerful, Conservative, Sophisticated, Mystery, Insecure, Determined, Authoritarian, Independent, Fearful, Formality, Prestige, Serious, Classic",
 		white: "Serene, Calm, Naive, Indifferent, Optimistic, Innocent, Virtuous, Unfriendly, Organized, Bland, Delicate, Independent, Perfectionist, Discreet, Freshness, Hope, Goodness, Purity, Cleanliness, Simplicity, Coolness",
@@ -217,7 +218,7 @@ function ColorDesc(aColor) {
 }
 function StarSign(aMonth, aDay, aSign, aWithDesc) {
 	// Two usage cases: StarSign(0, 0, "leo"); StarSign(7, 23)
-	var ac = arguments.callee;
+	var ac = StarSign;
 	if (!ac.ed)
 		ac.ed = [20, 19, 20, 20, 20, 21, 22, 22, 21, 22, 21, 21],
 		ac.es = "Capricorn,Aquarius,Pisces,Aries,Taurus,Gemini,Cancer,Leo,Virgo,Libra,Scorpio,Sagittarius".split(","),
@@ -240,7 +241,7 @@ function StarSign(aMonth, aDay, aSign, aWithDesc) {
 	return [aSign, aWithDesc && ac.sd[(aSign + "").toLowerCase()]];
 }
 function Tritype() {
-	var ac = arguments.callee;
+	var ac = Tritype;
 	if (!ac.tt) ac.tt = [
 		"125, 152, 215, 251, 512, 521, The Mentor, They are very diligent, caring, and knowledgeable. They want to be ethical, helpful, and wise. They are very idealistic and see what needs to be done and the simple and effective ways to do it. They are intensely private but care about people. They seek practical systems and procedures to measure results and effectiveness. They can come across as particular at times but they are always focused on improvement.",
 		"126, 162, 216, 261, 612, 621, The Supporter, They are diligent, caring, and inquisitive. They want to be ethical, helpful, and supportive. Highly responsible and cooperative, they are most comfortable when They do things ‘by the book’ and know what to expect. Focused on the needs and concerns of others, they seek ways to be of service. They enjoy being the power behind the throne. They also need to be seen as the one that makes the extra effort to do what is called for in any given situation.",
