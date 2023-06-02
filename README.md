@@ -6,7 +6,7 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
 [paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
-## Terminal (for Developers?)
+## Web Terminal alpha ver (for Developers?)
 [/misc/cmd](https://slowsient.github.io/misc/cmd)<br>
 Basic commands such as: `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
 
