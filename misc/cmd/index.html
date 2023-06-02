@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.0.6</title>
+	<title>Terminal | v0.0.7</title>
 </head>
 <body>
 <style>
@@ -156,7 +156,11 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}sum 1 2 3<br>",
 				"{{arrow1}}sum \"1,2,3\"<br>",
 				"tcc = to camel case<br>",
+				"{{arrow1}}tcc camel case<br>",
+				"{{arrow1}}tcc \"camel case\"<br>",
 				"tpc = to pascal case<br>",
+				"{{arrow1}}tpc pascal case<br>",
+				"{{arrow1}}tpc \"pascal case\"<br>",
 				"ucf = upper case first letter<br>",
 				"uc = upper case all<br>",
 				"lc = lower case all<br>",
@@ -232,11 +236,15 @@ function GetCommandOutput(cmd) {
 			response = "" + v;
 		}
 		else if (mainA in {"tcc":1,ccase:1,camelc:1,camelcase:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(" ")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
 			for (var i = 2, v=cmdline[1].toLowerCase(), cLen = cmdline.length; i < cLen; i++)
 				v += Worder.UCFirst(cmdline[i]);
 			response = "" + v;
 		}
 		else if (mainA in {"tpc":1,pcase:1,pascalc:1,pascalcase:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(" ")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
 			for (var i = 1, v="", cLen = cmdline.length; i < cLen; i++)
 				v += Worder.UCFirst(cmdline[i]);
 			response = "" + v;
