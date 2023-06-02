@@ -25,8 +25,8 @@ Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 [/pugen](https://slowsient.github.io/pugen)<br>
 
 ## MBTI - Links (personality related)
-[/mbti/estimate](https://slowsient.github.io/mbti/estimate)<br>
-[/mbti/estimate#dnt](https://slowsient.github.io/mbti/estimate#dnt)<br>
+[/persona/mbti](https://slowsient.github.io/persona/mbti)<br>
+[/persona/mbti#dnt](https://slowsient.github.io/persona/mbti#dnt)<br>
 
 ## Tor Region Gennodes - Country Code List Generator
 [/other/tor-gennodes](https://slowsient.github.io/other/tor-gennodes)
