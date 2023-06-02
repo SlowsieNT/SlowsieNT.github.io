@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.0.5</title>
+	<title>Terminal | v0.0.6</title>
 </head>
 <body>
 <style>
@@ -127,28 +127,45 @@ function GetCommandOutput(cmd) {
 	(function ResolveLine(cmdline) {
 		var tmp;
 		if (mainA in {help:1}) {
+			var test1 = "<span style=\"user-select:none;color:silver;\">---&gt; </span>";
 			response = [
 				"da = add/subtract, or add timestamp to date<br>",
+				"{{arrow1}}da now 86400<br>",
+				"{{arrow1}}da now -86400<br>",
 				"ta = Date or \"now\": add/subtract by X<br>",
+				"{{arrow1}}ta \"1970-01-01\" 31d<br>",
+				"{{arrow1}}ta now 31d<br>",
+				"{{arrow1}}ta now 31d23h<br>",
+				"{{arrow1}}ta now 31d23h59m<br>",
+				"{{arrow1}}ta now 31d23h59m59s<br>",
+				"{{arrow1}}ta now 31d23h59m59s999f<br>",
 				"cls = clear console<br>",
 				"clr = clear console<br>",
 				"clear = clear console<br>",
 				"avg = average, new use syntax: avg \"1,2,3\"<br>",
+				"{{arrow1}}avg 1 2 3<br>",
 				"min = math min, new use syntax: min \"1,2,3\"<br>",
+				"{{arrow1}}min 1 2 3<br>",
 				"max = math max, new use syntax: max \"1,2,3\"<br>",
+				"{{arrow1}}max 1 2 3<br>",
 				"sum = math sum, new use syntax: sum \"1,2,3\"<br>",
+				"{{arrow1}}sum 1 2 3<br>",
 				"tcc = to camel case<br>",
 				"tpc = to pascal case<br>",
 				"ucf = upper case first letter<br>",
 				"uc = upper case all<br>",
 				"lc = lower case all<br>",
 				"js = eval js expression<br>",
-				"rw = random word, usage: rw<br>",
-				"rw = random word, usage length 4: rw 4<br>",
-				"rng = random number, usage: rng 100<br>",
-				"rng = random number, usage: rng 50 100<br>",
-				"sb = separate by, usage: sb & \"a=4&b=4\"<br>",
-			].join("")
+				"{{arrow1}}js 1 + 1<br>",
+				"rw = random word<br>",
+				"{{arrow1}}rw<br>",
+				"{{arrow1}}rw 5<br>",
+				"rng = random number<br>",
+				"{{arrow1}}rng 100<br>",
+				"{{arrow1}}rng 10 50<br>",
+				"sb = separate by<br>",
+				"{{arrow1}}sb & \"a=4&b=4\"<br>",
+			].join("").replace(/\{\{arrow1\}\}/g, test1);
 		}
 		if (mainA in {da:1, dateadd:1}) {
 			var 
