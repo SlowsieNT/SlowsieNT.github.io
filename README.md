@@ -29,7 +29,7 @@ Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 [/persona/mbti#dnt](https://slowsient.github.io/persona/mbti#dnt)<br>
 
 ## Tor Region Gennodes - Country Code List Generator
-[/other/tor-gennodes](https://slowsient.github.io/other/tor-gennodes)
+[/misc/tor-gn](https://slowsient.github.io/misc/tor-gn)
 
 ## Numerology
 [/numero](https://slowsient.github.io/numero)<br>
