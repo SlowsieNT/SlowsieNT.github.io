@@ -7,7 +7,7 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
 ## Terminal (for Developers?)
-[/persona](https://slowsient.github.io/misc/cmd)<br>
+[/misc/cmd](https://slowsient.github.io/misc/cmd)<br>
 Basic commands such as: `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
 
 ## "Persona:" Color, Zodiac Sign, BMI, Tritype
