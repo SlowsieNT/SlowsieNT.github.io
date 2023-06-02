@@ -6,6 +6,10 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
 [paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
+## Terminal (for Developers?)
+[/persona](https://slowsient.github.io/misc/cmd)<br>
+Basic commands such as: `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
+
 ## "Persona:" Color, Zodiac Sign, BMI, Tritype
 [/persona](https://slowsient.github.io/persona)<br>
 Personality related.<br>
