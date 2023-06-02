@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Terminal | v0.0.5</title>
+</head>
+<body>
+<style>
+	html{width:100%;height:100%;}
+	body {background-color:#111;color:lime;}
+	.terminal {
+		margin: 16px;
+	}
+	.terminal * {
+		font-size:28px;
+		font-family: Consolas, monospace, 'Courier New', Courier;
+	}
+	.fg-lg{color:lightgreen;}
+	.terminal #output { }
+	.terminal input {
+		background-color: transparent;
+		color:lime;
+		border:none;outline:none;
+		vertical-align:middle;
+	}
+	.dib {display: inline-block;*display:inline;*zoom:1;}
+	.mw4{margin-left:4px;}
+	.mw5{margin-left:5px;}
+	.mw8{margin-left:8px;}
+	.mw9{margin-left:9px;}
+	.w90p {width:90%;}
+</style>
+<div class="terminal">
+	<div id="output"></div>
+	<div class="input">
+		<div class="dib">&gt;&gt;</div><input id="prompt" class="w90p mw8" type="text" autofocus placeholder="Enter command here...">
+	</div>
+</div>
+<!-- footer -->
+<div class="mw4" style="color:gray">
+	<div style="margin-top:32px"><i id="flicker722617809971422">No Rights reserved.</i></div>
+	<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+	<script>
+		(function(eBlink){
+			var i = 0, pauseBlink;
+			eBlink.onclick = function () { pauseBlink = !pauseBlink; };
+			(function loop() {
+				if (!pauseBlink) {
+					eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
+					eBlink.style.color = i & 1 ? "" : "lime";
+				}
+				setTimeout(loop, 1e3);
+			})();
+		})(document.getElementById("flicker722617809971422"));
+	</script>
+</div>
+<script>
+if (!Date.now) Date.now = function () {return +new Date;};
+function id(n, d) {
+	return (d||document).getElementById(n);
+}
+function ce(n) {
+	return document.createElement(n);
+}
+var hPrompt = id("prompt"),
+	hOutput = id("output"),
+	cmdHistory = [], hi=0,
+	_ = 1;
+function CaretToEnd(aElem) {
+    if (0 <= aElem.selectionStart)
+        aElem.selectionStart = aElem.selectionEnd = aElem.value.length;
+    else if (aElem.createTextRange) {
+        aElem.focus();
+        var r = aElem.createTextRange();
+        r.collapse(!1);
+        r.select();
+    }
+}
+hPrompt.onkeydown = function (e) {
+	if (!e) e = window.event;
+	var kc = (e.keyCode||e.which), hL = cmdHistory.length;
+	if (38 === kc) { // arrow up - last command is first
+		this.value = cmdHistory[hi--]||cmdHistory[0]||"";
+		if (hi < 0) hi = 0;
+	}
+	else if (40 === kc) { // arrow down
+		this.value = cmdHistory[++hi]||"";
+		if (hi > hL) hi=hL;
+	}
+	else if (13 === kc)
+		ProcessCommand(this);
+};
+hPrompt.onkeyup = function (e) {
+	if (!e) e = window.event;
+	var kc = (e.keyCode||e.which);
+	if (38 === kc || 40 === kc)
+		CaretToEnd(this);
+	if (13 === kc) {
+		var se = document.body.parentElement;
+		se.scrollTop = se.scrollHeight - se.offsetHeight;
+	}
+};
+function ProcessCommand(aIHandle) {
+	var cmd = aIHandle.value,
+		div = ce("div");
+	div.setAttribute("class", "output-line")
+	div.innerHTML = "<div><div class=\"dib\"></div></div>";
+	var co = GetCommandOutput(cmd),
+		ho = div.getElementsByTagName("div")[1],
+		data = co.body||co.data;
+	ho.innerHTML = data;
+	if (0 === co.type) {
+		hOutput.innerHTML = "";
+	} else hOutput.appendChild(div);
+	aIHandle.value = "";
+}
+function GetCommandOutput(cmd) {
+	var rett = 1, output = cmd, response,
+		cmdline = ParseCommandLineA(cmd),
+		mainA = "";
+	cmdHistory.push(cmd);
+	hi = cmdHistory.length - 1;
+	if (cmd.length) mainA = cmdline[0].toLowerCase();
+	// etc
+	(function ResolveLine(cmdline) {
+		var tmp;
+		if (mainA in {help:1}) {
+			response = [
+				"da = add/subtract, or add timestamp to date<br>",
+				"ta = Date or \"now\": add/subtract by X<br>",
+				"cls = clear console<br>",
+				"clr = clear console<br>",
+				"clear = clear console<br>",
+				"avg = average, new use syntax: avg \"1,2,3\"<br>",
+				"min = math min, new use syntax: min \"1,2,3\"<br>",
+				"max = math max, new use syntax: max \"1,2,3\"<br>",
+				"sum = math sum, new use syntax: sum \"1,2,3\"<br>",
+				"tcc = to camel case<br>",
+				"tpc = to pascal case<br>",
+				"ucf = upper case first letter<br>",
+				"uc = upper case all<br>",
+				"lc = lower case all<br>",
+				"js = eval js expression<br>",
+				"rw = random word, usage: rw<br>",
+				"rw = random word, usage length 4: rw 4<br>",
+				"rng = random number, usage: rng 100<br>",
+				"rng = random number, usage: rng 50 100<br>",
+				"sb = separate by, usage: sb & \"a=4&b=4\"<br>",
+			].join("")
+		}
+		if (mainA in {da:1, dateadd:1}) {
+			var 
+				a0 = cmdline[1],
+				a1 = cmdline[2],
+				dateX, dateY;
+			if ("now" == a0.toLowerCase()) a0 = new Date;
+			else if (a0 >= 0) a0 = new Date(Number(a0*1e3));
+			dateX = new Date(a0);
+			response = new Date(+dateX + a1*1e3) + "";
+		}
+		if (mainA in {ta:1, timeadd:1, addtime:1}) {
+			var 
+				a0 = cmdline[1],
+				a1 = cmdline[2],
+				dateX, dateY, ff=1;
+			if ("now" == a0.toLowerCase()) a0 = new Date;
+			else if (a0 >= 0) a0 = new Date(Number(a0*1e3));
+			dateX = new Date(a0);
+			// parse string format, sample: 31d23h59m59s999f (31days, 23hr, 59min, 59sec, 999ms)
+			var nmult = /^\-/.test(a1.trim());
+			for (var t, nobj = {d:0,h:0,m:0,s:0,f:0}, na = "", i = 0, sLen = a1.length; i < sLen; i++) {
+				if ((t = a1.charAt(i)) >= 0)
+					na += (t);
+				else nobj[t.toLowerCase()] = 0|na, na = "";
+			}
+			a1 = nobj.d*86400+nobj.h*3600+nobj.m*60+nobj.s+nobj.f/1000;
+			if (0 === a1 && (na = +(na)))
+				a1 = na;
+			if (nmult) a1 *= -1;
+			response = new Date(+dateX + a1*1e3) + "";
+		}
+		else if (mainA in {avg:1, average:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
+			for (var i = 1, c = 0, cLen = cmdline.length; i < cLen; i++)
+				c += +(cmdline[i]);
+			response = "" + (c / (-1 + cLen)).toFixed(5);
+		}
+		else if (mainA in {sum:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
+			for (var i = 1, c = 0, cLen = cmdline.length; i < cLen; i++)
+				c += +(cmdline[i]);
+			response = "" + c;
+		}
+		else if (mainA in {min:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
+			for (var i = 1, v=cmdline[i], cLen = cmdline.length; i < cLen; i++)
+				v = Math.min(v, cmdline[i]);
+			response = "" + v;
+		}
+		else if (mainA in {max:1}) {
+			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
+				cmdline = [cmdline[0]].concat(tmp);
+			for (var i = 1, v=cmdline[i], cLen = cmdline.length; i < cLen; i++)
+				v = Math.max(v, cmdline[i]);
+			response = "" + v;
+		}
+		else if (mainA in {"tcc":1,ccase:1,camelc:1,camelcase:1}) {
+			for (var i = 2, v=cmdline[1].toLowerCase(), cLen = cmdline.length; i < cLen; i++)
+				v += Worder.UCFirst(cmdline[i]);
+			response = "" + v;
+		}
+		else if (mainA in {"tpc":1,pcase:1,pascalc:1,pascalcase:1}) {
+			for (var i = 1, v="", cLen = cmdline.length; i < cLen; i++)
+				v += Worder.UCFirst(cmdline[i]);
+			response = "" + v;
+		}
+		else if (mainA in {sb:1})
+			response = "" + cmdline[2].split(cmdline[1]).join("<br>");
+		else if (mainA in {uc:1, up: 1, upper:1, uppercase:1})
+			response = cmdline[1].toUpperCase();
+		else if (mainA in {ucf:1, ucfirst:1})
+			response = Worder.UCFirst(cmdline[1]);
+		else if (mainA in {lc:1, down: 1, lower:1, lowercase:1})
+			response = cmdline[1].toLowerCase();
+		else if (mainA in {rw:1, rword:1})
+			response = Worder.Word(+cmdline[1]||4);
+		else if (mainA in {js:1, javascript:1})
+			response = Function("return " + cmdline[1])();
+		else if (mainA in {cls:1, clear:1, clr: 1})
+			response = null, rett = 0;
+		else if (mainA in {rng:1, rnum:1})
+			if (!cmdline[2]) response = rand(1, +cmdline[1]);
+			else response = rand(+cmdline[1], +cmdline[2]);
+	})(cmdline);
+	// return
+	return {
+		type: rett, body: "<div><span style=\"user-select:none;\">&gt;&gt;</span><div class=\"dib mw9\">" + output + "</div></div><div class=\"fg-lg\">"+(response||"")+"</div>"
+	};
+}
+function rand(aMin, aMax) {
+    return parseInt(Math.random() * (aMax - aMin + 1) + aMin);
+}
+var Worder = new function () {
+		var _ = this, r = Math.random;
+		function rr(aN) {
+			return 0|aN*r();
+		}
+		_[0] = _.Word = function (aLength) {
+			for (var word = "", lastt, i = 0; i < aLength; i++) {
+				if (0 === lastt && 0 === rr(12))
+					word += _.Vowel(); // 8.33%
+				else if (1 === lastt && 0 === rr(18))
+					word += _.Consonant(); // 5.55%
+				else if (0 === lastt)
+					word += _.Consonant(lastt=1);
+				else if (1 === lastt)
+					word += _.Vowel(lastt=0);
+				else word += rr(2) && _.Vowel(lastt=0) || _.Consonant(lastt=1);
+			}
+			return word;
+		};
+		_[1] = _.A = {
+			// vc = vowel count, cc = consonant count
+			// vc and cc are assigned at runtime.
+			VC: 0, CC: 0,
+			V: "aeiouy".split(""),
+			C: "bcdfghjklmnpqrstvwxz".split("")
+		};
+		_[2] = _.Consonant = function () {
+			if (!_.A.CC) _.A.CC = _.A.C.length;
+			return _.A.C[rr(_.A.CC)];
+		};
+		_[3] = _.Vowel = function () {
+			if (!_.A.VC) _.A.VC = _.A.V.length;
+			return _.A.V[rr(_.A.VC)];
+		};
+		_[4] = _.UCFirst = function (aStr) {
+			return aStr.charAt().toUpperCase() + aStr.slice(1);
+		};
+	};
+</script>
+<script>
+/* License: Unlicense
+    Source: github.com/SlowsieNT
+   This is free and unencumbered software released into the public domain.
+*/
+if (!"".trim)
+	String.prototype.trim = function () {
+		return this.replace(/^[\s\xA0\uFEFF]+|[\s\xA0\uFEFF]+$/g, "");
+	};
+function ParseCommandLineA(aCommandString, aNoTrimCheck) {
+	for (var vI = 0, vL = aCommandString.length, vInQuote, vStr="", vArgs=[]; vI < vL; vI++) {
+		var vCC = aCommandString.charAt(vI), vNC = aCommandString.charAt(1 + vI),
+			vNQ = '"' === vNC, vCQ = '"' === vCC, vNS = '\\' === vNC, vCS = '\\' === vCC;
+		if (vInQuote) {
+			if (vCS && vNS || vCS && vNQ) {
+				vStr += vNC;
+				vI++;
+			} else if (vCQ) {
+				vArgs.push(vStr);
+				vStr = "";
+				vInQuote = !1;
+			} else vStr += vCC;
+		} else {
+			if (vCS && vNQ) { /* <- must be first */
+				vStr += vNC;
+				vI++;
+			} else if (" " === vCC) { /* <- must be second */
+				if (aNoTrimCheck)
+					vArgs.push(vStr);
+				else if (vStr.trim())
+					vArgs.push(vStr);
+				vStr = "";
+			} else if (vCQ) {
+				vInQuote = !0;
+			} else vStr += vCC;
+		}
+	}
+	if (aNoTrimCheck)
+		vArgs.push(vStr);
+	else if (vStr.trim())
+		vArgs.push(vStr.trim());
+	return vArgs;
+}
+</script>
+</body>
+</html>
