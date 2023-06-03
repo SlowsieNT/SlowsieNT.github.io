@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.21</title>
+	<title>Terminal | v0.1.31</title>
 </head>
 <body>
 <style>
@@ -82,7 +82,7 @@ function CaretToEnd(aElem) {
         r.select();
     }
 }
-function GetDHMS(aTime) {
+function GetDHMS(aTime, aPostfix0, aPostfix1, aPostfix2, aPostfix3, aPostfix4) {
 	var d = 0|aTime/86400,
 		h = 0|aTime/3600%24,
 		m = 0|aTime/60%60,
@@ -92,7 +92,32 @@ function GetDHMS(aTime) {
 	if (h < 10) h = "0" + h;
 	if (m < 10) m = "0" + m;
 	if (s < 10) s = "0" + s;
-	return d + "d " + h + "h " + m + "min " + s + "." + ms + "sec";
+	if (ms < 10) ms = "00" + ms
+	else if (ms < 100) ms = "0" + ms;
+	return d + (aPostfix0||":") + h + (aPostfix1||":") + m + (aPostfix2||":") + s + (aPostfix3||".") + ms + (aPostfix4||"");
+}
+function EasyStopwatch(aElem, aOffset) {
+	var tmr, alive;
+	return {
+		Start: function () {
+			clearInterval(tmr);
+			alive = true;
+			sd = new Date;
+			setInterval(function () {
+				if (alive && aElem && aElem.tagName) {
+					var tstr = GetDHMS((new Date-sd)/1e3 + (aOffset|0), "d ");
+					if (aElem.value) aElem.value = tstr;
+					else aElem.innerHTML = tstr;
+				} else if (aElem && aElem.slice) {
+					var et = document.getElementById(aElem);
+					if (et && et.tagName) aElem = et;
+				}
+			}, 10);
+		}, Stop: function () {
+			alive = false;
+			clearInterval(tmr);
+		}
+	}
 }
 hPrompt.onkeydown = function (e) {
 	if (!e) e = window.event;
@@ -129,7 +154,10 @@ function ProcessCommand(aIHandle) {
 	ho.innerHTML = data;
 	if (0 === co.type) {
 		hOutput.innerHTML = "";
-	} else hOutput.appendChild(div);
+	} else if (2 === co.type) {
+		console.log(data);
+	}
+	else hOutput.appendChild(div);
 	aIHandle.value = "";
 }
 // Str2TasN = string to date as number
@@ -173,6 +201,12 @@ function GetCommandOutput(cmd) {
 		if (mainA in {help:1}) {
 			var test1 = "<span style=\"user-select:none;color:silver;\">--&gt; </span>", cd = new Date;
 			response = [
+				"sw = start stopwatch<br>",
+				"{{arrow1}}sw<br>",
+				"{{arrow1}}sw 10<br>",
+				"{{arrow1}}sw 1h59m<br>",
+				"{{arrow1}}sw 1h59m59s<br>",
+				"{{arrow1}}sw 59m59s999f<br>",
 				"da = add/subtract, or add timestamp to date<br>",
 				"{{arrow1}}da now 86400<br>",
 				"{{arrow1}}da now -86400<br>",
@@ -229,6 +263,14 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}sb & \"a=4&b=4\"<br>",
 			].join("").replace(/\{\{arrow1\}\}/g, test1);
 		}
+		if (mainA in {sw:1, stopwatch:1}) {
+			~function(aId){
+				response = "<b id=" + aId + "></b><i class=mw4 style=font-size:12px>#sw_" + aId + "</i>";
+				var sw = EasyStopwatch(aId, Str2TN(cmdline[1]));
+				sw.Start();
+				window["sw_"+aId] = sw;
+			}(Math.random().toString(36).slice(2));
+		}
 		if (mainA in {ta:1, timeadd:1}) {
 			var 
 				a0 = cmdline[1],
@@ -243,7 +285,7 @@ function GetCommandOutput(cmd) {
 				a2 = "1" === cmdline[3],
 				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
 				v = (z[1] + z[0])/1e3;
-			response = a2 ? GetDHMS(v) : (v + "");
+			response = a2 ? GetDHMS(v, "d ", "h ", "m ", "", "s") : (v + "");
 		}
 		if (mainA in {ts:1, timesub:1}) {
 			var 
@@ -259,7 +301,7 @@ function GetCommandOutput(cmd) {
 				a2 = "1" === cmdline[3],
 				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
 				v = (z[1] - z[0])/1e3;
-			response = a2 ? GetDHMS(v) : (v + "");
+			response = a2 ? GetDHMS(v, "d ", "h ", "m ", "", "s") : (v + "");
 		}
 		else if (mainA in {avg:1, average:1}) {
 			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
