@@ -4,21 +4,25 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.0.7</title>
+	<title>Terminal | v0.1.14</title>
 </head>
 <body>
 <style>
+	html,body{padding:0;margin:0;}
 	html{width:100%;height:100%;}
 	body {background-color:#111;color:lime;}
 	.terminal {
 		margin: 16px;
 	}
 	.terminal * {
-		font-size:28px;
+		font-size:20px;
 		font-family: Consolas, monospace, 'Courier New', Courier;
 	}
 	.fg-lg{color:lightgreen;}
-	.terminal #output { }
+	.terminal #output {
+		overflow:hidden;
+		word-break:break-all;
+	}
 	.terminal input {
 		background-color: transparent;
 		color:lime;
@@ -30,12 +34,13 @@
 	.mw5{margin-left:5px;}
 	.mw8{margin-left:8px;}
 	.mw9{margin-left:9px;}
-	.w90p {width:90%;}
+	.w87p {width:87%;}
+	.wfp {width:100%;}
 </style>
 <div class="terminal">
-	<div id="output"></div>
-	<div class="input">
-		<div class="dib">&gt;&gt;</div><input id="prompt" class="w90p mw8" type="text" autofocus placeholder="Enter command here...">
+	<div id="output" class="w87p"></div>
+	<div class="input wfp">
+		<div class="dib">&gt;&gt;</div><input id="prompt" class="w87p mw8" type="text" autofocus placeholder="Enter command here...">
 	</div>
 </div>
 <!-- footer -->
@@ -115,6 +120,34 @@ function ProcessCommand(aIHandle) {
 	} else hOutput.appendChild(div);
 	aIHandle.value = "";
 }
+// Str2TasN = string to date as number
+function Str2DasN(aArg0, aTrySTT) {
+	var dateX;
+	if (aArg0 > 0 || aArg0 < 1) dateX = new Date(aArg0*1e3);
+	else if ("now" == aArg0.toLowerCase()) dateX = +new Date;
+	else dateX = +new Date(aArg0);
+	if (aTrySTT && !(1 + Math.sqrt(dateX)))
+		dateX = Str2TN(aArg0)*1e3;
+	return dateX;
+}
+function DateMM(aX, aY) {
+	return [Math.min(aX, aY), Math.max(aX, aY)];
+}
+// Str2TasN = string to time number
+function Str2TN(aStr) {
+	// parse string format, sample: 31d23h59m59s999f (31days, 23hr, 59min, 59sec, 999ms)
+	var retval, nmult = /^\-/.test(aStr.trim());
+	for (var t, nobj = {d:0,h:0,m:0,s:0,f:0}, na = "", i = 0, sLen = aStr.length; i < sLen; i++) {
+		if ((t = aStr.charAt(i)) >= 0)
+			na += (t);
+		else nobj[t.toLowerCase()] = 0|na, na = "";
+	}
+	retval = nobj.d*86400+nobj.h*3600+nobj.m*60+nobj.s+nobj.f/1000;
+	if (0 === aStr && (na = +(na)))
+		retval = na;
+	if (nmult) retval *= -1;
+	return retval;
+}
 function GetCommandOutput(cmd) {
 	var rett = 1, output = cmd, response,
 		cmdline = ParseCommandLineA(cmd),
@@ -126,12 +159,12 @@ function GetCommandOutput(cmd) {
 	(function ResolveLine(cmdline) {
 		var tmp;
 		if (mainA in {help:1}) {
-			var test1 = "<span style=\"user-select:none;color:silver;\">---&gt; </span>";
+			var test1 = "<span style=\"user-select:none;color:silver;\">--&gt; </span>";
 			response = [
 				"da = add/subtract, or add timestamp to date<br>",
 				"{{arrow1}}da now 86400<br>",
 				"{{arrow1}}da now -86400<br>",
-				"ta = Date or \"now\": add/subtract by X<br>",
+				"ta = Add time to date, or even add date to date.<br>",
 				"{{arrow1}}ta \"1970-01-01\" 31d<br>",
 				"{{arrow1}}ta now -31d<br>",
 				"{{arrow1}}ta now 31d<br>",
@@ -139,6 +172,10 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}ta now 31d23h59m<br>",
 				"{{arrow1}}ta now 31d23h59m59s<br>",
 				"{{arrow1}}ta now 31d23h59m59s999f<br>",
+				"{{arrow1}}ta now now<br>",
+				"tau = Same as \"ta\" but yields unix timestamp.<br>",
+				"ts = Time subtract, yields date string.<br>",
+				"tsu = Time subtract, yields unix timestamp.<br>",
 				"cls = clear console<br>",
 				"clr = clear console<br>",
 				"clear = clear console<br>",
@@ -175,36 +212,33 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}sb & \"a=4&b=4\"<br>",
 			].join("").replace(/\{\{arrow1\}\}/g, test1);
 		}
-		if (mainA in {da:1, dateadd:1}) {
+		if (mainA in {ta:1, timeadd:1}) {
 			var 
 				a0 = cmdline[1],
 				a1 = cmdline[2],
-				dateX, dateY;
-			if ("now" == a0.toLowerCase()) a0 = new Date;
-			else if (a0 >= 0) a0 = new Date(Number(a0*1e3));
-			dateX = new Date(a0);
-			response = new Date(+dateX + a1*1e3) + "";
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
+			response = new Date(z[1] + z[0]) + "";
 		}
-		if (mainA in {ta:1, timeadd:1, addtime:1}) {
+		if (mainA in {tau:1, timeadd2:1}) {
 			var 
 				a0 = cmdline[1],
 				a1 = cmdline[2],
-				dateX, dateY, ff=1;
-			if ("now" == a0.toLowerCase()) a0 = new Date;
-			else if (a0 >= 0) a0 = new Date(Number(a0*1e3));
-			dateX = new Date(a0);
-			// parse string format, sample: 31d23h59m59s999f (31days, 23hr, 59min, 59sec, 999ms)
-			var nmult = /^\-/.test(a1.trim());
-			for (var t, nobj = {d:0,h:0,m:0,s:0,f:0}, na = "", i = 0, sLen = a1.length; i < sLen; i++) {
-				if ((t = a1.charAt(i)) >= 0)
-					na += (t);
-				else nobj[t.toLowerCase()] = 0|na, na = "";
-			}
-			a1 = nobj.d*86400+nobj.h*3600+nobj.m*60+nobj.s+nobj.f/1000;
-			if (0 === a1 && (na = +(na)))
-				a1 = na;
-			if (nmult) a1 *= -1;
-			response = new Date(+dateX + a1*1e3) + "";
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
+			response = (z[1] + z[0])/1e3 + "";
+		}
+		if (mainA in {ts:1, timesub:1}) {
+			var 
+				a0 = cmdline[1],
+				a1 = cmdline[2],
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
+			response = new Date(z[1] - z[0]) + "";
+		}
+		if (mainA in {tsu:1, timesub2:1}) {
+			var 
+				a0 = cmdline[1],
+				a1 = cmdline[2],
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
+			response = (z[1] - z[0])/1e3 + "";
 		}
 		else if (mainA in {avg:1, average:1}) {
 			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
