@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.14</title>
+	<title>Terminal | v0.1.17</title>
 </head>
 <body>
 <style>
@@ -81,6 +81,18 @@ function CaretToEnd(aElem) {
         r.collapse(!1);
         r.select();
     }
+}
+function GetDHMS(aTime) {
+	var d = 0|aTime/86400,
+		h = 0|aTime/3600%24,
+		m = 0|aTime/60%60,
+		s = 0|aTime%60,
+		ms = 0|aTime%1*1000;
+	if (d < 10) d = "" + d;
+	if (h < 10) h = "0" + h;
+	if (m < 10) m = "0" + m;
+	if (s < 10) s = "0" + s;
+	return d + "d " + h + "h " + m + "min " + s + "." + ms + "sec";
 }
 hPrompt.onkeydown = function (e) {
 	if (!e) e = window.event;
@@ -174,6 +186,9 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}ta now 31d23h59m59s999f<br>",
 				"{{arrow1}}ta now now<br>",
 				"tau = Same as \"ta\" but yields unix timestamp.<br>",
+				"{{arrow1}}tau now -31d<br>",
+				"{{arrow1}}tau now 31d<br>",
+				"{{arrow1}}tau now 31d 1<br>",
 				"ts = Time subtract, yields date string.<br>",
 				"tsu = Time subtract, yields unix timestamp.<br>",
 				"cls = clear console<br>",
@@ -223,8 +238,10 @@ function GetCommandOutput(cmd) {
 			var 
 				a0 = cmdline[1],
 				a1 = cmdline[2],
-				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
-			response = (z[1] + z[0])/1e3 + "";
+				a2 = "1" === cmdline[3],
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
+				v = (z[1] + z[0])/1e3;
+			response = a2 ? GetDHMS(v) : (v + "");
 		}
 		if (mainA in {ts:1, timesub:1}) {
 			var 
@@ -237,8 +254,10 @@ function GetCommandOutput(cmd) {
 			var 
 				a0 = cmdline[1],
 				a1 = cmdline[2],
-				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1));
-			response = (z[1] - z[0])/1e3 + "";
+				a2 = "1" === cmdline[3],
+				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
+				v = (z[1] - z[0])/1e3;
+			response = a2 ? GetDHMS(v) : (v + "");
 		}
 		else if (mainA in {avg:1, average:1}) {
 			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
