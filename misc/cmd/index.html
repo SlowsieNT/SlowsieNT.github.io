@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.31</title>
+	<title>Terminal | v0.1.32</title>
 </head>
 <body>
 <style>
@@ -266,7 +266,7 @@ function GetCommandOutput(cmd) {
 		if (mainA in {sw:1, stopwatch:1}) {
 			~function(aId){
 				response = "<b id=" + aId + "></b><i class=mw4 style=font-size:12px>#sw_" + aId + "</i>";
-				var sw = EasyStopwatch(aId, Str2TN(cmdline[1]));
+				var sw = EasyStopwatch(aId, cmdline[1] && Str2TN(cmdline[1]));
 				sw.Start();
 				window["sw_"+aId] = sw;
 			}(Math.random().toString(36).slice(2));
