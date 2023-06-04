@@ -8,7 +8,7 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 
 ## Web Terminal alpha ver (for Developers?)
 [/misc/cmd](https://slowsient.github.io/misc/cmd)<br>
-Basic commands such as: `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
+Basic commands such as: `stopwatch`, `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
 
 ## "Persona:" Color, Zodiac Sign, BMI, Tritype
 [/persona](https://slowsient.github.io/persona)<br>
