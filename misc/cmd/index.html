@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.35</title>
+	<title>Terminal | v0.1.54</title>
 </head>
 <body>
 <style>
@@ -100,6 +100,12 @@ function GetDHMS(aTime, aPostfix0, aPostfix1, aPostfix2, aPostfix3, aPostfix4) {
 	if (ms < 10) ms = "00" + ms
 	else if (ms < 100) ms = "0" + ms;
 	return d + (aPostfix0||":") + h + (aPostfix1||":") + m + (aPostfix2||":") + s + (aPostfix3||".") + ms + (aPostfix4||"");
+}
+function daperc(aNum, aPerc, aDiff) {
+	return aNum + aNum*(aPerc/100)*(!+aDiff && -1 || 1);
+}
+function perc(aNum) {
+	return aNum*100;
 }
 function EasyStopwatch(aElem, aOffset) {
 	var tmr, alive;
@@ -204,17 +210,32 @@ function GetCommandOutput(cmd) {
 	(function ResolveLine(cmdline) {
 		var tmp;
 		if (mainA in {help:1}) {
-			var test1 = "<span style=\"user-select:none;color:silver;\">--&gt; </span>", cd = new Date;
-			response = [
-				"sw = start stopwatch<br>",
+			var test1 = "<span style=\"user-select:none;color:silver;\">--&gt; </span>",
+			cd = new Date,
+			a0 = cmdline[1];
+			if (a0 in {sw:1}) response = [
+				"sw - StopWatch<br>",
+				"Syntax &amp; samples:<br>",
+				"{{arrow1}}sw &lt;startTime><br>",
 				"{{arrow1}}sw<br>",
-				"{{arrow1}}sw 10<br>",
+				"{{arrow1}}sw 10s<br>",
 				"{{arrow1}}sw 1h59m<br>",
 				"{{arrow1}}sw 1h59m59s<br>",
 				"{{arrow1}}sw 59m59s999f<br>",
-				"da = add/subtract, or add timestamp to date<br>",
+			];
+			else if (a0 in {dap:1}) response = [
+				"dap = Difference/Add Percentage<br>",
+				"Syntax &amp; samples:<br>",
+				"{{arrow1}}dap &lt;number> &lt;percentage> &lt;toAdd><br>",
+				"{{arrow1}}dap 100 2<br>",
+				"{{arrow1}}dap 100 2 1<br>",
+			];
+			else if (a0 in {da:1}) response = [
+				"da = Add/subtract, or add timestamp to date<br>",
 				"{{arrow1}}da now 86400<br>",
 				"{{arrow1}}da now -86400<br>",
+			];
+			else if (a0 in {ta:1}) response = [
 				"ta = Add time to date, or even add date to date.<br>",
 				"{{arrow1}}ta \"1970-01-01\" 31d<br>",
 				"{{arrow1}}ta now -31d<br>",
@@ -224,49 +245,99 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}ta now 31d23h59m59s<br>",
 				"{{arrow1}}ta now 31d23h59m59s999f<br>",
 				"{{arrow1}}ta now now<br>",
+			];
+			else if (a0 in {tau:1}) response = [
 				"tau = Same as \"ta\" but yields unix timestamp.<br>",
 				"{{arrow1}}tau now -31d<br>",
 				"{{arrow1}}tau now 31d<br>",
-				"ts = Time subtract, yields date string.<br>",
+			];
+			else if (a0 in {tsu:1}) response = [
 				"tsu = Time subtract, yields unix timestamp, try first command sample:<br>",
 				"{{arrow1}}tsu \""+cd.getFullYear()+"-"+(1+cd.getMonth())+"-1\" now 1<br>",
 				"{{arrow1}}tsu now -31d<br>",
 				"{{arrow1}}tsu now 31d<br>",
-				"cls = clear console<br>",
-				"clr = clear console<br>",
-				"clear = clear console<br>",
-				"avg = average<br>",
+			];
+			else if (a0 in {avg:1}) response = [
+				"avg = Average<br>",
 				"{{arrow1}}avg 1 2 3<br>",
 				"{{arrow1}}avg \"1,2,3\"<br>",
-				"min = math min<br>",
+			];
+			else if (a0 in {min:1}) response = [
+				"min = Math min<br>",
 				"{{arrow1}}min 1 2 3<br>",
 				"{{arrow1}}min \"1,2,3\"<br>",
-				"max = math max<br>",
+			];
+			else if (a0 in {max:1}) response = [
+				"max = Math max<br>",
 				"{{arrow1}}max 1 2 3<br>",
 				"{{arrow1}}max \"1,2,3\"<br>",
-				"sum = math sum<br>",
+			];
+			else if (a0 in {sum:1}) response = [
+				"sum = Math sum<br>",
 				"{{arrow1}}sum 1 2 3<br>",
 				"{{arrow1}}sum \"1,2,3\"<br>",
-				"tcc = to camel case<br>",
+			];
+			else if (a0 in {tcc:1}) response = [
+				"tcc = To camel case<br>",
 				"{{arrow1}}tcc camel case<br>",
 				"{{arrow1}}tcc \"camel case\"<br>",
-				"tpc = to pascal case<br>",
+			];
+			else if (a0 in {tpc:1}) response = [
+				"tpc = To pascal case<br>",
 				"{{arrow1}}tpc pascal case<br>",
 				"{{arrow1}}tpc \"pascal case\"<br>",
-				"ucf = upper case first letter<br>",
-				"uc = upper case all<br>",
-				"lc = lower case all<br>",
-				"js = eval js expression<br>",
-				"{{arrow1}}js 1 + 1<br>",
-				"rw = random word<br>",
+			];
+			else if (a0 in {rw:1}) response = [
+				"rw = Random word<br>",
 				"{{arrow1}}rw<br>",
 				"{{arrow1}}rw 5<br>",
-				"rng = random number<br>",
+			];
+			else if (a0 in {rng:1}) response = [
+				"rng = Random number<br>",
 				"{{arrow1}}rng 100<br>",
 				"{{arrow1}}rng 10 50<br>",
-				"sb = separate by<br>",
+			];
+			else if (a0 in {sb:1}) response = [
+				"sb = Separate by<br>",
 				"{{arrow1}}sb & \"a=4&b=4\"<br>",
-			].join("").replace(/\{\{arrow1\}\}/g, test1);
+			];
+			else if (a0 in {sw:1}) response = "";
+			else if (a0) response = ["Likely isn't important command. No details about it."];
+			else response = [
+				"help - Show list, or details for command<br>",
+				"{{arrow1}}help &lt;abbreviation><br>",
+				"{{arrow1}}help dap<br>",
+				"dap = Difference/Add Percentage<br>",
+				"sw = Start stopwatch<br>",
+				"da = Add/subtract date<br>",
+				"ta = Add time, see help<br>",
+				"tau = Add time; unix timestamp.<br>",
+				"ts = Time subtract<br>",
+				"tsu = Time subtract unix timestamp<br>",
+				"cls = Clear console<br>",
+				"avg = Average<br>",
+				"min = Math min<br>",
+				"max = Math max<br>",
+				"sum = Math sum<br>",
+				"tcc = To camel case<br>",
+				"tpc = To pascal case<br>",
+				"ucf = Upper case first letter<br>",
+				"uc = Upper case all<br>",
+				"lc = Lower case all<br>",
+				"js = Eval js expression<br>",
+				"rw = Random word<br>",
+				"rng = Random number<br>",
+				"sb = Separate by<br>",
+			]
+			response = response.join("").replace(/\{\{arrow1\}\}/g, test1);
+		}
+		if (mainA in {dap:1, daperc:1, diffaddperc:1}) {
+			var 
+				a0 = cmdline[1],
+				a1 = cmdline[2],
+				a2 = cmdline[3],
+				z = 0;
+			response = daperc(+a0, +a1, a2) + "";
 		}
 		if (mainA in {sw:1, stopwatch:1}) {
 			~function(aId){
@@ -290,7 +361,7 @@ function GetCommandOutput(cmd) {
 				a2 = "1" === cmdline[3],
 				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
 				v = (z[1] + z[0])/1e3;
-			response = a2 ? GetDHMS(v, "d ", "h ", "m ", "", "s") : (v + "");
+			response = a2 ? GetDHMS(v, "d ") : (v + "");
 		}
 		if (mainA in {ts:1, timesub:1}) {
 			var 
@@ -306,7 +377,7 @@ function GetCommandOutput(cmd) {
 				a2 = "1" === cmdline[3],
 				z = DateMM(Str2DasN(a0, 1), Str2DasN(a1, 1)),
 				v = (z[1] - z[0])/1e3;
-			response = a2 ? GetDHMS(v, "d ", "h ", "m ", "", "s") : (v + "");
+			response = a2 ? GetDHMS(v, "d ") : (v + "");
 		}
 		else if (mainA in {avg:1, average:1}) {
 			if (2 === cmdline.length && (tmp = cmdline[1].split(",")).length > 1)
