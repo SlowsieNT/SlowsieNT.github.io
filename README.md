@@ -6,6 +6,12 @@ Note: Design was never intended to be pleasing, might be changed in the future, 
 [deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
 [paginate.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/paginate.md)<br>
 
+## Browse Japanese words (romaji too)
+[/romaji/browse](https://slowsient.github.io/romaji/browse) <- Link<br>
+Needs `~9MB` to load it UNLESS cached.<br>
+Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
+Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
+
 ## Web Terminal alpha ver (for Developers?)
 [/misc/cmd](https://slowsient.github.io/misc/cmd)<br>
 Basic commands such as: `stopwatch`, `min`, `max`, `avg`, `sum`, `timeAdd`, `rw` - random word, etc.<br>
