@@ -68,6 +68,7 @@
 				</div>
 				<div class="dib mw4">
 					<button id="btnSearchRomajiWord" class="bs01">Search</button>
+					<button id="btnResetRomajiWord" class="bs01">Reset</button>
 				</div>
 			</div>
 		</td>
@@ -108,6 +109,10 @@ function RomajiSearch() {
 		else document.getElementById("r_" + dword).style.display = "none";
 	}
 }
+btnResetRomajiWord.onclick = function () {
+	tbSearchRomajiWord.value = "";
+	RomajiSearch();
+};
 btnSearchRomajiWord.onclick = RomajiSearch;
 var DictBrowser = {
 	Dict: [
