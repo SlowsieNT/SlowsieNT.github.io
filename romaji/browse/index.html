@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width">
+	<title>JADict Browser</title>
+	<meta name="description" content="Browse Japanese words (Romaji included)">
+	<meta name="keywords" content="JADict Browser">
+	<style>
+	*{background-color:transparent;color:gray;border:none;outline:none;padding:0;margin:0;min-width:0;min-height:0;}
+	*{font-family:Helvetica, Arial, sans-serif;}
+	select{font-family:consolas,monospace,'Courier New',Courier;}
+	body{background-color: #111;}
+	.bg-22{background-color:#222;}
+	.bg-33{background-color:#333;}
+	.bg-44,.hbg44:hover{background-color:#444;}
+	.p4-8{padding:4px 8px;}
+	.fs24{font-size: 24px;}
+	.fs20{font-size: 20px;}
+	.mn4{margin-top:4px;}
+	.mn2{margin-top:2px;}
+	.mw4{margin-left:4px;}
+	.mw16{margin-left:16px;}
+	.m16{margin:16px;}
+	.m4{margin:4px;}
+	.dib{display: inline-block;*display:inline;*zoom:1;}
+	input,select,button,textarea{font-size:16px;}
+	.wordstbl td {padding:4px 16px;font-size:20px;}
+	.es01, .bs01 {
+		padding:2px 4px;
+		border:1px #444 solid;
+		background-color: #222;
+		color:lime;outline:none;
+	}
+	.bs01:hover {background-color: #444;}
+	</style>
+</head>	
+<body>
+<script src="/js/lang/jaBasicDict.js"></script>
+<script src="/js/lang/jaFrequentDict.js"></script>
+<table class="m16">
+	<tr>
+		<td>Dictionary</td>
+		<td>
+			<div class="mw16">
+				<select id="cbDictType" class="bg-22 p4-8 es01">
+					<option value="0">Basic</option>
+					<option value="1" selected>Most used words</option>
+				</select>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td><u>Romaji</u> start letter</td>
+		<td>
+			<div class="mw16">
+				<select id="cbDictSLetter" class="bg-22 p4-8 es01"></select>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td><u>Romaji</u> word search</td>
+		<td>
+			<div class="mw16">
+				<div class="dib">
+					<input id="tbSearchRomajiWord" type="text" placeholder="aa" class="es01 p4-8">
+				</div>
+				<div class="dib mw4">
+					<button id="btnSearchRomajiWord" class="bs01">Search</button>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+<!-- footer -->
+<div class="m16">
+	<div style="margin-top:24px"><i id="flicker722617809971422">No Rights reserved.</i></div>
+	<div><i>Source Code License: <u>Unlicense</u>.</i></div>
+	<script>
+		(function(eBlink){
+			var i = 0, pauseBlink;
+			eBlink.onclick = function () { pauseBlink = !pauseBlink; };
+			(function loop() {
+				if (!pauseBlink) {
+					eBlink.style.textDecoration = i++ & 1 ? "underline" : "none";
+					eBlink.style.color = i & 1 ? "" : "lime";
+				}
+				setTimeout(loop, 1e3);
+			})();
+		})(document.getElementById("flicker722617809971422"));
+	</script>
+</div>
+<table class="wordstbl">
+	<tr><td><b>Word</b></td><td><b>Romaji</b></td><td><b>Type</b></td><td><b>Meaning</b></td></tr>
+	<tbody id="wordlist"></tbody>
+</table>
+<script>
+cbDictSLetter.onchange = cbDictType.onchange = onload = function () {
+	DictBrowser.UI.Update();
+};
+function RomajiSearch() {
+	var searchWord = tbSearchRomajiWord.value;
+	for (var i in DictBrowser.CurrentDictWords) {
+		var dword = DictBrowser.CurrentDictWords[i][1];
+		if ("" == searchWord || searchWord == dword)
+			document.getElementById("r_" + dword).style.display = "";
+		else document.getElementById("r_" + dword).style.display = "none";
+	}
+}
+btnSearchRomajiWord.onclick = RomajiSearch;
+var DictBrowser = {
+	Dict: [
+		ResolveDictRLA(jaBasicDict),
+		ResolveDictRLA(jaFrequentDict),
+		{}
+	],
+	CurrentDictWords: null,
+	UI: {
+		LastDictType: null,
+		LastStartLetter: null,
+		Update: function () {
+			var 
+				dType = cbDictType.value,
+				sLetter = cbDictSLetter.value,
+				dict = DictBrowser.Dict[dType],
+				romajiLetter = dict[0],
+				z = 0;
+				// refresh ui
+				wordlist.innerHTML = "";
+				// append alphabetically(?)
+				if (this.LastDictType != dType) {
+					this.LastDictType = dType;
+					// refresh ui
+					cbDictSLetter.innerHTML = "";
+					// render letters
+					var startLettersSorted = dict[1];
+					for (var i in startLettersSorted) {
+						var startLetter = startLettersSorted[i],
+							sLname = startLetter, 
+							opt = document.createElement("option");
+						if ("" == sLname)
+							sLname = "?";
+						opt.innerHTML = sLname + " ("+romajiLetter[startLetter][0]+")";
+						opt.value = startLetter;
+						cbDictSLetter.appendChild(opt);
+					}
+					sLetter = cbDictSLetter.value;
+				}
+				// clear if any words rendered
+				wordlist.innerHTML = "";
+				// prepare dict items
+				DictBrowser.LastStartLetter = sLetter;
+				var dictItems = romajiLetter[sLetter];
+					dictWords = dictItems[1];
+				DictBrowser.CurrentDictWords = dictWords;
+				// render items?
+				for (var i in dictWords) {
+					// item[word, romaji, type, meaning]
+					var item = dictWords[i];
+					// render:
+					var tRow = document.createElement("tr");
+					tRow.id = "r_" + item[1];
+					tRow.innerHTML = "<td>"+item[0]+"</td><td>"+item[1]+"</td><td>"+item[2]+"</td><td>"+item[3]+"</td>"
+					// append
+					wordlist.appendChild(tRow);
+				}
+		}
+	}
+};
+function ResolveDictRLA(aDict) {
+	var romajiLetter = {};
+	for (var n in aDict) {
+		var word = n,
+			wordInfo = aDict[n];
+		// wordInfo[romaji, type, meaning]
+		var letter = wordInfo[0].slice(0,1);
+		if (!romajiLetter[letter])
+			romajiLetter[letter] = [0,[]];
+		romajiLetter[letter][0]++;
+		romajiLetter[letter][1].push([word].concat(wordInfo));
+	}
+	var startLettersSorted = [];
+	for (var startLetter in romajiLetter)
+		startLettersSorted.push(startLetter);
+	startLettersSorted.sort();
+	return [
+		romajiLetter, startLettersSorted
+	];
+}
+</script>
+</body>
+</html>
