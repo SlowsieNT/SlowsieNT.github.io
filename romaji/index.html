@@ -79,7 +79,7 @@
 				<tr>
 					<td>
 						<span>Words per page</span>
-						<div class="mn4"><input id="tbWordsPerPage" class="w48 es01" type="number" value="400" min="50"></div>
+						<div class="mn4"><input id="tbWordsPerPage" class="w48 es01" type="number" value="2000" min="50"></div>
 					</td>
 					<td>
 						<div class="mw16">
@@ -410,6 +410,7 @@ function Paginate(aConf) {
 	function HandleUICA(aElemArr, aValue, aAttr) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
+		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
 			var t = aElemArr[i], etn = t.tagName;
 			if (void 0 !== aAttr) {
