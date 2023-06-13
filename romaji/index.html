@@ -79,7 +79,7 @@
 				<tr>
 					<td>
 						<span>Words per page</span>
-						<div class="mn4"><input id="tbWordsPerPage" class="w48 es01" type="number" value="2000" min="50"></div>
+						<div class="mn4"><input id="tbWordsPerPage" class="w48 es01" type="number" value="2269" min="50"></div>
 					</td>
 					<td>
 						<div class="mw16">
@@ -96,8 +96,9 @@
 					<td>
 						<div class="mw16 mn2">
 							<span>Page:</span>
-							<input id="tbCurrentPage" class="w48 es01" type="number" value="1">
-							/&nbsp;<b id="lbTotalPages">1</b>
+							<div class="dib">
+								<input id="tbCurrentPage" class="w32 es01" type="number" value="1">&nbsp;/&nbsp;<input id="lbTotalPages" min="1" class="w32 es01" type="number" value="4">
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -105,7 +106,7 @@
 		</fieldset>
 		<div>
 			<fieldset>
-				<legend>Score</legend>
+				<legend id="lbScore">Score</legend>
 				<table class="mw4">
 					<tr>
 						<td>
@@ -142,6 +143,8 @@
 			<div><span><span class="fg-lime">-</span> You can pause to read answer by clicking answer again.</span></div>
 			<div><span><span class="fg-lime">-</span> You can pause blinking of license text by clicking it.</span></div>
 			<div><span><span class="fg-lime">-</span> You can run this app on Internet Explorer 6.</span></div>
+			<div><span><span class="fg-lime">-</span> On PC, you can use numbers to answer.</span></div>
+			<div><span><span class="fg-lime">-</span> You may <u>double click</u> "Score" to set speed.</span></div>
 		</fieldset>
 		<script>
 /* Time to tremble in fear, modern devs!
@@ -150,6 +153,27 @@
 // easify
 for (var n in jaBasicDict) jaBasicDict[n] = [n].concat(jaBasicDict[n]);
 for (var n in jaFrequentDict) jaFrequentDict[n] = [n].concat(jaFrequentDict[n]);
+// misc ui event
+lbScore.ondblclick = function () {
+	var pv = prompt("AnswerDelay, AnswerReDelay = ", Game.Settings.AnswerDelay+","+Game.Settings.ReAnswerDelay);
+	if (pv && (pv = pv.split(","))) {
+		var x = pv[0]|0,
+			y = pv[1]|0;
+		if (x < 250) x = 250;
+		if (y < 500) y = 500;
+		Game.Settings.AnswerDelay = x > 3500 ? 3500 : x;
+		Game.Settings.ReAnswerDelay = y > 5000 ? 5000 : y;
+	}
+};
+onkeydown = function (e) {
+	e = e||event;
+	if (!e) return;
+	var kc = e.keyCode||e.which;
+	if (kc > 48 && kc < 58) {
+		var kn = kc-48;
+		liAnswers.getElementsByTagName("button")[kn-1].click();
+	}
+};
 // etc
 var Game = {
 	Dict: {
