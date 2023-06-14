@@ -22,6 +22,7 @@ function Paginate(aConf) {
 	function HandleUICA(aElemArr, aValue, aAttr) {
 		if (aElemArr && void 0 === aElemArr.length && aElemArr.tagName)
 			aElemArr = [aElemArr];
+		if (!aElemArr) return;
 		for (var i = 0, arrLen = aElemArr.length; i < arrLen; i++) {
 			var t = aElemArr[i], etn = t.tagName;
 			if (void 0 !== aAttr) {
@@ -91,6 +92,7 @@ function Paginate(aConf) {
 	// Now create main handle
 	var rH = {};
 	function ResolveData(aDataConf, aPageNum, aPerPage) {
+		if (!arguments.length) return memArray;
 		// aDataConf[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 		if (aDataConf[0]) {
 			tmpArray = [];
