@@ -46,8 +46,9 @@
 </head>
 <body>
 	<!-- Putting dictionary here so page goes dark mode faster? -->
-	<script src="/js/lang/jaBasicDict.js"></script>
+	<script src="/js/lang/jaFrequentRanks.js"></script>
 	<script src="/js/lang/jaFrequentDict.js"></script>
+	<script src="/js/lang/jaBasicDict.js"></script>
 	<!-- Using old school design -->
 	<fieldset>
 		<legend><b><script>document.write(document.title);</script></b></legend>
@@ -150,9 +151,25 @@
 /* Time to tremble in fear, modern devs!
  * Behold the IE6 compatible code!
  */
-// easify
-for (var n in jaBasicDict) jaBasicDict[n] = [n].concat(jaBasicDict[n]);
-for (var n in jaFrequentDict) jaFrequentDict[n] = [n].concat(jaFrequentDict[n]);
+var jaFrequentDictRanked = [], jaFreqUnrankedDbg;
+!function(){
+	var jaFreqRanked = [], jaFreqUnranked = [];
+	// easify:
+	for (var n in jaBasicDict) jaBasicDict[n] = [n].concat(jaBasicDict[n]);
+	// easify:
+	for (var n in jaFrequentDict) {
+		jaFrequentDict[n] = [n].concat(jaFrequentDict[n]);
+		// rank it:
+		var z = [jaFrequentDict[n][1], jaFrequentDict[n]];
+		if (n in jaFrequentRanks) jaFreqRanked.push(z);
+		else jaFreqUnranked.push(z);
+	}
+	jaFrequentDictRanked = jaFreqRanked.concat(jaFreqUnrankedDbg=jaFreqUnranked);
+	// display ranked count in debug console:
+	console.log("Ranked:", jaFreqRanked.length);
+	console.log("Unranked:", jaFreqUnrankedDbg);
+	console.log("If you have ranks for the unranked, please contact dev.");
+}();
 // misc ui event
 lbScore.ondblclick = function () {
 	var pv = prompt("AnswerDelay, AnswerReDelay = ", Game.Settings.AnswerDelay+","+Game.Settings.ReAnswerDelay);
@@ -177,28 +194,42 @@ onkeydown = function (e) {
 // etc
 var Game = {
 	Dict: {
-		CurrentDataType: 1, /*CurrentDataType[0 array, 1 obj]*/
-		Current: null,
-		Mode: {
+		Modes: {
 			// don't change array manually unless it's at index 1
-			"ModeX": [0, jaBasicDict, {}],
-			"Mode1": [0, jaFrequentDict, {}]
+			ModeX: {
+				Type: 1,
+				Count: 0,
+				Data: jaBasicDict,
+				Refined: {}
+			}, Mode1: {
+				Type: 0,
+				Count: 0,
+				Data: jaFrequentDictRanked,
+				Refined: {}
+			}
 		},
 		ResolveAll: function (aMode) {
 			var _ = this;
-			if (void 0 === aMode) for (var cdict = "Hard", i = 0, rbA = Game.UI.RbArrDictMode, rLen = rbA.length; i < rLen; i++) {
+			if (void 0 === aMode) for (var cdict = "ModeX", i = 0, rbA = Game.UI.RbArrDictMode, rLen = rbA.length; i < rLen; i++) {
 				var rBtn = rbA[i];
 				if (rBtn.checked) cdict = rBtn.value;
 			}
 			// allocate lengths:
-			for (var mode in _.Mode)
-				for (var kWord in _.Mode[mode][1]) {
-					++_.Mode[mode][0];
-					// real shet:
-					_.Mode[mode][2][_.Mode[mode][1][kWord][1]] = _.Mode[mode][1][kWord];
+			for (var mode in _.Modes) {
+				var modeInfo = _.Modes[mode];
+				if (modeInfo.Type) {
+					if (modeInfo.Count) continue;
+					for (var kWord in _.Modes[mode].Data) {
+						++_.Modes[mode].Count;
+						// real shet:
+						_.Modes[mode].Refined[_.Modes[mode].Data[kWord][1]] = _.Modes[mode].Data[kWord];
+					}
+				} else {
+					modeInfo.Count = _.Modes[mode].Data.length;
+					modeInfo.Refined = _.Modes[mode].Data;
 				}
-			// default mode:
-			_.Current = _.Mode[cdict] || _.Mode[aMode];
+			}
+			_.Current = _.Modes[aMode||cdict]||_.Modes.ModeX;
 		}
 	},
 	Settings: {
@@ -343,7 +374,7 @@ var Game = {
 				correctAnswer = arrWords[correctAnswerIdx],
 				answers = [correctAnswer];
 			Game.UI.LbQWord.innerHTML = correctAnswer[1][1];
-			Game.UI.LbQWordXji.innerHTML = correctAnswer[0]+"";
+			Game.UI.LbQWordXji.innerHTML = correctAnswer[1][0]+"";
 			// Allocate decoy items
 			for (var i = 0; i < arrWordsLen; i++)
 				if (arrWords[i][1][1] != correctAnswer[1][1])
@@ -365,7 +396,8 @@ var Game = {
 				iPerPage: +Game.UI.TbWordsPerPage.value,
 				// Data[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 				Data: [
-					Game.Dict.CurrentDataType, Game.Dict.Current[1] // OR: [ 1, {a:1,b:2,c:3,d:4,e:5} ]
+					Game.Dict.Current.Type,
+					Game.Dict.Current.Refined
 				],
 				// Auto disable Next/Back button?
 				AutoDisable: true,
@@ -504,6 +536,7 @@ function Paginate(aConf) {
 	// Now create main handle
 	var rH = {};
 	function ResolveData(aDataConf, aPageNum, aPerPage) {
+		if (!arguments.length) return memArray;
 		// aDataConf[0: DataType(0=Array, 1=Object), 1: ArrayOrObject]
 		if (aDataConf[0]) {
 			tmpArray = [];
