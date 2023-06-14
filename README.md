@@ -22,7 +22,7 @@ Personality related.<br>
 
 ## Japanese Memory Game v3; JaLLiK
 [/romaji](https://slowsient.github.io/romaji) <- Link<br>
-Needs `~9MB` to load it UNLESS cached.<br>
+Needs `~11MB` to load it UNLESS cached.<br>
 Dictionary 1: Most used words dictionary of <b>11,344</b> words.<br>
 Dictionary 2: Basic dictionary of <b>115,821</b> words.<br>
 
