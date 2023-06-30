@@ -462,7 +462,7 @@ function GetCommandOutput(cmd) {
 			response = "<span class=fs16>" + WMDYHMS(d) + "</span><br>";
 			response += "~" + moonInfo.IPerc + "% <u>illuminated</u>.<br>";
 			response += "" + MoonBasic.LunarPhase(moonInfo.MoonAge) + ".<br>";
-			response += "" + moonInfo.MoonAge.toFixed(1) + " days old (age).<br>";
+			response += "" + moonInfo.MoonAge.toFixed(2) + " days (age).<br>";
 			response += "<span class=fs14>Waxing = Light on right side.</span>";
 		}
 		else if (mainA in {sb:1})
