@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.67</title>
+	<title>Terminal | v0.1.71</title>
 </head>
 <body>
 <style>
@@ -29,6 +29,11 @@
 		border:none;outline:none;
 		vertical-align:middle;
 	}
+	.fs8{font-size:8px;}
+	.fs10{font-size:10px;}
+	.fs12{font-size:12px;}
+	.fs14{font-size:14px;}
+	.fs16{font-size:16px;}
 	.dib {display: inline-block;*display:inline;*zoom:1;}
 	.mw4{margin-left:4px;}
 	.mw5{margin-left:5px;}
@@ -453,8 +458,12 @@ function GetCommandOutput(cmd) {
 		else if (mainA in {moon:1}) {
 			var vref = {x:0}, d = Str2DasN(cmdline[1], 1, vref);
 			if (vref.x) d += Date.now();
-			response = "" + WMDYHMS(d) + "<br>";
-			response += "~" + MoonBasic.FromUnix(d/1e3).IPerc + "% illuminated.";
+			var moonInfo = MoonBasic.FromUnix(d/1e3);
+			response = "<span class=fs16>" + WMDYHMS(d) + "</span><br>";
+			response += "~" + moonInfo.IPerc + "% <u>illuminated</u>.<br>";
+			response += "" + MoonBasic.LunarPhase(moonInfo.MoonAge) + ".<br>";
+			response += "" + moonInfo.MoonAge.toFixed(1) + " days old.<br>";
+			response += "<span class=fs12>Waxing is if less or equal 16.61 days old.</span>";
 		}
 		else if (mainA in {sb:1})
 			response = "" + cmdline[2].split(cmdline[1]).join("<br>");
@@ -573,6 +582,25 @@ var MoonBasic = new function () {
 		cos = Math.cos, floor = Math.floor,
 		atan = Math.atan, atan2 = Math.atan2,
 		asin = Math.asin;
+	_.LunarPhase = function (aAge) {
+		if (aAge < 1.84566)
+			return "New";
+		else if (aAge < 5.53699)
+			return "Waxing Crescent";
+		else if (aAge < 9.22831)
+			return "First Quarter";
+		else if (aAge < 12.91963)
+			return "Waxing Gibbous";
+		else if (aAge < 16.61096)
+			return "Full";
+		else if (aAge < 20.30228)
+			return "Waning Gibbous";
+		else if (aAge < 23.99361)
+			return "Last Quarter";
+		else if (aAge < 27.68493)
+			return "Waning Crescent";
+		return "New";
+	};
 	_.FromUnix = function (aTimestamp) {
 		if (void 0 === aTimestamp)
 			aTimestamp = new Date()/1e3;
