@@ -567,8 +567,8 @@ function ParseCommandLineA(aCommandString, aNoTrimCheck) {
 </script>
 <script>
 var MoonBasic = new function () {
-	var _ = this;
-	var sqrt = Math.sqrt, tan = Math.tan,
+	var _ = this,
+		sqrt = Math.sqrt, tan = Math.tan,
 		abs = Math.abs, sin = Math.sin,
 		cos = Math.cos, floor = Math.floor,
 		atan = Math.atan, atan2 = Math.atan2,
@@ -594,7 +594,7 @@ var MoonBasic = new function () {
 		var Msmax = 384401.0; // semi-major axis of Moon's orbit in km
 		var Mparallax = 0.9507; // parallax at distance a from Earth
 		var Synmonth = 29.53058868; // synodic month (new Moon to new Moon)
-		var pdate = _.jtime(aTimestamp);
+		var pdate = _.JulianTime(aTimestamp);
 		var pphase; // illuminated fraction
 		var mAge; // age of moon in days
 		var dist; // distance in kilometres
@@ -603,69 +603,69 @@ var MoonBasic = new function () {
 		var sunDia; // sun's angular diameter
 		// Calculation of the Sun's position.
 		var Day = pdate - Epoch; // date within epoch
-		var N = _.fixangle((360 / 365.2422) * Day); // mean anomaly of the Sun
-		var M = _.fixangle( N + Elonge - Elongp); // convert from perigee
+		var N = _.FixAngle((360 / 365.2422) * Day); // mean anomaly of the Sun
+		var M = _.FixAngle( N + Elonge - Elongp); // convert from perigee
 		// co-ordinates to epoch 1980.0
-		var Ec = _.kepler( M, Eccent); // solve equation of Kepler
+		var Ec = _.Kepler( M, Eccent); // solve equation of Kepler
 		Ec = sqrt((1 + Eccent) / (1 -  Eccent)) * tan( Ec / 2);
-		Ec = 2 * _.todeg(atan(Ec)); // true anomaly
-		var Lambdasun = _.fixangle(Ec +  Elongp); // Sun's geocentric ecliptic
+		Ec = 2 * _.ToDeg(atan(Ec)); // true anomaly
+		var Lambdasun = _.FixAngle(Ec +  Elongp); // Sun's geocentric ecliptic
 		// longitude
 		// Orbital distance factor.
-		var F = (1 + Eccent * cos(_.torad(Ec))) / (1 - Eccent * Eccent);
+		var F = (1 + Eccent * cos(_.ToRad(Ec))) / (1 - Eccent * Eccent);
 		var SunDist = Sunsmax / F; // distance to Sun in km
 		var SunAng = F * SunAngSz; // Sun's angular size in degrees
 		// Calculation of the Moon's position.
 		// Moon's mean longitude.
-		var ml = _.fixangle(13.1763966 * Day + Mmlong);
+		var ml = _.FixAngle(13.1763966 * Day + Mmlong);
 		// Moon's mean anomaly.
-		var MM = _.fixangle(ml - 0.1114041 * Day - Mmlongp);
+		var MM = _.FixAngle(ml - 0.1114041 * Day - Mmlongp);
 		// Moon's ascending node mean longitude.
-		var MN = _.fixangle(Mlnode - 0.0529539 * Day);
+		var MN = _.FixAngle(Mlnode - 0.0529539 * Day);
 		// Evection.
-		var Ev = 1.2739 * sin(_.torad(2 * (ml - Lambdasun) - MM));
+		var Ev = 1.2739 * sin(_.ToRad(2 * (ml - Lambdasun) - MM));
 		// Annual equation.
-		var Ae = 0.1858 * sin(_.torad(M));
+		var Ae = 0.1858 * sin(_.ToRad(M));
 		// Correction term.
-		var A3 = 0.37 * sin(_.torad(M));
+		var A3 = 0.37 * sin(_.ToRad(M));
 		// Corrected anomaly.
 		var MmP = MM + Ev - Ae - A3;
 		// Correction for the equation of the centre.
-		var mEc = 6.2886 * sin(_.torad(MmP));
+		var mEc = 6.2886 * sin(_.ToRad(MmP));
 		// Another correction term.
-		var A4 = 0.214 * sin(_.torad(2 * MmP));
+		var A4 = 0.214 * sin(_.ToRad(2 * MmP));
 		// Corrected longitude.
 		var lP = ml + Ev + mEc - Ae + A4;
 		// Variation.
-		var V = 0.6583 * sin(_.torad(2 * (lP - Lambdasun)));
+		var V = 0.6583 * sin(_.ToRad(2 * (lP - Lambdasun)));
 
 		// True longitude.
 		var lPP = lP + V;
 		// Corrected longitude of the node.
-		var NP = MN - 0.16 * sin(_.torad(M));
+		var NP = MN - 0.16 * sin(_.ToRad(M));
 
 		// Y inclination coordinate.
-		var y = sin(_.torad(lPP - NP)) * cos(_.torad(Minc));
+		var y = sin(_.ToRad(lPP - NP)) * cos(_.ToRad(Minc));
 		// X inclination coordinate.
-		var x = cos(_.torad(lPP - NP));
+		var x = cos(_.ToRad(lPP - NP));
 
 		// Ecliptic longitude.
-		var Lambdamoon = _.todeg(atan2(y, x));
+		var Lambdamoon = _.ToDeg(atan2(y, x));
 		Lambdamoon += NP;
 		// Ecliptic latitude.
-		var BetaM = _.todeg(
-			asin(sin(_.torad(lPP - NP)) * sin(_.torad(Minc)))
+		var BetaM = _.ToDeg(
+			asin(sin(_.ToRad(lPP - NP)) * sin(_.ToRad(Minc)))
 		);
 
 		// Calculation of the phase of the Moon.
 		// Age of the Moon in degrees.
 		var MoonAge = lPP - Lambdasun;
 		// Phase of the Moon.
-		var MoonPhase = (1 - cos(_.torad(MoonAge))) / 2;
+		var MoonPhase = (1 - cos(_.ToRad(MoonAge))) / 2;
 		// Calculate distance of moon from the centre of the Earth.
 		var MoonDist =
 			(Msmax * (1 - Mecc * Mecc)) /
-			(1 + Mecc * cos(_.torad(MmP + mEc)));
+			(1 + Mecc * cos(_.ToRad(MmP + mEc)));
 
 		// Calculate Moon's angular diameter.
 		var MoonDFrac = MoonDist / Msmax;
@@ -674,12 +674,12 @@ var MoonBasic = new function () {
 		var MoonPar = Mparallax / MoonDFrac;
 
 		pphase = MoonPhase; // illuminated fraction
-		mAge = Synmonth * (_.fixangle(MoonAge) / 360.0); // age of moon in days
+		mAge = Synmonth * (_.FixAngle(MoonAge) / 360.0); // age of moon in days
 		dist = MoonDist; // distance in kilometres
 		angdia = MoonAng; // angular diameter in degrees
 		sunDist = SunDist; // distance to Sun
 		sunDia = SunAng; // sun's angular diameter
-		mpfrac = _.fixangle(MoonAge) / 360.0;
+		mpfrac = _.FixAngle(MoonAge) / 360.0;
 		return {
 			IPerc: +(pphase*100).toFixed(2),
 			MoonPhase: pphase,
@@ -691,28 +691,28 @@ var MoonBasic = new function () {
 			MPFrac: mpfrac
 		};
 	};
-	_.torad = function (x) {
+	_.ToRad = function (x) {
 		return x * (Math.PI / 180.0);
-	}
-	_.fixangle = function (x) {
+	};
+	_.FixAngle = function (x) {
 		return x - 360.0 * floor(x / 360.0);
-	}
-	_.todeg = function (x) {return x * (180.0 / Math.PI); }
-	_.jtime = function (t) {
+	};
+	_.ToDeg = function (x) {return x * (180.0 / Math.PI); };
+	_.JulianTime = function (t) {
 		var julian = t / 86400 + 2440587.5;
 		// (seconds /(seconds per day)) + julian date of epoch	   2440587.5 / 86400 = 28,24753472222 Days
 		return julian;
-	}
-	_.kepler = function (m, ecc) {
+	};
+	_.Kepler = function (m, ecc) {
 		EPSILON = 1e-6;
-		e = m = _.torad(m);
+		e = m = _.ToRad(m);
 		delta = 0;
 		do {
 			delta = e - ecc * sin(e) - m;
 			e -= delta / (1 - ecc * cos(e));
 		} while (abs(delta) > EPSILON);
 		return e;
-	}
+	};
 };
 </script>
 </body>
