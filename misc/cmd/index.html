@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.65</title>
+	<title>Terminal | v0.1.67</title>
 </head>
 <body>
 <style>
@@ -638,17 +638,14 @@ var MoonBasic = new function () {
 		var lP = ml + Ev + mEc - Ae + A4;
 		// Variation.
 		var V = 0.6583 * sin(_.ToRad(2 * (lP - Lambdasun)));
-
 		// True longitude.
 		var lPP = lP + V;
 		// Corrected longitude of the node.
 		var NP = MN - 0.16 * sin(_.ToRad(M));
-
 		// Y inclination coordinate.
 		var y = sin(_.ToRad(lPP - NP)) * cos(_.ToRad(Minc));
 		// X inclination coordinate.
 		var x = cos(_.ToRad(lPP - NP));
-
 		// Ecliptic longitude.
 		var Lambdamoon = _.ToDeg(atan2(y, x));
 		Lambdamoon += NP;
@@ -656,7 +653,6 @@ var MoonBasic = new function () {
 		var BetaM = _.ToDeg(
 			asin(sin(_.ToRad(lPP - NP)) * sin(_.ToRad(Minc)))
 		);
-
 		// Calculation of the phase of the Moon.
 		// Age of the Moon in degrees.
 		var MoonAge = lPP - Lambdasun;
@@ -666,13 +662,11 @@ var MoonBasic = new function () {
 		var MoonDist =
 			(Msmax * (1 - Mecc * Mecc)) /
 			(1 + Mecc * cos(_.ToRad(MmP + mEc)));
-
 		// Calculate Moon's angular diameter.
 		var MoonDFrac = MoonDist / Msmax;
 		MoonAng = Mangsiz / MoonDFrac;
 		// Calculate Moon's parallax.
 		var MoonPar = Mparallax / MoonDFrac;
-
 		pphase = MoonPhase; // illuminated fraction
 		mAge = Synmonth * (_.FixAngle(MoonAge) / 360.0); // age of moon in days
 		dist = MoonDist; // distance in kilometres
@@ -691,13 +685,9 @@ var MoonBasic = new function () {
 			MPFrac: mpfrac
 		};
 	};
-	_.ToRad = function (x) {
-		return x * (Math.PI / 180.0);
-	};
-	_.FixAngle = function (x) {
-		return x - 360.0 * floor(x / 360.0);
-	};
-	_.ToDeg = function (x) {return x * (180.0 / Math.PI); };
+	_.ToRad = function (x) { return x * (Math.PI / 180.0); };
+	_.FixAngle = function (x) { return x - 360.0 * floor(x / 360.0); };
+	_.ToDeg = function (x) { return x * (180.0 / Math.PI); };
 	_.JulianTime = function (t) {
 		var julian = t / 86400 + 2440587.5;
 		// (seconds /(seconds per day)) + julian date of epoch	   2440587.5 / 86400 = 28,24753472222 Days
