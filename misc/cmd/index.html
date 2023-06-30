@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.55</title>
+	<title>Terminal | v0.1.65</title>
 </head>
 <body>
 <style>
@@ -107,6 +107,23 @@ function daperc(aNum, aPerc, aDiff) {
 function perc(aNum) {
 	return aNum*100;
 }
+function WMDYHMS(aUTOrDate, aSafeFail) {
+	var _ = WMDYHMS, did;
+	if (void 0 === aUTOrDate && aSafeFail)
+		aUTOrDate = new Date, did = 1;
+	if (!_.MF)
+		_.MF = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dev"];
+		_.WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+		_.LZ = function (n) { return n < 10 ? "0"+n : n;}
+	var d = did && aUTOrDate || new Date(aUTOrDate);
+	if (d.getDate())
+		return (
+			_.WD[d.getDay()] + ", " + _.MF[d.getMonth()] + " " + d.getDate() + ", " +
+			d.getFullYear() + ", " +
+			_.LZ(d.getHours()) + ":" + _.LZ(d.getMinutes()) + ":" + _.LZ(d.getSeconds())
+		);
+	return "Invalid Date";
+}
 function EasyStopwatch(aElem, aOffset) {
 	var tmr, alive;
 	return {
@@ -172,14 +189,18 @@ function ProcessCommand(aIHandle) {
 	aIHandle.value = "";
 }
 // Str2TasN = string to date as number
-function Str2DasN(aArg0, aTrySTT) {
+function Str2DasN(aArg0, aTrySTT, aRef) {
 	var dateX;
+	if (void 0 === aArg0) aArg0 = "now";
 	if (aArg0 > 0 || aArg0 < 1) dateX = new Date(aArg0*1e3);
 	else if ("now" == aArg0.toLowerCase()) dateX = +new Date;
 	else dateX = +new Date(aArg0);
-	if (aTrySTT && !(1 + Math.sqrt(dateX)))
-		dateX = Str2TN(aArg0)*1e3;
+	if (aTrySTT && InvalidDate(dateX))
+		dateX = Str2TN(aArg0)*1e3, aRef && (aRef.x=1);
 	return dateX;
+}
+function InvalidDate(aX) {
+	return !(1 + Math.sqrt(aX));
 }
 function DateMM(aX, aY) {
 	return [Math.min(aX, aY), Math.max(aX, aY)];
@@ -257,6 +278,13 @@ function GetCommandOutput(cmd) {
 				"{{arrow1}}tsu now -31d<br>",
 				"{{arrow1}}tsu now 31d<br>",
 			];
+			else if (a0 in {moon:1}) response = [
+				"moon = Get moon illumination % from date string, or time string, or unix timestamp.<br>",
+				"{{arrow1}}moon<br>",
+				"{{arrow1}}moon \""+cd.getFullYear()+"-"+(1+cd.getMonth())+"-1\" now 1<br>",
+				"{{arrow1}}moon -31d<br>",
+				"{{arrow1}}moon 31d<br>",
+			];
 			else if (a0 in {avg:1}) response = [
 				"avg = Average<br>",
 				"{{arrow1}}avg 1 2 3<br>",
@@ -307,6 +335,7 @@ function GetCommandOutput(cmd) {
 				"help - Show list, or details for command<br>",
 				"{{arrow1}}help &lt;abbreviation><br>",
 				"{{arrow1}}help dap<br>",
+				"moon = Moon approximate illumination<br>",
 				"dap = Difference/Add Percentage<br>",
 				"sw = Start stopwatch<br>",
 				"da = Add/subtract date<br>",
@@ -421,6 +450,12 @@ function GetCommandOutput(cmd) {
 				v += Worder.UCFirst(cmdline[i]);
 			response = "" + v;
 		}
+		else if (mainA in {moon:1}) {
+			var vref = {x:0}, d = Str2DasN(cmdline[1], 1, vref);
+			if (vref.x) d += Date.now();
+			response = "" + WMDYHMS(d) + "<br>";
+			response += "~" + MoonBasic.FromUnix(d/1e3).IPerc + "% illuminated.";
+		}
 		else if (mainA in {sb:1})
 			response = "" + cmdline[2].split(cmdline[1]).join("<br>");
 		else if (mainA in {uc:1, up: 1, upper:1, uppercase:1})
@@ -529,6 +564,156 @@ function ParseCommandLineA(aCommandString, aNoTrimCheck) {
 		vArgs.push(vStr.trim());
 	return vArgs;
 }
+</script>
+<script>
+var MoonBasic = new function () {
+	var _ = this;
+	var sqrt = Math.sqrt, tan = Math.tan,
+		abs = Math.abs, sin = Math.sin,
+		cos = Math.cos, floor = Math.floor,
+		atan = Math.atan, atan2 = Math.atan2,
+		asin = Math.asin;
+	_.FromUnix = function (aTimestamp) {
+		if (void 0 === aTimestamp)
+			aTimestamp = new Date()/1e3;
+		// Astronomical constants.
+		var Epoch = 2444238.5; // 1980 January 0.0
+		// Constants defining the Sun's apparent orbit.
+		var Elonge = 278.83354; // ecliptic longitude of the Sun at epoch 1980.0
+		var Elongp = 282.596403; // ecliptic longitude of the Sun at perigee
+		var Eccent = 0.016718; // eccentricity of Earth's orbit
+		var Sunsmax = 1.495985e8; // semi-major axis of Earth's orbit, km
+		var SunAngSz = 0.533128; // sun's angular size, degrees, at semi-major axis distance
+		// Elements of the Moon's orbit, epoch 1980.0.
+		var Mmlong = 64.975464; // moon's mean longitude at the epoch
+		var Mmlongp = 349.383063; // mean longitude of the perigee at the epoch
+		var Mlnode = 151.950429; // mean longitude of the node at the epoch
+		var Minc = 5.145396; // inclination of the Moon's orbit
+		var Mecc = 0.0549; // eccentricity of the Moon's orbit
+		var Mangsiz = 0.5181; // moon's angular size at distance a from Earth
+		var Msmax = 384401.0; // semi-major axis of Moon's orbit in km
+		var Mparallax = 0.9507; // parallax at distance a from Earth
+		var Synmonth = 29.53058868; // synodic month (new Moon to new Moon)
+		var pdate = _.jtime(aTimestamp);
+		var pphase; // illuminated fraction
+		var mAge; // age of moon in days
+		var dist; // distance in kilometres
+		var angdia; // angular diameter in degrees
+		var sunDist; // distance to Sun
+		var sunDia; // sun's angular diameter
+		// Calculation of the Sun's position.
+		var Day = pdate - Epoch; // date within epoch
+		var N = _.fixangle((360 / 365.2422) * Day); // mean anomaly of the Sun
+		var M = _.fixangle( N + Elonge - Elongp); // convert from perigee
+		// co-ordinates to epoch 1980.0
+		var Ec = _.kepler( M, Eccent); // solve equation of Kepler
+		Ec = sqrt((1 + Eccent) / (1 -  Eccent)) * tan( Ec / 2);
+		Ec = 2 * _.todeg(atan(Ec)); // true anomaly
+		var Lambdasun = _.fixangle(Ec +  Elongp); // Sun's geocentric ecliptic
+		// longitude
+		// Orbital distance factor.
+		var F = (1 + Eccent * cos(_.torad(Ec))) / (1 - Eccent * Eccent);
+		var SunDist = Sunsmax / F; // distance to Sun in km
+		var SunAng = F * SunAngSz; // Sun's angular size in degrees
+		// Calculation of the Moon's position.
+		// Moon's mean longitude.
+		var ml = _.fixangle(13.1763966 * Day + Mmlong);
+		// Moon's mean anomaly.
+		var MM = _.fixangle(ml - 0.1114041 * Day - Mmlongp);
+		// Moon's ascending node mean longitude.
+		var MN = _.fixangle(Mlnode - 0.0529539 * Day);
+		// Evection.
+		var Ev = 1.2739 * sin(_.torad(2 * (ml - Lambdasun) - MM));
+		// Annual equation.
+		var Ae = 0.1858 * sin(_.torad(M));
+		// Correction term.
+		var A3 = 0.37 * sin(_.torad(M));
+		// Corrected anomaly.
+		var MmP = MM + Ev - Ae - A3;
+		// Correction for the equation of the centre.
+		var mEc = 6.2886 * sin(_.torad(MmP));
+		// Another correction term.
+		var A4 = 0.214 * sin(_.torad(2 * MmP));
+		// Corrected longitude.
+		var lP = ml + Ev + mEc - Ae + A4;
+		// Variation.
+		var V = 0.6583 * sin(_.torad(2 * (lP - Lambdasun)));
+
+		// True longitude.
+		var lPP = lP + V;
+		// Corrected longitude of the node.
+		var NP = MN - 0.16 * sin(_.torad(M));
+
+		// Y inclination coordinate.
+		var y = sin(_.torad(lPP - NP)) * cos(_.torad(Minc));
+		// X inclination coordinate.
+		var x = cos(_.torad(lPP - NP));
+
+		// Ecliptic longitude.
+		var Lambdamoon = _.todeg(atan2(y, x));
+		Lambdamoon += NP;
+		// Ecliptic latitude.
+		var BetaM = _.todeg(
+			asin(sin(_.torad(lPP - NP)) * sin(_.torad(Minc)))
+		);
+
+		// Calculation of the phase of the Moon.
+		// Age of the Moon in degrees.
+		var MoonAge = lPP - Lambdasun;
+		// Phase of the Moon.
+		var MoonPhase = (1 - cos(_.torad(MoonAge))) / 2;
+		// Calculate distance of moon from the centre of the Earth.
+		var MoonDist =
+			(Msmax * (1 - Mecc * Mecc)) /
+			(1 + Mecc * cos(_.torad(MmP + mEc)));
+
+		// Calculate Moon's angular diameter.
+		var MoonDFrac = MoonDist / Msmax;
+		MoonAng = Mangsiz / MoonDFrac;
+		// Calculate Moon's parallax.
+		var MoonPar = Mparallax / MoonDFrac;
+
+		pphase = MoonPhase; // illuminated fraction
+		mAge = Synmonth * (_.fixangle(MoonAge) / 360.0); // age of moon in days
+		dist = MoonDist; // distance in kilometres
+		angdia = MoonAng; // angular diameter in degrees
+		sunDist = SunDist; // distance to Sun
+		sunDia = SunAng; // sun's angular diameter
+		mpfrac = _.fixangle(MoonAge) / 360.0;
+		return {
+			IPerc: +(pphase*100).toFixed(2),
+			MoonPhase: pphase,
+			MoonAge: mAge,
+			MoonDist: dist,
+			MoonAngle: angdia,
+			SunDist: sunDist,
+			SunAngle: sunDia,
+			MPFrac: mpfrac
+		};
+	};
+	_.torad = function (x) {
+		return x * (Math.PI / 180.0);
+	}
+	_.fixangle = function (x) {
+		return x - 360.0 * floor(x / 360.0);
+	}
+	_.todeg = function (x) {return x * (180.0 / Math.PI); }
+	_.jtime = function (t) {
+		var julian = t / 86400 + 2440587.5;
+		// (seconds /(seconds per day)) + julian date of epoch	   2440587.5 / 86400 = 28,24753472222 Days
+		return julian;
+	}
+	_.kepler = function (m, ecc) {
+		EPSILON = 1e-6;
+		e = m = _.torad(m);
+		delta = 0;
+		do {
+			delta = e - ecc * sin(e) - m;
+			e -= delta / (1 - ecc * cos(e));
+		} while (abs(delta) > EPSILON);
+		return e;
+	}
+};
 </script>
 </body>
 </html>
