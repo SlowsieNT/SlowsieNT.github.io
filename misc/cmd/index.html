@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Terminal | v0.1.71</title>
+	<title>Terminal | v0.1.72</title>
 </head>
 <body>
 <style>
@@ -462,8 +462,8 @@ function GetCommandOutput(cmd) {
 			response = "<span class=fs16>" + WMDYHMS(d) + "</span><br>";
 			response += "~" + moonInfo.IPerc + "% <u>illuminated</u>.<br>";
 			response += "" + MoonBasic.LunarPhase(moonInfo.MoonAge) + ".<br>";
-			response += "" + moonInfo.MoonAge.toFixed(1) + " days old.<br>";
-			response += "<span class=fs12>Waxing is if less or equal 16.61 days old.</span>";
+			response += "" + moonInfo.MoonAge.toFixed(1) + " days old (age).<br>";
+			response += "<span class=fs14>Waxing = Light on right side.</span>";
 		}
 		else if (mainA in {sb:1})
 			response = "" + cmdline[2].split(cmdline[1]).join("<br>");
