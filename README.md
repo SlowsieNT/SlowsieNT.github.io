@@ -1,6 +1,7 @@
 # Index of
 Note: Design was never intended to be pleasing, might be changed in the future, who knows.<br>
-<img src="https://api.visitorbadge.io/api/visitors?path=slowsient.github.io&countColor=%2337d67a&style=flat-square&labelStyle=upper">
+<img src="https://api.visitorbadge.io/api/visitors?path=slowsient.github.io&countColor=%2337d67a&style=flat-square&labelStyle=upper"><br>
+All the content is only for educational and non-profit purposes.<br>
 
 ## JS Libraries (for Developers)
 [deft.js; documentation](https://github.com/SlowsieNT/SlowsieNT.github.io/blob/main/js/lib/deft.md) - Loop `for` AJAX<br>
