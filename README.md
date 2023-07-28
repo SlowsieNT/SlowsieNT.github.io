@@ -19,6 +19,8 @@ Basic commands such as: `stopwatch`, `min`, `max`, `avg`, `sum`, `timeAdd`, `rw`
 ## "Persona:" Color, Zodiac Sign, BMI, Tritype
 [/persona](https://slowsient.github.io/persona)<br>
 Personality related.<br>
+[/persona/wings](https://slowsient.github.io/persona/wings)<br>
+Enneagram wings.<br>
 
 ## Japanese Memory Game v3; JaLLiK
 [/romaji](https://slowsient.github.io/romaji) <- Link<br>
