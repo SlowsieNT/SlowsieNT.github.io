@@ -1,4 +1,4 @@
-## No rights reserved.
+## No rights reserved. Just pasted text.
 
 # Enneagram 1 Wings
 ## 1w9
